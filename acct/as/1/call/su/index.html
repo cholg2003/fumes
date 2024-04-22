@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 100px auto;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .buttons {
+            margin-top: 50px;
+        }
+
+        .whatsapp-button,
+        .call-button {
+            display: inline-block;
+            padding: 20px 40px;
+            font-size: 18px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            margin: 0 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .whatsapp-button:hover,
+        .call-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script>
+        function redirectToWhatsApp() {
+            var whatsappNumber = '+211926430475';
+            window.location.href = 'https://wa.me/' + whatsappNumber;
+            alert('WhatsApp Number: ' + whatsappNumber);
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Our Request Page</h1>
+        <div class="buttons">
+            <button onclick="redirectToWhatsApp()" class="whatsapp-button">WhatsApp Request</button>
+            <a href="call.php" class="call-button">Call Request</a>
+        </div>
+    </div>
+</body>
+</html>
