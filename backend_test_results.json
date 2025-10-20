@@ -1,0 +1,58 @@
+{
+  "timestamp": "2025-10-20T20:23:40.014700",
+  "total_tests": 10,
+  "passed_tests": 10,
+  "success_rate": 100.0,
+  "results": [
+    {
+      "test": "Login - general_clerk",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Patient Search - By Serial Number",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Patient Search - By Name",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Patient Details",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Price List",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Balance Validation - Insufficient Funds",
+      "success": true,
+      "details": "Status: 400"
+    },
+    {
+      "test": "Submit Bill",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Bill History",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Bill Details",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Void Bill",
+      "success": true,
+      "details": "Status: 200"
+    }
+  ]
+}
