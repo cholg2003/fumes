@@ -435,14 +435,14 @@ class MedicalBillingAPITester:
                 print(f"   Created pricelist item: {test_item['item_id']}")
                 
                 # Test delete pricelist item
-                success, response = self.run_test(
+                delete_success, delete_response = self.run_test(
                     "Admin - Delete Pricelist Item",
                     "DELETE",
                     f"admin/pricelists/{test_item['hospital_name']}/{test_item['item_id']}",
                     200
                 )
                 
-                if success:
+                if delete_success:
                     print(f"   Deleted pricelist item: {test_item['item_id']}")
         
         return success
