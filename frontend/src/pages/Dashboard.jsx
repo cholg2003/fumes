@@ -189,17 +189,30 @@ const Dashboard = () => {
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-800">Medical Insurance Billing</h1>
-            <p className="text-sm text-gray-600 mt-1">{hospitalName} • {username}</p>
+            <p className="text-sm text-gray-600 mt-1">{hospitalName} • {username} • {role}</p>
           </div>
-          <Button
-            data-testid="logout-button"
-            onClick={handleLogout}
-            variant="outline"
-            className="flex items-center gap-2 border-gray-300 hover:bg-gray-50"
-          >
-            <LogOut className="w-4 h-4" />
-            Logout
-          </Button>
+          <div className="flex items-center gap-3">
+            {role === 'Admin' && (
+              <Button
+                data-testid="admin-panel-button"
+                onClick={() => navigate('/admin')}
+                variant="outline"
+                className="flex items-center gap-2 border-purple-300 text-purple-700 hover:bg-purple-50"
+              >
+                <Settings className="w-4 h-4" />
+                Admin Panel
+              </Button>
+            )}
+            <Button
+              data-testid="logout-button"
+              onClick={handleLogout}
+              variant="outline"
+              className="flex items-center gap-2 border-gray-300 hover:bg-gray-50"
+            >
+              <LogOut className="w-4 h-4" />
+              Logout
+            </Button>
+          </div>
         </div>
       </div>
 
