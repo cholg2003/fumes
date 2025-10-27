@@ -112,6 +112,29 @@ class PatientSearchResult(BaseModel):
     relationship: str
     remaining_balance: float
 
+class FamilyCreate(BaseModel):
+    family_id: str
+    principle_member_name: str
+    total_allotment: float
+    remaining_balance: float
+
+class MemberCreate(BaseModel):
+    serial_number: str
+    family_id: str
+    first_name: str
+    middle_name: Optional[str] = ""
+    last_name: str
+    dob: str
+    sex: str
+    relationship: str
+
+class PriceListCreate(BaseModel):
+    hospital_name: str
+    item_id: str
+    item_name: str
+    item_type: str
+    cost: float
+
 # Helper functions
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
