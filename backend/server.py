@@ -159,6 +159,11 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     except InvalidTokenError:
         raise HTTPException(status_code=401, detail="Invalid authentication credentials")
 
+async def get_admin_user(current_user: dict = Depends(get_current_user)):
+    if current_user["role"] != "Admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    return current_user
+
 # Routes
 @api_router.post("/auth/login", response_model=TokenResponse)
 async def login(user_login: UserLogin):
