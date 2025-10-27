@@ -45,6 +45,8 @@ class MedicalBillingAPITester:
                 response = requests.get(url, headers=test_headers, timeout=10)
             elif method == 'POST':
                 response = requests.post(url, json=data, headers=test_headers, timeout=10)
+            elif method == 'DELETE':
+                response = requests.delete(url, headers=test_headers, timeout=10)
 
             success = response.status_code == expected_status
             details = f"Status: {response.status_code}"
