@@ -344,6 +344,81 @@ async def void_bill(bill_id: str, current_user: dict = Depends(get_current_user)
     
     return {"success": True, "message": "Bill voided successfully"}
 
+# Admin Routes
+@api_router.get("/admin/families")
+async def get_all_families(admin_user: dict = Depends(get_admin_user)):
+    families = await db.families.find({}, {"_id": 0}).to_list(1000)
+    return families
+
+@api_router.post("/admin/families")
+async def create_family(family: FamilyCreate, admin_user: dict = Depends(get_admin_user)):
+    # Check if family_id already exists
+    existing = await db.families.find_one({"family_id": family.family_id})
+    if existing:
+        raise HTTPException(status_code=400, detail="Family ID already exists")
+    
+    family_doc = family.model_dump()
+    await db.families.insert_one(family_doc)
+    return {"success": True, "message": "Family created successfully"}
+
+@api_router.get("/admin/members")
+async def get_all_members(admin_user: dict = Depends(get_admin_user)):
+    members = await db.members.find({}, {"_id": 0}).to_list(1000)
+    return members
+
+@api_router.post("/admin/members")
+async def create_member(member: MemberCreate, admin_user: dict = Depends(get_admin_user)):
+    # Check if serial_number already exists
+    existing = await db.members.find_one({"serial_number": member.serial_number})
+    if existing:
+        raise HTTPException(status_code=400, detail="Serial number already exists")
+    
+    # Check if family exists
+    family = await db.families.find_one({"family_id": member.family_id})
+    if not family:
+        raise HTTPException(status_code=404, detail="Family ID not found")
+    
+    member_doc = member.model_dump()
+    await db.members.insert_one(member_doc)
+    return {"success": True, "message": "Member added successfully"}
+
+@api_router.get("/admin/pricelists/all")
+async def get_all_pricelists(admin_user: dict = Depends(get_admin_user)):
+    pricelists = await db.pricelists.find({}, {"_id": 0}).to_list(1000)
+    return pricelists
+
+@api_router.post("/admin/pricelists")
+async def create_pricelist_item(item: PriceListCreate, admin_user: dict = Depends(get_admin_user)):
+    # Check if item_id already exists for this hospital
+    existing = await db.pricelists.find_one({
+        "hospital_name": item.hospital_name,
+        "item_id": item.item_id
+    })
+    if existing:
+        raise HTTPException(status_code=400, detail="Item ID already exists for this hospital")
+    
+    item_doc = item.model_dump()
+    await db.pricelists.insert_one(item_doc)
+    return {"success": True, "message": "Price list item created successfully"}
+
+@api_router.delete("/admin/pricelists/{hospital_name}/{item_id}")
+async def delete_pricelist_item(hospital_name: str, item_id: str, admin_user: dict = Depends(get_admin_user)):
+    result = await db.pricelists.delete_one({
+        "hospital_name": hospital_name,
+        "item_id": item_id
+    })
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Price list item not found")
+    
+    return {"success": True, "message": "Price list item deleted successfully"}
+
+@api_router.get("/admin/hospitals")
+async def get_hospitals(admin_user: dict = Depends(get_admin_user)):
+    # Get unique hospital names from users collection
+    users = await db.users.find({}, {"_id": 0, "hospital_name": 1}).to_list(1000)
+    hospitals = list(set([u["hospital_name"] for u in users]))
+    return hospitals
+
 # Include the router in the main app
 app.include_router(api_router)
 
