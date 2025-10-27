@@ -1,8 +1,8 @@
 {
-  "timestamp": "2025-10-27T14:49:06.636590",
+  "timestamp": "2025-10-27T14:49:42.236982",
   "total_tests": 27,
-  "passed_tests": 25,
-  "success_rate": 92.5925925925926,
+  "passed_tests": 26,
+  "success_rate": 96.29629629629629,
   "results": [
     {
       "test": "Login - general_clerk",
@@ -86,8 +86,8 @@
     },
     {
       "test": "Admin - Delete Pricelist Item",
-      "success": false,
-      "details": "Exception: cannot access local variable 'response' where it is not associated with a value"
+      "success": true,
+      "details": "Status: 200"
     },
     {
       "test": "Get Test Patient Details",
