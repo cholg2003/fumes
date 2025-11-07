@@ -615,6 +615,24 @@ async def bulk_create_pricelists(bulk_data: BulkPriceList, admin_user: dict = De
         "skipped": items_skipped
     }
 
+@api_router.put("/admin/pricelists/{hospital_name}/{item_id}")
+async def update_pricelist_item(hospital_name: str, item_id: str, item_update: PriceListUpdate, admin_user: dict = Depends(get_admin_user)):
+    # Check if item exists
+    existing = await db.pricelists.find_one({"hospital_name": hospital_name, "item_id": item_id})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Price list item not found")
+    
+    # Build update document
+    update_doc = {k: v for k, v in item_update.model_dump().items() if v is not None}
+    if not update_doc:
+        raise HTTPException(status_code=400, detail="No fields to update")
+    
+    await db.pricelists.update_one(
+        {"hospital_name": hospital_name, "item_id": item_id},
+        {"$set": update_doc}
+    )
+    return {"success": True, "message": "Price list item updated successfully"}
+
 @api_router.delete("/admin/pricelists/{hospital_name}/{item_id}")
 async def delete_pricelist_item(hospital_name: str, item_id: str, admin_user: dict = Depends(get_admin_user)):
     result = await db.pricelists.delete_one({
