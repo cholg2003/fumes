@@ -224,7 +224,7 @@ const Dashboard = () => {
             <p className="text-sm text-gray-600 mt-1">{hospitalName} • {username} • {role}</p>
           </div>
           <div className="flex items-center gap-3">
-            {role === 'Admin' && (
+            {isSuperAdmin && (
               <Button
                 data-testid="admin-panel-button"
                 onClick={() => navigate('/admin')}
