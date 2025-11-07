@@ -447,6 +447,35 @@ async def get_hospitals(admin_user: dict = Depends(get_admin_user)):
     hospitals = list(set([u["hospital_name"] for u in users]))
     return hospitals
 
+@api_router.post("/admin/users")
+async def create_user(
+    username: str,
+    hospital_name: str,
+    role: str,
+    temporary_password: str,
+    admin_user: dict = Depends(get_admin_user)
+):
+    # Check if username exists
+    existing = await db.users.find_one({"username": username})
+    if existing:
+        raise HTTPException(status_code=400, detail="Username already exists")
+    
+    # Create user with first_login flag
+    user_doc = {
+        "username": username,
+        "password": pwd_context.hash(temporary_password),
+        "hospital_name": hospital_name,
+        "role": role,
+        "first_login": True
+    }
+    await db.users.insert_one(user_doc)
+    return {"success": True, "message": "User created successfully", "temporary_password": temporary_password}
+
+@api_router.get("/admin/users")
+async def get_all_users(admin_user: dict = Depends(get_admin_user)):
+    users = await db.users.find({}, {"_id": 0, "password": 0}).to_list(1000)
+    return users
+
 # Include the router in the main app
 app.include_router(api_router)
 
