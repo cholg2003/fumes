@@ -103,7 +103,7 @@ async def seed_database():
     members = [
         # Smith Family
         {
-            "serial_number": "SEC-2413-01",
+            "serial_number": "SEC-2413-00",
             "family_id": "SEC-2413",
             "first_name": "John",
             "middle_name": "Robert",
@@ -113,7 +113,7 @@ async def seed_database():
             "relationship": "Principle"
         },
         {
-            "serial_number": "SEC-2413-02",
+            "serial_number": "SEC-2413-01",
             "family_id": "SEC-2413",
             "first_name": "Mary",
             "middle_name": "Ann",
@@ -123,7 +123,7 @@ async def seed_database():
             "relationship": "Spouse"
         },
         {
-            "serial_number": "SEC-2413-03",
+            "serial_number": "SEC-2413-02",
             "family_id": "SEC-2413",
             "first_name": "Emma",
             "middle_name": "",
@@ -134,7 +134,7 @@ async def seed_database():
         },
         # Johnson Family
         {
-            "serial_number": "SEC-2414-01",
+            "serial_number": "SEC-2414-00",
             "family_id": "SEC-2414",
             "first_name": "Sarah",
             "middle_name": "Elizabeth",
@@ -144,7 +144,7 @@ async def seed_database():
             "relationship": "Principle"
         },
         {
-            "serial_number": "SEC-2414-02",
+            "serial_number": "SEC-2414-01",
             "family_id": "SEC-2414",
             "first_name": "David",
             "middle_name": "Lee",
@@ -155,7 +155,7 @@ async def seed_database():
         },
         # Brown Family
         {
-            "serial_number": "SEC-2415-01",
+            "serial_number": "SEC-2415-00",
             "family_id": "SEC-2415",
             "first_name": "Michael",
             "middle_name": "James",
@@ -165,7 +165,7 @@ async def seed_database():
             "relationship": "Principle"
         },
         {
-            "serial_number": "SEC-2415-02",
+            "serial_number": "SEC-2415-01",
             "family_id": "SEC-2415",
             "first_name": "Linda",
             "middle_name": "Marie",
@@ -175,7 +175,7 @@ async def seed_database():
             "relationship": "Spouse"
         },
         {
-            "serial_number": "SEC-2415-03",
+            "serial_number": "SEC-2415-02",
             "family_id": "SEC-2415",
             "first_name": "James",
             "middle_name": "",
@@ -184,9 +184,19 @@ async def seed_database():
             "sex": "Male",
             "relationship": "Child"
         },
+        {
+            "serial_number": "SEC-2415-03",
+            "family_id": "SEC-2415",
+            "first_name": "Robert",
+            "middle_name": "Sr",
+            "last_name": "Brown",
+            "dob": "1950-03-20",
+            "sex": "Male",
+            "relationship": "Father"
+        },
         # Davis Family
         {
-            "serial_number": "SEC-2416-01",
+            "serial_number": "SEC-2416-00",
             "family_id": "SEC-2416",
             "first_name": "Emily",
             "middle_name": "Grace",
@@ -196,7 +206,7 @@ async def seed_database():
             "relationship": "Principle"
         },
         {
-            "serial_number": "SEC-2416-02",
+            "serial_number": "SEC-2416-01",
             "family_id": "SEC-2416",
             "first_name": "Robert",
             "middle_name": "William",
@@ -204,6 +214,26 @@ async def seed_database():
             "dob": "1991-04-12",
             "sex": "Male",
             "relationship": "Spouse"
+        },
+        {
+            "serial_number": "SEC-2416-02",
+            "family_id": "SEC-2416",
+            "first_name": "Margaret",
+            "middle_name": "",
+            "last_name": "Davis",
+            "dob": "1965-11-15",
+            "sex": "Female",
+            "relationship": "Mother"
+        },
+        {
+            "serial_number": "SEC-2416-03",
+            "family_id": "SEC-2416",
+            "first_name": "Sarah",
+            "middle_name": "Jane",
+            "last_name": "Thompson",
+            "dob": "1988-06-22",
+            "sex": "Female",
+            "relationship": "Dependent"
         }
     ]
     await db.members.insert_many(members)
