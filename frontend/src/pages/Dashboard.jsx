@@ -118,11 +118,18 @@ const Dashboard = () => {
       return;
     }
 
+    console.log('Selected item ID:', selectedItem);
+    console.log('Price list:', priceList);
+    
     const item = priceList.find(p => p.item_id === selectedItem);
+    console.log('Found item:', item);
+    
     if (item) {
       setBillItems([...billItems, item]);
       setSelectedItem('');
       toast.success('Item added to bill');
+    } else {
+      toast.error('Item not found in price list');
     }
   };
 
