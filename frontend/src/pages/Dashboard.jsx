@@ -249,8 +249,8 @@ const Dashboard = () => {
       </div>
 
       <div className="max-w-7xl mx-auto p-6 space-y-6">
-        {/* Monthly Billing Summary */}
-        {role === 'Admin' && Object.keys(monthlyStats).length > 0 && (
+        {/* Monthly Billing Summary - Superadmin Only */}
+        {isSuperAdmin && Object.keys(monthlyStats).length > 0 && (
           <Card className="border-indigo-200 shadow-md">
             <CardHeader className="bg-gradient-to-r from-indigo-50 to-indigo-100 border-b border-indigo-200">
               <CardTitle className="flex items-center gap-2 text-indigo-900">
