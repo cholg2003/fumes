@@ -646,10 +646,49 @@ async def delete_pricelist_item(hospital_name: str, item_id: str, admin_user: di
 
 @api_router.get("/admin/hospitals")
 async def get_hospitals(admin_user: dict = Depends(get_admin_user)):
-    # Get unique hospital names from users collection
-    users = await db.users.find({}, {"_id": 0, "hospital_name": 1}).to_list(1000)
-    hospitals = list(set([u["hospital_name"] for u in users]))
+    # Get unique hospital names from hospitals collection
+    hospitals = await db.hospitals.find({}, {"_id": 0}).to_list(1000)
     return hospitals
+
+@api_router.post("/admin/hospitals")
+async def create_hospital(hospital: HospitalCreate, admin_user: dict = Depends(get_admin_user)):
+    # Check if hospital already exists
+    existing = await db.hospitals.find_one({"hospital_name": hospital.hospital_name})
+    if existing:
+        raise HTTPException(status_code=400, detail="Hospital already exists")
+    
+    hospital_doc = hospital.model_dump()
+    await db.hospitals.insert_one(hospital_doc)
+    return {"success": True, "message": "Hospital created successfully"}
+
+@api_router.put("/admin/hospitals/{hospital_name}")
+async def update_hospital(hospital_name: str, hospital_update: HospitalCreate, admin_user: dict = Depends(get_admin_user)):
+    # Check if hospital exists
+    existing = await db.hospitals.find_one({"hospital_name": hospital_name})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Hospital not found")
+    
+    update_doc = hospital_update.model_dump()
+    await db.hospitals.update_one({"hospital_name": hospital_name}, {"$set": update_doc})
+    return {"success": True, "message": "Hospital updated successfully"}
+
+@api_router.delete("/admin/hospitals/{hospital_name}")
+async def delete_hospital(hospital_name: str, admin_user: dict = Depends(get_admin_user)):
+    # Check if hospital has users
+    users = await db.users.find_one({"hospital_name": hospital_name})
+    if users:
+        raise HTTPException(status_code=400, detail="Cannot delete hospital with existing users.")
+    
+    # Check if hospital has price lists
+    pricelists = await db.pricelists.find_one({"hospital_name": hospital_name})
+    if pricelists:
+        raise HTTPException(status_code=400, detail="Cannot delete hospital with existing price lists.")
+    
+    result = await db.hospitals.delete_one({"hospital_name": hospital_name})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Hospital not found")
+    
+    return {"success": True, "message": "Hospital deleted successfully"}
 
 @api_router.post("/admin/users")
 async def create_user(
