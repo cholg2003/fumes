@@ -197,7 +197,7 @@ const Dashboard = () => {
     try {
       await axios.post(`${API}/bills/${billId}/void`, {}, axiosConfig);
       toast.success('Bill voided successfully');
-      loadBills();
+      await loadBills();
       if (selectedPatient) {
         const response = await axios.get(`${API}/patients/${selectedPatient.serial_number}`, axiosConfig);
         setSelectedPatient(response.data);
