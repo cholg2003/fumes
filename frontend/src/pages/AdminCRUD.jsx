@@ -826,7 +826,9 @@ const AdminCRUD = () => {
           <TabsContent value="bills">
             <Card>
               <CardHeader>
-                <CardTitle>Bills (View & Delete Only)</CardTitle>
+                <CardTitle>
+                  {isSuperAdmin ? 'All Bills (View & Delete)' : `${hospitalName} Bills (View & Delete)`}
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <table className="w-full">
