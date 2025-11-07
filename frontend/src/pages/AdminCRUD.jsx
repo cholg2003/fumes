@@ -358,17 +358,22 @@ const AdminCRUD = () => {
       </div>
 
       <div className="max-w-7xl mx-auto p-6">
-        <Tabs defaultValue="hospitals" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6 bg-white border border-gray-200 p-1 rounded-lg">
-            <TabsTrigger value="hospitals"><Building2 className="w-4 h-4 mr-2" />Hospitals</TabsTrigger>
-            <TabsTrigger value="users"><UserPlus className="w-4 h-4 mr-2" />Users</TabsTrigger>
+        <Tabs defaultValue={isSuperAdmin ? "hospitals" : "families"} className="space-y-6">
+          <TabsList className={`grid w-full ${isSuperAdmin ? 'grid-cols-6' : 'grid-cols-4'} bg-white border border-gray-200 p-1 rounded-lg`}>
+            {isSuperAdmin && (
+              <>
+                <TabsTrigger value="hospitals"><Building2 className="w-4 h-4 mr-2" />Hospitals</TabsTrigger>
+                <TabsTrigger value="users"><UserPlus className="w-4 h-4 mr-2" />Users</TabsTrigger>
+              </>
+            )}
             <TabsTrigger value="families"><UsersRound className="w-4 h-4 mr-2" />Families</TabsTrigger>
             <TabsTrigger value="members"><Users className="w-4 h-4 mr-2" />Members</TabsTrigger>
             <TabsTrigger value="pricelists"><FileText className="w-4 h-4 mr-2" />Price Lists</TabsTrigger>
             <TabsTrigger value="bills"><Receipt className="w-4 h-4 mr-2" />Bills</TabsTrigger>
           </TabsList>
 
-          {/* Hospitals Tab */}
+          {/* Hospitals Tab - Superadmin Only */}
+          {isSuperAdmin && (
           <TabsContent value="hospitals">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
