@@ -538,6 +538,7 @@ const AdminCRUD = () => {
               </CardContent>
             </Card>
           </TabsContent>
+          )}
 
           {/* Families Tab */}
           <TabsContent value="families">
