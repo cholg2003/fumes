@@ -40,12 +40,18 @@ class UserLogin(BaseModel):
     username: str
     password: str
 
+class PasswordSetup(BaseModel):
+    username: str
+    temporary_password: str
+    new_password: str
+
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str
     hospital_name: str
     username: str
     role: str
+    first_login: bool
 
 class Member(BaseModel):
     model_config = ConfigDict(extra="ignore")
