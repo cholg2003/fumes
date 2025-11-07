@@ -342,7 +342,7 @@ const Dashboard = () => {
         </Card>
 
         {/* Bill Creation */}
-        {selectedPatient && (
+        {selectedPatient && (role === 'Finance' || role === 'Admin') && (
           <Card className="border-green-200 shadow-md">
             <CardHeader className="bg-gradient-to-r from-green-50 to-green-100 border-b border-green-200">
               <CardTitle className="flex items-center gap-2 text-green-900">
