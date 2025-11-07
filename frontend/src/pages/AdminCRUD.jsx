@@ -46,6 +46,10 @@ const AdminCRUD = () => {
 
   const token = localStorage.getItem('token');
   const role = localStorage.getItem('role');
+  const username = localStorage.getItem('username');
+  const hospitalName = localStorage.getItem('hospital_name');
+  
+  const isSuperAdmin = username === 'superadmin';
 
   useEffect(() => {
     if (!token) {
