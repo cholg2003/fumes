@@ -245,15 +245,30 @@ async def seed_database():
     
     print("✅ Database seeded successfully!")
     print("\n🔐 Login Credentials:")
+    print("\n** SUPER ADMIN **")
+    print("  Username: superadmin")
+    print("  Password: SuperAdmin@2024")
+    print("  Access: Full system administration\n")
+    
+    print("** Hospital Admins (First Login Required) **")
     print("Hospital: General Hospital")
-    print("  Username: general_clerk")
-    print("  Password: password123\n")
+    print("  Username: general_admin")
+    print("  Temp Password: temp_password_123")
+    print("  (Will be prompted to set new password on first login)\n")
+    
     print("Hospital: City Medical Center")
-    print("  Username: city_clerk")
-    print("  Password: password123\n")
+    print("  Username: city_admin")
+    print("  Temp Password: temp_password_123")
+    print("  (Will be prompted to set new password on first login)\n")
+    
     print("Hospital: Mercy Hospital")
     print("  Username: mercy_admin")
-    print("  Password: password123\n")
+    print("  Temp Password: temp_password_123")
+    print("  (Will be prompted to set new password on first login)\n")
+    
+    print("** Billing Clerks (Demo accounts) **")
+    print("  general_clerk / password123")
+    print("  city_clerk / password123\n")
     
     client.close()
 
