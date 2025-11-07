@@ -168,7 +168,10 @@ const Dashboard = () => {
         ...selectedPatient,
         remaining_balance: response.data.new_balance
       });
-      await loadBills(); // Reload bills to update monthly stats
+      await loadBills();
+      if (role === 'Admin') {
+        await loadMonthlyStats();
+      }
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Failed to submit bill');
     } finally {
