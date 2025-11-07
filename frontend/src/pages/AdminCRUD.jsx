@@ -56,8 +56,8 @@ const AdminCRUD = () => {
       navigate('/login');
       return;
     }
-    if (role !== 'Admin') {
-      toast.error('Access denied. Admin only.');
+    if (!isSuperAdmin) {
+      toast.error('Access denied. Superadmin only.');
       navigate('/dashboard');
       return;
     }
