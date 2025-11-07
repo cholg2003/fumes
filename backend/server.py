@@ -486,6 +486,39 @@ async def create_pricelist_item(item: PriceListCreate, admin_user: dict = Depend
     await db.pricelists.insert_one(item_doc)
     return {"success": True, "message": "Price list item created successfully"}
 
+@api_router.post("/admin/pricelists/bulk")
+async def bulk_create_pricelists(bulk_data: BulkPriceList, admin_user: dict = Depends(get_admin_user)):
+    items_created = []
+    items_skipped = []
+    
+    for item_data in bulk_data.items:
+        # Check if item_id already exists for this hospital
+        existing = await db.pricelists.find_one({
+            "hospital_name": bulk_data.hospital_name,
+            "item_id": item_data["item_id"]
+        })
+        
+        if existing:
+            items_skipped.append(item_data["item_id"])
+            continue
+        
+        item_doc = {
+            "hospital_name": bulk_data.hospital_name,
+            "item_id": item_data["item_id"],
+            "item_name": item_data["item_name"],
+            "item_type": item_data["item_type"],
+            "cost": float(item_data["cost"])
+        }
+        await db.pricelists.insert_one(item_doc)
+        items_created.append(item_data["item_id"])
+    
+    return {
+        "success": True,
+        "message": f"Created {len(items_created)} items, skipped {len(items_skipped)} duplicates",
+        "created": items_created,
+        "skipped": items_skipped
+    }
+
 @api_router.delete("/admin/pricelists/{hospital_name}/{item_id}")
 async def delete_pricelist_item(hospital_name: str, item_id: str, admin_user: dict = Depends(get_admin_user)):
     result = await db.pricelists.delete_one({
