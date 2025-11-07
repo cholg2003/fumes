@@ -190,7 +190,7 @@ const Dashboard = () => {
       await axios.post(`${API}/bills/${billId}/void`, {}, axiosConfig);
       toast.success('Bill voided successfully');
       await loadBills();
-      if (role === 'Admin') {
+      if (isSuperAdmin) {
         await loadMonthlyStats();
       }
       if (selectedPatient) {
