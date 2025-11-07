@@ -27,6 +27,8 @@ const Dashboard = () => {
   const hospitalName = localStorage.getItem('hospital_name');
   const username = localStorage.getItem('username');
   const role = localStorage.getItem('role');
+  
+  const isSuperAdmin = username === 'superadmin';
 
   useEffect(() => {
     if (!token) {
