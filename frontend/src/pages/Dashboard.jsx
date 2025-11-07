@@ -37,7 +37,7 @@ const Dashboard = () => {
     }
     loadPriceList();
     loadBills();
-    if (role === 'Admin') {
+    if (isSuperAdmin) {
       loadMonthlyStats();
     }
   }, []);
