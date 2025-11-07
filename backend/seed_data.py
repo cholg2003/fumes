@@ -62,6 +62,7 @@ async def seed_database():
             "role": "Admin",
             "first_login": False
         },
+        # General Hospital
         {
             "username": "general_admin",
             "password": pwd_context.hash("temp_password_123"),
@@ -70,12 +71,20 @@ async def seed_database():
             "first_login": True
         },
         {
-            "username": "general_clerk",
+            "username": "general_finance",
             "password": pwd_context.hash("password123"),
             "hospital_name": "General Hospital",
-            "role": "Billing Clerk",
+            "role": "Finance",
             "first_login": False
         },
+        {
+            "username": "general_reception",
+            "password": pwd_context.hash("password123"),
+            "hospital_name": "General Hospital",
+            "role": "Reception",
+            "first_login": False
+        },
+        # City Medical Center
         {
             "username": "city_admin",
             "password": pwd_context.hash("temp_password_123"),
@@ -84,18 +93,40 @@ async def seed_database():
             "first_login": True
         },
         {
-            "username": "city_clerk",
+            "username": "city_finance",
             "password": pwd_context.hash("password123"),
             "hospital_name": "City Medical Center",
-            "role": "Billing Clerk",
+            "role": "Finance",
             "first_login": False
         },
+        {
+            "username": "city_reception",
+            "password": pwd_context.hash("password123"),
+            "hospital_name": "City Medical Center",
+            "role": "Reception",
+            "first_login": False
+        },
+        # Mercy Hospital
         {
             "username": "mercy_admin",
             "password": pwd_context.hash("temp_password_123"),
             "hospital_name": "Mercy Hospital",
             "role": "Admin",
             "first_login": True
+        },
+        {
+            "username": "mercy_finance",
+            "password": pwd_context.hash("password123"),
+            "hospital_name": "Mercy Hospital",
+            "role": "Finance",
+            "first_login": False
+        },
+        {
+            "username": "mercy_reception",
+            "password": pwd_context.hash("password123"),
+            "hospital_name": "Mercy Hospital",
+            "role": "Reception",
+            "first_login": False
         }
     ]
     await db.users.insert_many(users)
