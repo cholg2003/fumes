@@ -43,14 +43,17 @@ const Admin = () => {
 
   const token = localStorage.getItem('token');
   const role = localStorage.getItem('role');
+  const username = localStorage.getItem('username');
+  
+  const isSuperAdmin = username === 'superadmin';
 
   useEffect(() => {
     if (!token) {
       navigate('/login');
       return;
     }
-    if (role !== 'Admin') {
-      toast.error('Access denied. Admin only.');
+    if (!isSuperAdmin) {
+      toast.error('Access denied. Superadmin only.');
       navigate('/dashboard');
       return;
     }
