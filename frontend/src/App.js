@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import PrintBill from './pages/PrintBill';
 import Admin from './pages/Admin';
+import AdminCRUD from './pages/AdminCRUD';
 import SetupPassword from './pages/SetupPassword';
 import './App.css';
 
@@ -16,6 +17,7 @@ function App() {
         <Route path="/setup-password" element={<SetupPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/admin/crud" element={<AdminCRUD />} />
         <Route path="/print/:billId" element={<PrintBill />} />
       </Routes>
     </BrowserRouter>
