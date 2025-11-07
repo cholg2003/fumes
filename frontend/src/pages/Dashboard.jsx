@@ -434,7 +434,8 @@ const Dashboard = () => {
         )}
 
         {/* Bill History */}
-        <Card className="border-purple-200 shadow-md">
+        {(role === 'Finance' || role === 'Admin') && (
+          <Card className="border-purple-200 shadow-md">
           <CardHeader className="bg-gradient-to-r from-purple-50 to-purple-100 border-b border-purple-200">
             <CardTitle className="flex items-center gap-2 text-purple-900">
               <FileText className="w-5 h-5" />
