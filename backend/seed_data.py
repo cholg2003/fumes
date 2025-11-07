@@ -26,22 +26,46 @@ async def seed_database():
     # Seed Users (Hospital Staff)
     users = [
         {
+            "username": "superadmin",
+            "password": pwd_context.hash("SuperAdmin@2024"),
+            "hospital_name": "System Administration",
+            "role": "Admin",
+            "first_login": False
+        },
+        {
+            "username": "general_admin",
+            "password": pwd_context.hash("temp_password_123"),
+            "hospital_name": "General Hospital",
+            "role": "Admin",
+            "first_login": True
+        },
+        {
             "username": "general_clerk",
             "password": pwd_context.hash("password123"),
             "hospital_name": "General Hospital",
-            "role": "Billing Clerk"
+            "role": "Billing Clerk",
+            "first_login": False
+        },
+        {
+            "username": "city_admin",
+            "password": pwd_context.hash("temp_password_123"),
+            "hospital_name": "City Medical Center",
+            "role": "Admin",
+            "first_login": True
         },
         {
             "username": "city_clerk",
             "password": pwd_context.hash("password123"),
             "hospital_name": "City Medical Center",
-            "role": "Billing Clerk"
+            "role": "Billing Clerk",
+            "first_login": False
         },
         {
             "username": "mercy_admin",
-            "password": pwd_context.hash("password123"),
+            "password": pwd_context.hash("temp_password_123"),
             "hospital_name": "Mercy Hospital",
-            "role": "Admin"
+            "role": "Admin",
+            "first_login": True
         }
     ]
     await db.users.insert_many(users)
