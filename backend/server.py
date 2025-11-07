@@ -422,12 +422,24 @@ async def get_bill_details(bill_id: str, current_user: dict = Depends(get_curren
     if not bill_header:
         raise HTTPException(status_code=404, detail="Bill not found")
     
-    bill_details = await db.bills_details.find({"bill_id": bill_id}, {"_id": 0}).to_list(100)
+    # Check if user has access to this bill
+    if current_user["role"] != "Admin" or current_user["hospital_name"] != "System Administration":
+        # Regular hospital users can only see their own bills
+        if bill_header["hospital_name"] != current_user["hospital_name"]:
+            raise HTTPException(status_code=403, detail="Access denied")
+    
+    bill_details = await db.bills_details.find({" bill_id": bill_id}, {"_id": 0}).to_list(100)
     
     return {
         "header": bill_header,
         "details": bill_details
     }
+
+@api_router.get("/admin/bills/all")
+async def get_all_bills_admin(admin_user: dict = Depends(get_admin_user)):
+    # Get all bills for admin (not filtered by hospital)
+    bills = await db.bills_header.find({}, {"_id": 0}).sort("timestamp", -1).to_list(1000)
+    return bills
 
 @api_router.post("/bills/{bill_id}/void")
 async def void_bill(bill_id: str, current_user: dict = Depends(get_current_user)):
