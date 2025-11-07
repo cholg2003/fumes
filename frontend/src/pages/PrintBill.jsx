@@ -58,21 +58,29 @@ const PrintBill = () => {
   const { header, details } = billData;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+    <div className="min-h-screen bg-gray-50 p-8 print:p-0 print:bg-white">
+      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden print:shadow-none print:rounded-none">
         {/* Print Button */}
-        <div className="p-4 bg-blue-600 print:hidden">
+        <div className="p-4 bg-blue-600 print:hidden flex items-center justify-between">
           <Button
             onClick={handlePrint}
             className="bg-white text-blue-600 hover:bg-gray-100 font-semibold"
+            data-testid="print-button"
           >
             <Printer className="w-4 h-4 mr-2" />
             Print Bill
           </Button>
+          <Button
+            onClick={() => window.close()}
+            variant="outline"
+            className="bg-white text-blue-600 hover:bg-gray-100 font-semibold"
+          >
+            Close
+          </Button>
         </div>
 
         {/* Bill Content */}
-        <div className="p-8" data-testid="print-bill-content">
+        <div className="p-8 print:p-6" data-testid="print-bill-content">
           {/* Header */}
           <div className="flex items-center justify-between mb-8 pb-6 border-b-2 border-blue-600">
             <div>
