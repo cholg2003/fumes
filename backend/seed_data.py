@@ -24,26 +24,20 @@ async def seed_database():
     await db.bills_details.delete_many({})
     await db.hospitals.delete_many({})
     
-    # Seed Hospitals
+    # Seed ONLY Super Admin - hospitals and users will be created via admin panel
+    users = [
+        {
+            "username": "superadmin",
+            "password": pwd_context.hash("SuperAdmin@2024"),
+            "hospital_name": "System Administration",
+            "role": "Admin",
+            "first_login": False
+        }
+    ]
+    await db.users.insert_many(users)
+    
+    # Seed sample hospitals (can be created via admin panel later)
     hospitals = [
-        {
-            "hospital_name": "General Hospital",
-            "address": "123 Main Street, City",
-            "phone": "+1-555-0101",
-            "email": "contact@generalhospital.com"
-        },
-        {
-            "hospital_name": "City Medical Center",
-            "address": "456 Oak Avenue, City",
-            "phone": "+1-555-0202",
-            "email": "info@citymedical.com"
-        },
-        {
-            "hospital_name": "Mercy Hospital",
-            "address": "789 Pine Road, City",
-            "phone": "+1-555-0303",
-            "email": "admin@mercyhospital.com"
-        },
         {
             "hospital_name": "System Administration",
             "address": "N/A",
@@ -52,84 +46,6 @@ async def seed_database():
         }
     ]
     await db.hospitals.insert_many(hospitals)
-    
-    # Seed Users (Hospital Staff)
-    users = [
-        {
-            "username": "superadmin",
-            "password": pwd_context.hash("SuperAdmin@2024"),
-            "hospital_name": "System Administration",
-            "role": "Admin",
-            "first_login": False
-        },
-        # General Hospital
-        {
-            "username": "general_admin",
-            "password": pwd_context.hash("temp_password_123"),
-            "hospital_name": "General Hospital",
-            "role": "Admin",
-            "first_login": True
-        },
-        {
-            "username": "general_finance",
-            "password": pwd_context.hash("password123"),
-            "hospital_name": "General Hospital",
-            "role": "Finance",
-            "first_login": False
-        },
-        {
-            "username": "general_reception",
-            "password": pwd_context.hash("password123"),
-            "hospital_name": "General Hospital",
-            "role": "Reception",
-            "first_login": False
-        },
-        # City Medical Center
-        {
-            "username": "city_admin",
-            "password": pwd_context.hash("temp_password_123"),
-            "hospital_name": "City Medical Center",
-            "role": "Admin",
-            "first_login": True
-        },
-        {
-            "username": "city_finance",
-            "password": pwd_context.hash("password123"),
-            "hospital_name": "City Medical Center",
-            "role": "Finance",
-            "first_login": False
-        },
-        {
-            "username": "city_reception",
-            "password": pwd_context.hash("password123"),
-            "hospital_name": "City Medical Center",
-            "role": "Reception",
-            "first_login": False
-        },
-        # Mercy Hospital
-        {
-            "username": "mercy_admin",
-            "password": pwd_context.hash("temp_password_123"),
-            "hospital_name": "Mercy Hospital",
-            "role": "Admin",
-            "first_login": True
-        },
-        {
-            "username": "mercy_finance",
-            "password": pwd_context.hash("password123"),
-            "hospital_name": "Mercy Hospital",
-            "role": "Finance",
-            "first_login": False
-        },
-        {
-            "username": "mercy_reception",
-            "password": pwd_context.hash("password123"),
-            "hospital_name": "Mercy Hospital",
-            "role": "Reception",
-            "first_login": False
-        }
-    ]
-    await db.users.insert_many(users)
     
     # Seed Families
     families = [
