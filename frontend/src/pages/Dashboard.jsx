@@ -171,7 +171,7 @@ const Dashboard = () => {
         remaining_balance: response.data.new_balance
       });
       await loadBills();
-      if (role === 'Admin') {
+      if (isSuperAdmin) {
         await loadMonthlyStats();
       }
     } catch (error) {
