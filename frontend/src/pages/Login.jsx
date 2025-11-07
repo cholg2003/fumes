@@ -26,13 +26,21 @@ const Login = () => {
         password
       });
 
-      localStorage.setItem('token', response.data.access_token);
-      localStorage.setItem('hospital_name', response.data.hospital_name);
-      localStorage.setItem('username', response.data.username);
-      localStorage.setItem('role', response.data.role);
+      const { access_token, hospital_name, username: user, role, first_login } = response.data;
 
-      toast.success('Login successful!');
-      navigate('/dashboard');
+      localStorage.setItem('token', access_token);
+      localStorage.setItem('hospital_name', hospital_name);
+      localStorage.setItem('username', user);
+      localStorage.setItem('role', role);
+
+      if (first_login) {
+        // Redirect to password setup
+        localStorage.setItem('temp_password', password);
+        navigate('/setup-password');
+      } else {
+        toast.success('Login successful!');
+        navigate('/dashboard');
+      }
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Login failed');
     } finally {
