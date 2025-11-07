@@ -350,8 +350,12 @@ const AdminCRUD = () => {
               Back to Dashboard
             </Button>
             <div>
-              <h1 className="text-2xl font-bold text-gray-800">Admin Panel - CRUD Operations</h1>
-              <p className="text-sm text-gray-600">Manage all system entities</p>
+              <h1 className="text-2xl font-bold text-gray-800">
+                {isSuperAdmin ? 'Admin Panel - CRUD Operations' : `${hospitalName} - Admin Panel`}
+              </h1>
+              <p className="text-sm text-gray-600">
+                {isSuperAdmin ? 'Manage all system entities' : 'Manage hospital data'}
+              </p>
             </div>
           </div>
         </div>
