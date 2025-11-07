@@ -132,7 +132,18 @@ class MemberCreate(BaseModel):
     last_name: str
     dob: str
     sex: str
-    relationship: str
+    relationship: str  # Principle, Spouse, Father, Mother, Child, Dependent
+
+class FamilyWithMembers(BaseModel):
+    family_id: str
+    principle_member_name: str
+    total_allotment: float
+    remaining_balance: float
+    members: List[dict]  # List of member details without serial numbers
+
+class BulkPriceList(BaseModel):
+    hospital_name: str
+    items: List[dict]  # List of {item_id, item_name, item_type, cost}
 
 class PriceListCreate(BaseModel):
     hospital_name: str
