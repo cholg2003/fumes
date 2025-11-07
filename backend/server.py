@@ -435,6 +435,39 @@ async def create_family(family: FamilyCreate, admin_user: dict = Depends(get_adm
     await db.families.insert_one(family_doc)
     return {"success": True, "message": "Family created successfully"}
 
+@api_router.put("/admin/families/{family_id}")
+async def update_family(family_id: str, family_update: FamilyUpdate, admin_user: dict = Depends(get_admin_user)):
+    # Check if family exists
+    existing = await db.families.find_one({"family_id": family_id})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Family not found")
+    
+    # Build update document
+    update_doc = {k: v for k, v in family_update.model_dump().items() if v is not None}
+    if not update_doc:
+        raise HTTPException(status_code=400, detail="No fields to update")
+    
+    await db.families.update_one({"family_id": family_id}, {"$set": update_doc})
+    return {"success": True, "message": "Family updated successfully"}
+
+@api_router.delete("/admin/families/{family_id}")
+async def delete_family(family_id: str, admin_user: dict = Depends(get_admin_user)):
+    # Check if family has members
+    members = await db.members.find_one({"family_id": family_id})
+    if members:
+        raise HTTPException(status_code=400, detail="Cannot delete family with existing members. Delete members first.")
+    
+    # Check if family has bills
+    bills = await db.bills_header.find_one({"family_id": family_id})
+    if bills:
+        raise HTTPException(status_code=400, detail="Cannot delete family with existing bills.")
+    
+    result = await db.families.delete_one({"family_id": family_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Family not found")
+    
+    return {"success": True, "message": "Family deleted successfully"}
+
 @api_router.post("/admin/families/bulk")
 async def create_family_with_members(family_data: FamilyWithMembers, admin_user: dict = Depends(get_admin_user)):
     # Check if family_id already exists
