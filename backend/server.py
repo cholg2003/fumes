@@ -400,6 +400,52 @@ async def create_family(family: FamilyCreate, admin_user: dict = Depends(get_adm
     await db.families.insert_one(family_doc)
     return {"success": True, "message": "Family created successfully"}
 
+@api_router.post("/admin/families/bulk")
+async def create_family_with_members(family_data: FamilyWithMembers, admin_user: dict = Depends(get_admin_user)):
+    # Check if family_id already exists
+    existing = await db.families.find_one({"family_id": family_data.family_id})
+    if existing:
+        raise HTTPException(status_code=400, detail="Family ID already exists")
+    
+    # Create family
+    family_doc = {
+        "family_id": family_data.family_id,
+        "principle_member_name": family_data.principle_member_name,
+        "total_allotment": family_data.total_allotment,
+        "remaining_balance": family_data.remaining_balance
+    }
+    await db.families.insert_one(family_doc)
+    
+    # Create members with auto-generated serial numbers
+    members_created = []
+    for index, member_data in enumerate(family_data.members):
+        serial_number = f"{family_data.family_id}-{index:02d}"
+        
+        # Check if serial number already exists
+        existing_member = await db.members.find_one({"serial_number": serial_number})
+        if existing_member:
+            raise HTTPException(status_code=400, detail=f"Serial number {serial_number} already exists")
+        
+        member_doc = {
+            "serial_number": serial_number,
+            "family_id": family_data.family_id,
+            "first_name": member_data["first_name"],
+            "middle_name": member_data.get("middle_name", ""),
+            "last_name": member_data["last_name"],
+            "dob": member_data["dob"],
+            "sex": member_data["sex"],
+            "relationship": member_data["relationship"]
+        }
+        await db.members.insert_one(member_doc)
+        members_created.append(serial_number)
+    
+    return {
+        "success": True,
+        "message": f"Family and {len(members_created)} members created successfully",
+        "family_id": family_data.family_id,
+        "members": members_created
+    }
+
 @api_router.get("/admin/members")
 async def get_all_members(admin_user: dict = Depends(get_admin_user)):
     members = await db.members.find({}, {"_id": 0}).to_list(1000)
