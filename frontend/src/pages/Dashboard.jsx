@@ -252,6 +252,37 @@ const Dashboard = () => {
       </div>
 
       <div className="max-w-7xl mx-auto p-6 space-y-6">
+        {/* Monthly Billing Summary */}
+        {role === 'Admin' && Object.keys(monthlyStats).length > 0 && (
+          <Card className="border-indigo-200 shadow-md">
+            <CardHeader className="bg-gradient-to-r from-indigo-50 to-indigo-100 border-b border-indigo-200">
+              <CardTitle className="flex items-center gap-2 text-indigo-900">
+                <DollarSign className="w-5 h-5" />
+                Monthly Billing Summary - {new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {Object.entries(monthlyStats).map(([hospital, stats]) => (
+                  <div key={hospital} className="bg-gradient-to-br from-indigo-50 to-white p-6 rounded-xl border border-indigo-200 shadow-sm">
+                    <h3 className="font-semibold text-gray-800 mb-3">{hospital}</h3>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">Total Bills:</span>
+                        <span className="text-lg font-bold text-indigo-600">{stats.count}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">Total Amount:</span>
+                        <span className="text-2xl font-bold text-green-600">${stats.total.toFixed(2)}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Patient Search */}
         <Card className="border-blue-200 shadow-md">
           <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100 border-b border-blue-200">
