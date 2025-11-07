@@ -35,6 +35,9 @@ const Dashboard = () => {
     }
     loadPriceList();
     loadBills();
+    if (role === 'Admin') {
+      loadMonthlyStats();
+    }
   }, []);
 
   const axiosConfig = {
@@ -56,34 +59,18 @@ const Dashboard = () => {
     try {
       const response = await axios.get(`${API}/bills`, axiosConfig);
       setBills(response.data);
-      calculateMonthlyStats(response.data);
     } catch (error) {
       toast.error('Failed to load bills');
     }
   };
 
-  const calculateMonthlyStats = (billsData) => {
-    const now = new Date();
-    const currentMonth = now.getMonth();
-    const currentYear = now.getFullYear();
-
-    const stats = {};
-
-    billsData.forEach(bill => {
-      if (bill.status === 'COMPLETED') {
-        const billDate = new Date(bill.timestamp);
-        if (billDate.getMonth() === currentMonth && billDate.getFullYear() === currentYear) {
-          const hospital = bill.hospital_name;
-          if (!stats[hospital]) {
-            stats[hospital] = { total: 0, count: 0 };
-          }
-          stats[hospital].total += bill.total_bill_amount;
-          stats[hospital].count += 1;
-        }
-      }
-    });
-
-    setMonthlyStats(stats);
+  const loadMonthlyStats = async () => {
+    try {
+      const response = await axios.get(`${API}/bills/monthly-stats`, axiosConfig);
+      setMonthlyStats(response.data);
+    } catch (error) {
+      console.error('Failed to load monthly stats:', error);
+    }
   };
 
   const handleSearch = async () => {
