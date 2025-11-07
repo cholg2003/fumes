@@ -73,16 +73,18 @@ const AdminCRUD = () => {
       const requests = [
         axios.get(`${API}/admin/families`, axiosConfig),
         axios.get(`${API}/admin/members`, axiosConfig),
-        axios.get(`${API}/admin/pricelists/all`, axiosConfig),
-        axios.get(`${API}/bills`, axiosConfig)
+        axios.get(`${API}/admin/pricelists/all`, axiosConfig)
       ];
       
-      // Only superadmin can view hospitals and all users
+      // Bills endpoint differs based on user type
       if (isSuperAdmin) {
         requests.unshift(
           axios.get(`${API}/admin/hospitals`, axiosConfig),
           axios.get(`${API}/admin/users`, axiosConfig)
         );
+        requests.push(axios.get(`${API}/admin/bills/all`, axiosConfig)); // All bills for superadmin
+      } else {
+        requests.push(axios.get(`${API}/bills`, axiosConfig)); // Only hospital bills
       }
       
       const responses = await Promise.all(requests);
