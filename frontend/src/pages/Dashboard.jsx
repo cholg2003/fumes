@@ -506,6 +506,7 @@ const Dashboard = () => {
             )}
           </CardContent>
         </Card>
+        )}
       </div>
     </div>
   );
