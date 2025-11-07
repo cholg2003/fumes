@@ -189,8 +189,30 @@ async def login(user_login: UserLogin):
         token_type="bearer",
         hospital_name=user["hospital_name"],
         username=user["username"],
-        role=user["role"]
+        role=user["role"],
+        first_login=user.get("first_login", False)
     )
+
+@api_router.post("/auth/setup-password")
+async def setup_password(password_setup: PasswordSetup):
+    user = await db.users.find_one({"username": password_setup.username}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    if not user.get("first_login", False):
+        raise HTTPException(status_code=400, detail="Password already set")
+    
+    if not verify_password(password_setup.temporary_password, user["password"]):
+        raise HTTPException(status_code=401, detail="Invalid temporary password")
+    
+    # Update password and mark as not first login
+    new_hashed_password = pwd_context.hash(password_setup.new_password)
+    await db.users.update_one(
+        {"username": password_setup.username},
+        {"$set": {"password": new_hashed_password, "first_login": False}}
+    )
+    
+    return {"success": True, "message": "Password set successfully"}
 
 @api_router.get("/patients/search")
 async def search_patient(query: str, current_user: dict = Depends(get_current_user)):
