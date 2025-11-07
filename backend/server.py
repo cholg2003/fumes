@@ -452,40 +452,6 @@ async def void_bill(bill_id: str, current_user: dict = Depends(get_current_user)
     
     return {"success": True, "message": "Bill voided successfully"}
 
-@api_router.get("/bills/monthly-stats")
-async def get_monthly_billing_stats(current_user: dict = Depends(get_current_user)):
-    # Get current month's bills
-    now = datetime.now(timezone.utc)
-    start_of_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-    
-    # Aggregate bills by hospital for current month
-    pipeline = [
-        {
-            "$match": {
-                "timestamp": {"$gte": start_of_month.isoformat()},
-                "status": "COMPLETED"
-            }
-        },
-        {
-            "$group": {
-                "_id": "$hospital_name",
-                "total_amount": {"$sum": "$total_bill_amount"},
-                "bill_count": {"$sum": 1}
-            }
-        }
-    ]
-    
-    results = await db.bills_header.aggregate(pipeline).to_list(100)
-    
-    stats = {}
-    for result in results:
-        stats[result["_id"]] = {
-            "total": result["total_amount"],
-            "count": result["bill_count"]
-        }
-    
-    return stats
-
 @api_router.delete("/admin/bills/{bill_id}")
 async def delete_bill(bill_id: str, admin_user: dict = Depends(get_admin_user)):
     # Get bill to check if it needs refund
