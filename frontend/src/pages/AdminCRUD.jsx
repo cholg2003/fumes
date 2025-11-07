@@ -447,8 +447,10 @@ const AdminCRUD = () => {
               </CardContent>
             </Card>
           </TabsContent>
+          )}
 
-          {/* Users Tab */}
+          {/* Users Tab - Superadmin Only */}
+          {isSuperAdmin && (
           <TabsContent value="users">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
