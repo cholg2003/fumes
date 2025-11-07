@@ -341,25 +341,20 @@ async def seed_database():
     print("  Password: SuperAdmin@2024")
     print("  Access: Full system administration\n")
     
-    print("** Hospital Admins (First Login Required) **")
-    print("Hospital: General Hospital")
-    print("  Username: general_admin")
-    print("  Temp Password: temp_password_123")
-    print("  (Will be prompted to set new password on first login)\n")
+    print("** General Hospital **")
+    print("  Admin: general_admin / temp_password_123 (First login required)")
+    print("  Finance: general_finance / password123")
+    print("  Reception: general_reception / password123\n")
     
-    print("Hospital: City Medical Center")
-    print("  Username: city_admin")
-    print("  Temp Password: temp_password_123")
-    print("  (Will be prompted to set new password on first login)\n")
+    print("** City Medical Center **")
+    print("  Admin: city_admin / temp_password_123 (First login required)")
+    print("  Finance: city_finance / password123")
+    print("  Reception: city_reception / password123\n")
     
-    print("Hospital: Mercy Hospital")
-    print("  Username: mercy_admin")
-    print("  Temp Password: temp_password_123")
-    print("  (Will be prompted to set new password on first login)\n")
-    
-    print("** Billing Clerks (Demo accounts) **")
-    print("  general_clerk / password123")
-    print("  city_clerk / password123\n")
+    print("** Mercy Hospital **")
+    print("  Admin: mercy_admin / temp_password_123 (First login required)")
+    print("  Finance: mercy_finance / password123")
+    print("  Reception: mercy_reception / password123\n")
     
     client.close()
 
