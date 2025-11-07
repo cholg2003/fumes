@@ -691,33 +691,54 @@ async def delete_hospital(hospital_name: str, admin_user: dict = Depends(get_adm
     return {"success": True, "message": "Hospital deleted successfully"}
 
 @api_router.post("/admin/users")
-async def create_user(
-    username: str,
-    hospital_name: str,
-    role: str,
-    temporary_password: str,
-    admin_user: dict = Depends(get_admin_user)
-):
+async def create_user(user_data: UserCreate, admin_user: dict = Depends(get_admin_user)):
     # Check if username exists
-    existing = await db.users.find_one({"username": username})
+    existing = await db.users.find_one({"username": user_data.username})
     if existing:
         raise HTTPException(status_code=400, detail="Username already exists")
     
     # Create user with first_login flag
     user_doc = {
-        "username": username,
-        "password": pwd_context.hash(temporary_password),
-        "hospital_name": hospital_name,
-        "role": role,
-        "first_login": True
+        "username": user_data.username,
+        "password": pwd_context.hash(user_data.temporary_password),
+        "hospital_name": user_data.hospital_name,
+        "role": user_data.role,
+        "first_login": user_data.first_login
     }
     await db.users.insert_one(user_doc)
-    return {"success": True, "message": "User created successfully", "temporary_password": temporary_password}
+    return {"success": True, "message": "User created successfully"}
 
 @api_router.get("/admin/users")
 async def get_all_users(admin_user: dict = Depends(get_admin_user)):
     users = await db.users.find({}, {"_id": 0, "password": 0}).to_list(1000)
     return users
+
+@api_router.put("/admin/users/{username}")
+async def update_user(username: str, user_update: UserUpdate, admin_user: dict = Depends(get_admin_user)):
+    # Check if user exists
+    existing = await db.users.find_one({"username": username})
+    if not existing:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Build update document
+    update_doc = {k: v for k, v in user_update.model_dump().items() if v is not None}
+    if not update_doc:
+        raise HTTPException(status_code=400, detail="No fields to update")
+    
+    await db.users.update_one({"username": username}, {"$set": update_doc})
+    return {"success": True, "message": "User updated successfully"}
+
+@api_router.delete("/admin/users/{username}")
+async def delete_user(username: str, admin_user: dict = Depends(get_admin_user)):
+    # Prevent deleting superadmin
+    if username == "superadmin":
+        raise HTTPException(status_code=400, detail="Cannot delete superadmin account")
+    
+    result = await db.users.delete_one({"username": username})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return {"success": True, "message": "User deleted successfully"}
 
 # Include the router in the main app
 app.include_router(api_router)
