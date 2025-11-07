@@ -70,20 +70,38 @@ const AdminCRUD = () => {
 
   const loadData = async () => {
     try {
-      const [hospitalsRes, usersRes, familiesRes, membersRes, pricelistsRes, billsRes] = await Promise.all([
-        axios.get(`${API}/admin/hospitals`, axiosConfig),
-        axios.get(`${API}/admin/users`, axiosConfig),
+      const requests = [
         axios.get(`${API}/admin/families`, axiosConfig),
         axios.get(`${API}/admin/members`, axiosConfig),
         axios.get(`${API}/admin/pricelists/all`, axiosConfig),
         axios.get(`${API}/bills`, axiosConfig)
-      ]);
-      setHospitals(hospitalsRes.data);
-      setUsers(usersRes.data);
-      setFamilies(familiesRes.data);
-      setMembers(membersRes.data);
-      setPricelists(pricelistsRes.data);
-      setBills(billsRes.data);
+      ];
+      
+      // Only superadmin can view hospitals and all users
+      if (isSuperAdmin) {
+        requests.unshift(
+          axios.get(`${API}/admin/hospitals`, axiosConfig),
+          axios.get(`${API}/admin/users`, axiosConfig)
+        );
+      }
+      
+      const responses = await Promise.all(requests);
+      
+      if (isSuperAdmin) {
+        setHospitals(responses[0].data);
+        setUsers(responses[1].data);
+        setFamilies(responses[2].data);
+        setMembers(responses[3].data);
+        setPricelists(responses[4].data);
+        setBills(responses[5].data);
+      } else {
+        setFamilies(responses[0].data);
+        setMembers(responses[1].data);
+        setPricelists(responses[2].data);
+        setBills(responses[3].data);
+        // For hospital admin, only load their hospital info
+        setHospitals([{ hospital_name: hospitalName }]);
+      }
     } catch (error) {
       toast.error('Failed to load data');
     }
