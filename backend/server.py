@@ -145,6 +145,41 @@ class BulkPriceList(BaseModel):
     hospital_name: str
     items: List[dict]  # List of {item_id, item_name, item_type, cost}
 
+class HospitalCreate(BaseModel):
+    hospital_name: str
+    address: Optional[str] = ""
+    phone: Optional[str] = ""
+    email: Optional[str] = ""
+
+class UserCreate(BaseModel):
+    username: str
+    hospital_name: str
+    role: str
+    temporary_password: str
+    first_login: bool = True
+
+class FamilyUpdate(BaseModel):
+    principle_member_name: Optional[str] = None
+    total_allotment: Optional[float] = None
+    remaining_balance: Optional[float] = None
+
+class MemberUpdate(BaseModel):
+    first_name: Optional[str] = None
+    middle_name: Optional[str] = None
+    last_name: Optional[str] = None
+    dob: Optional[str] = None
+    sex: Optional[str] = None
+    relationship: Optional[str] = None
+
+class PriceListUpdate(BaseModel):
+    item_name: Optional[str] = None
+    item_type: Optional[str] = None
+    cost: Optional[float] = None
+
+class UserUpdate(BaseModel):
+    hospital_name: Optional[str] = None
+    role: Optional[str] = None
+
 class PriceListCreate(BaseModel):
     hospital_name: str
     item_id: str
