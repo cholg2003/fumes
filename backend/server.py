@@ -428,7 +428,7 @@ async def get_bill_details(bill_id: str, current_user: dict = Depends(get_curren
         if bill_header["hospital_name"] != current_user["hospital_name"]:
             raise HTTPException(status_code=403, detail="Access denied")
     
-    bill_details = await db.bills_details.find({" bill_id": bill_id}, {"_id": 0}).to_list(100)
+    bill_details = await db.bills_details.find({"bill_id": bill_id}, {"_id": 0}).to_list(100)
     
     return {
         "header": bill_header,
