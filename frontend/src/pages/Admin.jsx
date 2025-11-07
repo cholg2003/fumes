@@ -72,7 +72,8 @@ const Admin = () => {
       setFamilies(familiesRes.data);
       setMembers(membersRes.data);
       setPricelists(pricelistsRes.data);
-      setHospitals(hospitalsRes.data);
+      // Extract hospital names from hospital objects
+      setHospitals(hospitalsRes.data.map(h => h.hospital_name));
     } catch (error) {
       toast.error('Failed to load data');
     }
