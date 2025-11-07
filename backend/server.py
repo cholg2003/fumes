@@ -535,6 +535,34 @@ async def create_member(member: MemberCreate, admin_user: dict = Depends(get_adm
     await db.members.insert_one(member_doc)
     return {"success": True, "message": "Member added successfully"}
 
+@api_router.put("/admin/members/{serial_number}")
+async def update_member(serial_number: str, member_update: MemberUpdate, admin_user: dict = Depends(get_admin_user)):
+    # Check if member exists
+    existing = await db.members.find_one({"serial_number": serial_number})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Member not found")
+    
+    # Build update document
+    update_doc = {k: v for k, v in member_update.model_dump().items() if v is not None}
+    if not update_doc:
+        raise HTTPException(status_code=400, detail="No fields to update")
+    
+    await db.members.update_one({"serial_number": serial_number}, {"$set": update_doc})
+    return {"success": True, "message": "Member updated successfully"}
+
+@api_router.delete("/admin/members/{serial_number}")
+async def delete_member(serial_number: str, admin_user: dict = Depends(get_admin_user)):
+    # Check if member has bills
+    bills = await db.bills_header.find_one({"patient_serial_number": serial_number})
+    if bills:
+        raise HTTPException(status_code=400, detail="Cannot delete member with existing bills.")
+    
+    result = await db.members.delete_one({"serial_number": serial_number})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Member not found")
+    
+    return {"success": True, "message": "Member deleted successfully"}
+
 @api_router.get("/admin/pricelists/all")
 async def get_all_pricelists(admin_user: dict = Depends(get_admin_user)):
     pricelists = await db.pricelists.find({}, {"_id": 0}).to_list(1000)
