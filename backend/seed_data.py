@@ -22,6 +22,36 @@ async def seed_database():
     await db.pricelists.delete_many({})
     await db.bills_header.delete_many({})
     await db.bills_details.delete_many({})
+    await db.hospitals.delete_many({})
+    
+    # Seed Hospitals
+    hospitals = [
+        {
+            "hospital_name": "General Hospital",
+            "address": "123 Main Street, City",
+            "phone": "+1-555-0101",
+            "email": "contact@generalhospital.com"
+        },
+        {
+            "hospital_name": "City Medical Center",
+            "address": "456 Oak Avenue, City",
+            "phone": "+1-555-0202",
+            "email": "info@citymedical.com"
+        },
+        {
+            "hospital_name": "Mercy Hospital",
+            "address": "789 Pine Road, City",
+            "phone": "+1-555-0303",
+            "email": "admin@mercyhospital.com"
+        },
+        {
+            "hospital_name": "System Administration",
+            "address": "N/A",
+            "phone": "N/A",
+            "email": "superadmin@system.com"
+        }
+    ]
+    await db.hospitals.insert_many(hospitals)
     
     # Seed Users (Hospital Staff)
     users = [
