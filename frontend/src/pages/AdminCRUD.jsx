@@ -859,9 +859,26 @@ const AdminCRUD = () => {
                           </span>
                         </td>
                         <td className="p-3 text-center">
-                          <Button variant="ghost" size="sm" onClick={() => handleBillDelete(bill.bill_id)} className="text-red-600">
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
+                          <div className="flex items-center justify-center gap-2">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              onClick={() => window.open(`/print/${bill.bill_id}`, '_blank')}
+                              className="text-blue-600 hover:bg-blue-50"
+                              title="Print Bill"
+                            >
+                              <Printer className="w-4 h-4" />
+                            </Button>
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              onClick={() => handleBillDelete(bill.bill_id)} 
+                              className="text-red-600 hover:bg-red-50"
+                              title="Delete Bill"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
                         </td>
                       </tr>
                     ))}
