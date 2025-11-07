@@ -15,7 +15,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 const RELATIONSHIPS = ['Principle', 'Spouse', 'Father', 'Mother', 'Child', 'Dependent'];
-const ROLES = ['Admin', 'Billing Clerk'];
+const ROLES = ['Admin', 'Finance', 'Reception'];
 
 const AdminCRUD = () => {
   const navigate = useNavigate();
