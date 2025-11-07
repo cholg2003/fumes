@@ -53,7 +53,7 @@ async def seed_database():
             "family_id": "SEC-2413",
             "principle_member_name": "John Smith",
             "total_allotment": 5000.00,
-            "remaining_balance": 4250.00
+            "remaining_balance": 5000.00
         },
         {
             "family_id": "SEC-2414",
@@ -65,13 +65,13 @@ async def seed_database():
             "family_id": "SEC-2415",
             "principle_member_name": "Michael Brown",
             "total_allotment": 3000.00,
-            "remaining_balance": 850.00
+            "remaining_balance": 3000.00
         },
         {
             "family_id": "SEC-2416",
             "principle_member_name": "Emily Davis",
             "total_allotment": 6000.00,
-            "remaining_balance": 5200.00
+            "remaining_balance": 6000.00
         }
     ]
     await db.families.insert_many(families)
