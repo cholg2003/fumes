@@ -214,6 +214,12 @@ const Admin = () => {
               <p className="text-sm text-gray-600">System Management</p>
             </div>
           </div>
+          <Button
+            onClick={() => navigate('/admin/crud')}
+            className="bg-purple-600 hover:bg-purple-700"
+          >
+            Manage All Data (CRUD)
+          </Button>
         </div>
       </div>
 
