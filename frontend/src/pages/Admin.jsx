@@ -7,11 +7,14 @@ import { Label } from '../components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
+import { Textarea } from '../components/ui/textarea';
 import { toast } from 'sonner';
-import { ArrowLeft, Users, DollarSign, FileText, Trash2, UserPlus } from 'lucide-react';
+import { ArrowLeft, Users, DollarSign, FileText, Trash2, UserPlus, Plus, Upload } from 'lucide-react';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
+
+const RELATIONSHIPS = ['Principle', 'Spouse', 'Father', 'Mother', 'Child', 'Dependent'];
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -21,33 +24,21 @@ const Admin = () => {
   const [hospitals, setHospitals] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Family form
-  const [familyForm, setFamilyForm] = useState({
+  // Bulk family form (family + multiple members)
+  const [bulkFamilyForm, setBulkFamilyForm] = useState({
     family_id: '',
     principle_member_name: '',
     total_allotment: '',
-    remaining_balance: ''
+    remaining_balance: '',
+    members: [
+      { first_name: '', middle_name: '', last_name: '', dob: '', sex: 'Male', relationship: 'Principle' }
+    ]
   });
 
-  // Member form
-  const [memberForm, setMemberForm] = useState({
-    serial_number: '',
-    family_id: '',
-    first_name: '',
-    middle_name: '',
-    last_name: '',
-    dob: '',
-    sex: '',
-    relationship: ''
-  });
-
-  // Pricelist form
-  const [pricelistForm, setPricelistForm] = useState({
+  // Bulk pricelist
+  const [bulkPricelistForm, setBulkPricelistForm] = useState({
     hospital_name: '',
-    item_id: '',
-    item_name: '',
-    item_type: '',
-    cost: ''
+    csvData: ''
   });
 
   const token = localStorage.getItem('token');
@@ -87,21 +78,52 @@ const Admin = () => {
     }
   };
 
-  const handleCreateFamily = async (e) => {
+  const handleAddMember = () => {
+    setBulkFamilyForm({
+      ...bulkFamilyForm,
+      members: [
+        ...bulkFamilyForm.members,
+        { first_name: '', middle_name: '', last_name: '', dob: '', sex: 'Male', relationship: 'Child' }
+      ]
+    });
+  };
+
+  const handleRemoveMember = (index) => {
+    if (bulkFamilyForm.members.length === 1) {
+      toast.error('Family must have at least one member');
+      return;
+    }
+    const newMembers = bulkFamilyForm.members.filter((_, i) => i !== index);
+    setBulkFamilyForm({ ...bulkFamilyForm, members: newMembers });
+  };
+
+  const handleMemberChange = (index, field, value) => {
+    const newMembers = [...bulkFamilyForm.members];
+    newMembers[index][field] = value;
+    setBulkFamilyForm({ ...bulkFamilyForm, members: newMembers });
+  };
+
+  const handleCreateBulkFamily = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post(`${API}/admin/families`, {
-        ...familyForm,
-        total_allotment: parseFloat(familyForm.total_allotment),
-        remaining_balance: parseFloat(familyForm.remaining_balance)
+      const response = await axios.post(`${API}/admin/families/bulk`, {
+        family_id: bulkFamilyForm.family_id,
+        principle_member_name: bulkFamilyForm.principle_member_name,
+        total_allotment: parseFloat(bulkFamilyForm.total_allotment),
+        remaining_balance: parseFloat(bulkFamilyForm.remaining_balance),
+        members: bulkFamilyForm.members
       }, axiosConfig);
-      toast.success('Family created successfully');
-      setFamilyForm({
+
+      toast.success(response.data.message);
+      setBulkFamilyForm({
         family_id: '',
         principle_member_name: '',
         total_allotment: '',
-        remaining_balance: ''
+        remaining_balance: '',
+        members: [
+          { first_name: '', middle_name: '', last_name: '', dob: '', sex: 'Male', relationship: 'Principle' }
+        ]
       });
       loadData();
     } catch (error) {
@@ -111,49 +133,48 @@ const Admin = () => {
     }
   };
 
-  const handleCreateMember = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      await axios.post(`${API}/admin/members`, memberForm, axiosConfig);
-      toast.success('Member added successfully');
-      setMemberForm({
-        serial_number: '',
-        family_id: '',
-        first_name: '',
-        middle_name: '',
-        last_name: '',
-        dob: '',
-        sex: '',
-        relationship: ''
-      });
-      loadData();
-    } catch (error) {
-      toast.error(error.response?.data?.detail || 'Failed to add member');
-    } finally {
-      setLoading(false);
+  const parseCsvPriceList = (csvText) => {
+    const lines = csvText.trim().split('\n');
+    const items = [];
+    
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) continue;
+      
+      const parts = line.split(',').map(p => p.trim());
+      if (parts.length >= 4) {
+        items.push({
+          item_id: parts[0],
+          item_name: parts[1],
+          item_type: parts[2],
+          cost: parts[3]
+        });
+      }
     }
+    return items;
   };
 
-  const handleCreatePricelistItem = async (e) => {
+  const handleBulkPricelistUpload = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post(`${API}/admin/pricelists`, {
-        ...pricelistForm,
-        cost: parseFloat(pricelistForm.cost)
+      const items = parseCsvPriceList(bulkPricelistForm.csvData);
+      
+      if (items.length === 0) {
+        toast.error('No valid items found in CSV');
+        return;
+      }
+
+      const response = await axios.post(`${API}/admin/pricelists/bulk`, {
+        hospital_name: bulkPricelistForm.hospital_name,
+        items
       }, axiosConfig);
-      toast.success('Price list item created successfully');
-      setPricelistForm({
-        hospital_name: '',
-        item_id: '',
-        item_name: '',
-        item_type: '',
-        cost: ''
-      });
+
+      toast.success(response.data.message);
+      setBulkPricelistForm({ hospital_name: '', csvData: '' });
       loadData();
     } catch (error) {
-      toast.error(error.response?.data?.detail || 'Failed to create item');
+      toast.error(error.response?.data?.detail || 'Failed to upload price list');
     } finally {
       setLoading(false);
     }
@@ -200,11 +221,11 @@ const Admin = () => {
           <TabsList className="grid w-full grid-cols-3 bg-white border border-gray-200 p-1 rounded-lg">
             <TabsTrigger value="families" className="flex items-center gap-2">
               <Users className="w-4 h-4" />
-              Families & Members
+              Add Family (Bulk)
             </TabsTrigger>
             <TabsTrigger value="pricelists" className="flex items-center gap-2">
               <FileText className="w-4 h-4" />
-              Price Lists
+              Price Lists (Bulk)
             </TabsTrigger>
             <TabsTrigger value="view" className="flex items-center gap-2">
               <DollarSign className="w-4 h-4" />
@@ -212,35 +233,35 @@ const Admin = () => {
             </TabsTrigger>
           </TabsList>
 
-          {/* Families & Members Tab */}
-          <TabsContent value="families" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Add Family */}
-              <Card className="border-blue-200 shadow-md">
-                <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100 border-b border-blue-200">
-                  <CardTitle className="flex items-center gap-2 text-blue-900">
-                    <Users className="w-5 h-5" />
-                    Add New Family
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="pt-6">
-                  <form onSubmit={handleCreateFamily} className="space-y-4">
+          {/* Bulk Family Creation Tab */}
+          <TabsContent value="families">
+            <Card className="border-blue-200 shadow-md">
+              <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100 border-b border-blue-200">
+                <CardTitle className="flex items-center gap-2 text-blue-900">
+                  <Users className="w-5 h-5" />
+                  Add Family with Members
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <form onSubmit={handleCreateBulkFamily} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
                     <div className="space-y-2">
                       <Label>Family ID</Label>
                       <Input
-                        data-testid="family-id-input"
-                        placeholder="e.g., SEC-2417"
-                        value={familyForm.family_id}
-                        onChange={(e) => setFamilyForm({...familyForm, family_id: e.target.value})}
+                        data-testid="bulk-family-id-input"
+                        placeholder="e.g., SEC-2425"
+                        value={bulkFamilyForm.family_id}
+                        onChange={(e) => setBulkFamilyForm({...bulkFamilyForm, family_id: e.target.value})}
                         required
                       />
+                      <p className="text-xs text-gray-600">Members will be: {bulkFamilyForm.family_id}-00, {bulkFamilyForm.family_id}-01, etc.</p>
                     </div>
                     <div className="space-y-2">
                       <Label>Principle Member Name</Label>
                       <Input
                         placeholder="Full name"
-                        value={familyForm.principle_member_name}
-                        onChange={(e) => setFamilyForm({...familyForm, principle_member_name: e.target.value})}
+                        value={bulkFamilyForm.principle_member_name}
+                        onChange={(e) => setBulkFamilyForm({...bulkFamilyForm, principle_member_name: e.target.value})}
                         required
                       />
                     </div>
@@ -250,8 +271,8 @@ const Admin = () => {
                         type="number"
                         step="0.01"
                         placeholder="5000.00"
-                        value={familyForm.total_allotment}
-                        onChange={(e) => setFamilyForm({...familyForm, total_allotment: e.target.value})}
+                        value={bulkFamilyForm.total_allotment}
+                        onChange={(e) => setBulkFamilyForm({...bulkFamilyForm, total_allotment: e.target.value})}
                         required
                       />
                     </div>
@@ -261,227 +282,183 @@ const Admin = () => {
                         type="number"
                         step="0.01"
                         placeholder="5000.00"
-                        value={familyForm.remaining_balance}
-                        onChange={(e) => setFamilyForm({...familyForm, remaining_balance: e.target.value})}
-                        required
-                      />
-                    </div>
-                    <Button
-                      data-testid="create-family-button"
-                      type="submit"
-                      disabled={loading}
-                      className="w-full bg-blue-600 hover:bg-blue-700"
-                    >
-                      Create Family
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-
-              {/* Add Member */}
-              <Card className="border-green-200 shadow-md">
-                <CardHeader className="bg-gradient-to-r from-green-50 to-green-100 border-b border-green-200">
-                  <CardTitle className="flex items-center gap-2 text-green-900">
-                    <UserPlus className="w-5 h-5" />
-                    Add Beneficiary/Member
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="pt-6">
-                  <form onSubmit={handleCreateMember} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label>Serial Number</Label>
-                      <Input
-                        data-testid="member-serial-input"
-                        placeholder="e.g., SEC-2417-01"
-                        value={memberForm.serial_number}
-                        onChange={(e) => setMemberForm({...memberForm, serial_number: e.target.value})}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Family ID</Label>
-                      <Select
-                        value={memberForm.family_id}
-                        onValueChange={(value) => setMemberForm({...memberForm, family_id: value})}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select family" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {families.map((family) => (
-                            <SelectItem key={family.family_id} value={family.family_id}>
-                              {family.family_id} - {family.principle_member_name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="space-y-2">
-                        <Label>First Name</Label>
-                        <Input
-                          placeholder="First name"
-                          value={memberForm.first_name}
-                          onChange={(e) => setMemberForm({...memberForm, first_name: e.target.value})}
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Middle Name</Label>
-                        <Input
-                          placeholder="Middle name"
-                          value={memberForm.middle_name}
-                          onChange={(e) => setMemberForm({...memberForm, middle_name: e.target.value})}
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Last Name</Label>
-                      <Input
-                        placeholder="Last name"
-                        value={memberForm.last_name}
-                        onChange={(e) => setMemberForm({...memberForm, last_name: e.target.value})}
-                        required
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="space-y-2">
-                        <Label>Date of Birth</Label>
-                        <Input
-                          type="date"
-                          value={memberForm.dob}
-                          onChange={(e) => setMemberForm({...memberForm, dob: e.target.value})}
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Sex</Label>
-                        <Select
-                          value={memberForm.sex}
-                          onValueChange={(value) => setMemberForm({...memberForm, sex: value})}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Male">Male</SelectItem>
-                            <SelectItem value="Female">Female</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Relationship</Label>
-                      <Select
-                        value={memberForm.relationship}
-                        onValueChange={(value) => setMemberForm({...memberForm, relationship: value})}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select relationship" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Principle">Principle</SelectItem>
-                          <SelectItem value="Spouse">Spouse</SelectItem>
-                          <SelectItem value="Child">Child</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <Button
-                      data-testid="create-member-button"
-                      type="submit"
-                      disabled={loading}
-                      className="w-full bg-green-600 hover:bg-green-700"
-                    >
-                      Add Member
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          {/* Price Lists Tab */}
-          <TabsContent value="pricelists" className="space-y-6">
-            <Card className="border-purple-200 shadow-md">
-              <CardHeader className="bg-gradient-to-r from-purple-50 to-purple-100 border-b border-purple-200">
-                <CardTitle className="flex items-center gap-2 text-purple-900">
-                  <FileText className="w-5 h-5" />
-                  Add Price List Item
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-6">
-                <form onSubmit={handleCreatePricelistItem} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label>Hospital Name</Label>
-                      <Select
-                        value={pricelistForm.hospital_name}
-                        onValueChange={(value) => setPricelistForm({...pricelistForm, hospital_name: value})}
-                      >
-                        <SelectTrigger data-testid="pricelist-hospital-select">
-                          <SelectValue placeholder="Select hospital" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {hospitals.map((hospital) => (
-                            <SelectItem key={hospital} value={hospital}>
-                              {hospital}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Item ID</Label>
-                      <Input
-                        placeholder="e.g., SERV-006 or DRUG-005"
-                        value={pricelistForm.item_id}
-                        onChange={(e) => setPricelistForm({...pricelistForm, item_id: e.target.value})}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Item Name</Label>
-                      <Input
-                        placeholder="e.g., CT Scan"
-                        value={pricelistForm.item_name}
-                        onChange={(e) => setPricelistForm({...pricelistForm, item_name: e.target.value})}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Item Type</Label>
-                      <Select
-                        value={pricelistForm.item_type}
-                        onValueChange={(value) => setPricelistForm({...pricelistForm, item_type: value})}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Service">Service</SelectItem>
-                          <SelectItem value="Drug">Drug</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Cost ($)</Label>
-                      <Input
-                        type="number"
-                        step="0.01"
-                        placeholder="100.00"
-                        value={pricelistForm.cost}
-                        onChange={(e) => setPricelistForm({...pricelistForm, cost: e.target.value})}
+                        value={bulkFamilyForm.remaining_balance}
+                        onChange={(e) => setBulkFamilyForm({...bulkFamilyForm, remaining_balance: e.target.value})}
                         required
                       />
                     </div>
                   </div>
+
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-gray-800">Family Members</h3>
+                      <Button
+                        type="button"
+                        onClick={handleAddMember}
+                        variant="outline"
+                        size="sm"
+                        className="flex items-center gap-2"
+                      >
+                        <Plus className="w-4 h-4" />
+                        Add Member
+                      </Button>
+                    </div>
+
+                    {bulkFamilyForm.members.map((member, index) => (
+                      <div key={index} className="p-4 bg-gray-50 rounded-lg border border-gray-200 space-y-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-semibold text-gray-700">
+                            Member {index + 1} - Serial: {bulkFamilyForm.family_id}-{String(index).padStart(2, '0')}
+                          </span>
+                          {bulkFamilyForm.members.length > 1 && (
+                            <Button
+                              type="button"
+                              onClick={() => handleRemoveMember(index)}
+                              variant="ghost"
+                              size="sm"
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          )}
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <div className="space-y-2">
+                            <Label>First Name</Label>
+                            <Input
+                              placeholder="First name"
+                              value={member.first_name}
+                              onChange={(e) => handleMemberChange(index, 'first_name', e.target.value)}
+                              required
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Middle Name</Label>
+                            <Input
+                              placeholder="Middle name"
+                              value={member.middle_name}
+                              onChange={(e) => handleMemberChange(index, 'middle_name', e.target.value)}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Last Name</Label>
+                            <Input
+                              placeholder="Last name"
+                              value={member.last_name}
+                              onChange={(e) => handleMemberChange(index, 'last_name', e.target.value)}
+                              required
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Date of Birth</Label>
+                            <Input
+                              type="date"
+                              value={member.dob}
+                              onChange={(e) => handleMemberChange(index, 'dob', e.target.value)}
+                              required
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Sex</Label>
+                            <Select
+                              value={member.sex}
+                              onValueChange={(value) => handleMemberChange(index, 'sex', value)}
+                            >
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Male">Male</SelectItem>
+                                <SelectItem value="Female">Female</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Relationship</Label>
+                            <Select
+                              value={member.relationship}
+                              onValueChange={(value) => handleMemberChange(index, 'relationship', value)}
+                            >
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {RELATIONSHIPS.map(rel => (
+                                  <SelectItem key={rel} value={rel}>{rel}</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
                   <Button
-                    data-testid="create-pricelist-button"
+                    data-testid="create-bulk-family-button"
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-blue-600 hover:bg-blue-700 h-12 text-lg font-semibold"
+                  >
+                    {loading ? 'Creating...' : `Create Family with ${bulkFamilyForm.members.length} Member(s)`}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Bulk Price Lists Tab */}
+          <TabsContent value="pricelists" className="space-y-6">
+            <Card className="border-purple-200 shadow-md">
+              <CardHeader className="bg-gradient-to-r from-purple-50 to-purple-100 border-b border-purple-200">
+                <CardTitle className="flex items-center gap-2 text-purple-900">
+                  <Upload className="w-5 h-5" />
+                  Bulk Upload Price List (CSV)
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <form onSubmit={handleBulkPricelistUpload} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>Hospital Name</Label>
+                    <Select
+                      value={bulkPricelistForm.hospital_name}
+                      onValueChange={(value) => setBulkPricelistForm({...bulkPricelistForm, hospital_name: value})}
+                    >
+                      <SelectTrigger data-testid="bulk-pricelist-hospital-select">
+                        <SelectValue placeholder="Select hospital" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {hospitals.map((hospital) => (
+                          <SelectItem key={hospital} value={hospital}>
+                            {hospital}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>CSV Data</Label>
+                    <Textarea
+                      data-testid="bulk-pricelist-csv-input"
+                      placeholder="Paste CSV data here&#10;Format: item_id, item_name, item_type, cost&#10;Example:&#10;SERV-020, MRI Scan, Service, 500&#10;DRUG-010, Aspirin 100mg, Drug, 5"
+                      value={bulkPricelistForm.csvData}
+                      onChange={(e) => setBulkPricelistForm({...bulkPricelistForm, csvData: e.target.value})}
+                      rows={10}
+                      className="font-mono text-sm"
+                      required
+                    />
+                    <p className="text-xs text-gray-600">Format: item_id, item_name, item_type (Service/Drug), cost</p>
+                  </div>
+
+                  <Button
+                    data-testid="bulk-upload-pricelist-button"
                     type="submit"
                     disabled={loading}
                     className="w-full bg-purple-600 hover:bg-purple-700"
                   >
-                    Add Price List Item
+                    {loading ? 'Uploading...' : 'Upload Price List'}
                   </Button>
                 </form>
               </CardContent>
