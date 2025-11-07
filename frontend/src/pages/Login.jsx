@@ -99,15 +99,6 @@ const Login = () => {
               {loading ? 'Signing in...' : 'Sign In'}
             </Button>
           </form>
-
-          <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <p className="text-sm font-semibold text-blue-800 mb-2">Demo Credentials:</p>
-            <div className="text-xs text-blue-700 space-y-1">
-              <p>• general_clerk / password123</p>
-              <p>• city_clerk / password123</p>
-              <p>• mercy_admin / password123</p>
-            </div>
-          </div>
         </div>
       </div>
     </div>
