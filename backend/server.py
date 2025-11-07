@@ -418,6 +418,28 @@ async def void_bill(bill_id: str, current_user: dict = Depends(get_current_user)
     
     return {"success": True, "message": "Bill voided successfully"}
 
+@api_router.delete("/admin/bills/{bill_id}")
+async def delete_bill(bill_id: str, admin_user: dict = Depends(get_admin_user)):
+    # Get bill to check if it needs refund
+    bill = await db.bills_header.find_one({"bill_id": bill_id}, {"_id": 0})
+    if not bill:
+        raise HTTPException(status_code=404, detail="Bill not found")
+    
+    # If bill is completed, refund the amount
+    if bill["status"] == "COMPLETED":
+        await db.families.update_one(
+            {"family_id": bill["family_id"]},
+            {"$inc": {"remaining_balance": bill["total_bill_amount"]}}
+        )
+    
+    # Delete bill details
+    await db.bills_details.delete_many({"bill_id": bill_id})
+    
+    # Delete bill header
+    await db.bills_header.delete_one({"bill_id": bill_id})
+    
+    return {"success": True, "message": "Bill deleted successfully"}
+
 # Admin Routes
 @api_router.get("/admin/families")
 async def get_all_families(admin_user: dict = Depends(get_admin_user)):
