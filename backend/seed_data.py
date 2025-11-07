@@ -215,62 +215,26 @@ async def seed_database():
     ]
     await db.members.insert_many(members)
     
-    # Seed Price Lists
-    pricelists = [
-        # General Hospital
-        {"hospital_name": "General Hospital", "item_id": "SERV-001", "item_name": "Doctor Consultation", "item_type": "Service", "cost": 75.00},
-        {"hospital_name": "General Hospital", "item_id": "SERV-002", "item_name": "Specialist Consultation", "item_type": "Service", "cost": 150.00},
-        {"hospital_name": "General Hospital", "item_id": "SERV-003", "item_name": "X-Ray", "item_type": "Service", "cost": 120.00},
-        {"hospital_name": "General Hospital", "item_id": "SERV-004", "item_name": "Blood Test (Basic)", "item_type": "Service", "cost": 50.00},
-        {"hospital_name": "General Hospital", "item_id": "SERV-005", "item_name": "Ultrasound", "item_type": "Service", "cost": 200.00},
-        {"hospital_name": "General Hospital", "item_id": "DRUG-001", "item_name": "Paracetamol 500mg (10 tablets)", "item_type": "Drug", "cost": 5.00},
-        {"hospital_name": "General Hospital", "item_id": "DRUG-002", "item_name": "Amoxicillin 500mg (20 capsules)", "item_type": "Drug", "cost": 15.00},
-        {"hospital_name": "General Hospital", "item_id": "DRUG-003", "item_name": "Ibuprofen 400mg (30 tablets)", "item_type": "Drug", "cost": 8.00},
-        {"hospital_name": "General Hospital", "item_id": "DRUG-004", "item_name": "Cough Syrup 100ml", "item_type": "Drug", "cost": 12.00},
-        
-        # City Medical Center
-        {"hospital_name": "City Medical Center", "item_id": "SERV-001", "item_name": "Doctor Consultation", "item_type": "Service", "cost": 85.00},
-        {"hospital_name": "City Medical Center", "item_id": "SERV-002", "item_name": "Specialist Consultation", "item_type": "Service", "cost": 175.00},
-        {"hospital_name": "City Medical Center", "item_id": "SERV-003", "item_name": "X-Ray", "item_type": "Service", "cost": 135.00},
-        {"hospital_name": "City Medical Center", "item_id": "SERV-004", "item_name": "Blood Test (Basic)", "item_type": "Service", "cost": 60.00},
-        {"hospital_name": "City Medical Center", "item_id": "SERV-005", "item_name": "CT Scan", "item_type": "Service", "cost": 450.00},
-        {"hospital_name": "City Medical Center", "item_id": "DRUG-001", "item_name": "Paracetamol 500mg (10 tablets)", "item_type": "Drug", "cost": 6.00},
-        {"hospital_name": "City Medical Center", "item_id": "DRUG-002", "item_name": "Amoxicillin 500mg (20 capsules)", "item_type": "Drug", "cost": 18.00},
-        {"hospital_name": "City Medical Center", "item_id": "DRUG-003", "item_name": "Insulin (1 vial)", "item_type": "Drug", "cost": 95.00},
-        
-        # Mercy Hospital
-        {"hospital_name": "Mercy Hospital", "item_id": "SERV-001", "item_name": "Doctor Consultation", "item_type": "Service", "cost": 70.00},
-        {"hospital_name": "Mercy Hospital", "item_id": "SERV-002", "item_name": "Specialist Consultation", "item_type": "Service", "cost": 140.00},
-        {"hospital_name": "Mercy Hospital", "item_id": "SERV-003", "item_name": "X-Ray", "item_type": "Service", "cost": 110.00},
-        {"hospital_name": "Mercy Hospital", "item_id": "SERV-004", "item_name": "Blood Test (Comprehensive)", "item_type": "Service", "cost": 80.00},
-        {"hospital_name": "Mercy Hospital", "item_id": "SERV-005", "item_name": "MRI Scan", "item_type": "Service", "cost": 850.00},
-        {"hospital_name": "Mercy Hospital", "item_id": "DRUG-001", "item_name": "Paracetamol 500mg (10 tablets)", "item_type": "Drug", "cost": 4.50},
-        {"hospital_name": "Mercy Hospital", "item_id": "DRUG-002", "item_name": "Amoxicillin 500mg (20 capsules)", "item_type": "Drug", "cost": 14.00},
-        {"hospital_name": "Mercy Hospital", "item_id": "DRUG-003", "item_name": "Aspirin 100mg (30 tablets)", "item_type": "Drug", "cost": 7.00}
-    ]
-    await db.pricelists.insert_many(pricelists)
+    # Seed Price Lists - Empty, will be added via admin panel per hospital
+    pricelists = []
+    # await db.pricelists.insert_many(pricelists)
     
     print("✅ Database seeded successfully!")
-    print("\n🔐 Login Credentials:")
-    print("\n** SUPER ADMIN **")
+    print("\n🔐 SUPER ADMIN CREDENTIALS:")
     print("  Username: superadmin")
     print("  Password: SuperAdmin@2024")
-    print("  Access: Full system administration\n")
-    
-    print("** General Hospital **")
-    print("  Admin: general_admin / temp_password_123 (First login required)")
-    print("  Finance: general_finance / password123")
-    print("  Reception: general_reception / password123\n")
-    
-    print("** City Medical Center **")
-    print("  Admin: city_admin / temp_password_123 (First login required)")
-    print("  Finance: city_finance / password123")
-    print("  Reception: city_reception / password123\n")
-    
-    print("** Mercy Hospital **")
-    print("  Admin: mercy_admin / temp_password_123 (First login required)")
-    print("  Finance: mercy_finance / password123")
-    print("  Reception: mercy_reception / password123\n")
+    print("  Access: Full system administration")
+    print("\n📋 NEXT STEPS:")
+    print("  1. Login as superadmin")
+    print("  2. Go to Admin Panel → Manage All Data (CRUD)")
+    print("  3. Create hospitals in 'Hospitals' tab")
+    print("  4. Create users for each hospital in 'Users' tab:")
+    print("     - 1 Admin per hospital")
+    print("     - 1 Finance per hospital")
+    print("     - 1 Reception per hospital")
+    print("  5. Add price lists for each hospital")
+    print("\n✨ Sample families have been created for testing")
+    print("   You can search for: SEC-2413, SEC-2414, SEC-2415, SEC-2416\n")
     
     client.close()
 
