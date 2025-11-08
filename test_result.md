@@ -106,7 +106,7 @@ user_problem_statement: "Medical Insurance Billing System - Add searchable price
 
 backend:
   - task: "Add searchable price list items by Item ID"
-    implemented: false
+    implemented: true
     working: "NA"
     file: "backend/server.py"
     stuck_count: 0
@@ -115,79 +115,91 @@ backend:
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Starting implementation - No backend changes needed for item search, frontend only"
+        comment: "No backend changes needed for item search - this is frontend only feature"
 
   - task: "Add status field to Family model"
-    implemented: false
+    implemented: true
     working: "NA"
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Need to add status field (Active/Suspended) to Family model"
+        comment: "Added status field (Active/Suspended) to Family, FamilyCreate, FamilyUpdate models. Default is 'Active'"
 
   - task: "Add status field to Member model"
-    implemented: false
+    implemented: true
     working: "NA"
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Need to add status field (Active/Suspended) to Member model"
+        comment: "Added status field (Active/Suspended) to Member, MemberCreate, MemberUpdate models. Default is 'Active'"
 
   - task: "Update patient search endpoint to filter suspended records"
-    implemented: false
+    implemented: true
     working: "NA"
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Search endpoint must exclude suspended families/members from Dashboard search"
+        comment: "Updated /patients/search endpoint to filter out suspended families/members from Dashboard. Only superadmin can see suspended records"
 
   - task: "Add suspend/unsuspend family endpoint"
-    implemented: false
+    implemented: true
     working: "NA"
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Super Admin only endpoint to suspend/unsuspend families. When family suspended, all members auto-suspend"
+        comment: "Added POST /admin/families/{family_id}/suspend and /unsuspend endpoints. Superadmin only. When family suspended, all members auto-suspend"
 
   - task: "Add suspend/unsuspend member endpoint"
-    implemented: false
+    implemented: true
     working: "NA"
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Super Admin only endpoint to suspend/unsuspend members"
+        comment: "Added POST /admin/members/{serial_number}/suspend and /unsuspend endpoints. Superadmin only"
 
   - task: "Prevent billing for suspended families/members"
-    implemented: false
+    implemented: true
     working: "NA"
     file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Updated /bills/submit endpoint to check if family/member is suspended and return 403 error if true"
+
+  - task: "Migrate existing data to add status field"
+    implemented: true
+    working: "NA"
+    file: "backend/migrate_status.py"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Bill submission endpoint must check if family/member is suspended and reject if true"
+        comment: "Created and ran migration script. Updated 4 families and 13 members with status='Active'"
 
 frontend:
   - task: "Implement searchable price list items in Dashboard"
