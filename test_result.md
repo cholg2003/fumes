@@ -101,3 +101,149 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "Medical Insurance Billing System - Add searchable price list items by Item ID/Name and implement family/member suspension functionality"
+
+backend:
+  - task: "Add searchable price list items by Item ID"
+    implemented: false
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Starting implementation - No backend changes needed for item search, frontend only"
+
+  - task: "Add status field to Family model"
+    implemented: false
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Need to add status field (Active/Suspended) to Family model"
+
+  - task: "Add status field to Member model"
+    implemented: false
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Need to add status field (Active/Suspended) to Member model"
+
+  - task: "Update patient search endpoint to filter suspended records"
+    implemented: false
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Search endpoint must exclude suspended families/members from Dashboard search"
+
+  - task: "Add suspend/unsuspend family endpoint"
+    implemented: false
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Super Admin only endpoint to suspend/unsuspend families. When family suspended, all members auto-suspend"
+
+  - task: "Add suspend/unsuspend member endpoint"
+    implemented: false
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Super Admin only endpoint to suspend/unsuspend members"
+
+  - task: "Prevent billing for suspended families/members"
+    implemented: false
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Bill submission endpoint must check if family/member is suspended and reject if true"
+
+frontend:
+  - task: "Implement searchable price list items in Dashboard"
+    implemented: false
+    working: "NA"
+    file: "frontend/src/pages/Dashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Add search input to filter price list items by Item ID and Item Name (case-insensitive)"
+
+  - task: "Add suspend/unsuspend UI in AdminCRUD"
+    implemented: false
+    working: "NA"
+    file: "frontend/src/pages/AdminCRUD.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Add status column and suspend/unsuspend buttons in Families and Members tabs (Super Admin only)"
+
+  - task: "Add status indicators for suspended records"
+    implemented: false
+    working: "NA"
+    file: "frontend/src/pages/AdminCRUD.jsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Show visual badges for Active/Suspended status"
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 0
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "Implement searchable price list items in Dashboard"
+    - "Add status field to Family and Member models"
+    - "Update patient search endpoint to filter suspended records"
+    - "Add suspend/unsuspend endpoints"
+    - "Prevent billing for suspended families/members"
+    - "Add suspend/unsuspend UI in AdminCRUD"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: "Starting implementation of two features: 1) Searchable price list items by Item ID/Name, 2) Family/Member suspension system with status field. Will implement backend changes first, then frontend."
