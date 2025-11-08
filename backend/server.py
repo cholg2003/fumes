@@ -262,28 +262,45 @@ async def setup_password(password_setup: PasswordSetup):
 
 @api_router.get("/patients/search")
 async def search_patient(query: str, current_user: dict = Depends(get_current_user)):
-    # Search by serial number or name
-    search_filter = {
-        "$or": [
-            {"serial_number": {"$regex": query, "$options": "i"}},
-            {"first_name": {"$regex": query, "$options": "i"}},
-            {"last_name": {"$regex": query, "$options": "i"}}
-        ]
-    }
+    # Check if query is a Family ID (e.g., SEC-2413 without the member number)
+    is_family_id = query and '-' in query and len(query.split('-')) == 2
     
-    patients = await db.members.find(search_filter, {"_id": 0}).to_list(10)
-    
-    # Get family balance for each patient
-    results = []
-    for patient in patients:
-        family = await db.families.find_one({"family_id": patient["family_id"]}, {"_id": 0})
-        if family:
-            results.append({
-                **patient,
-                "remaining_balance": family["remaining_balance"]
-            })
-    
-    return results
+    if is_family_id:
+        # Search by Family ID - return all family members
+        family = await db.families.find_one({"family_id": query}, {"_id": 0})
+        if not family:
+            return {"type": "family", "family": None, "members": []}
+        
+        members = await db.members.find({"family_id": query}, {"_id": 0}).to_list(100)
+        
+        return {
+            "type": "family",
+            "family": family,
+            "members": members
+        }
+    else:
+        # Search by serial number or name (individual search)
+        search_filter = {
+            "$or": [
+                {"serial_number": {"$regex": query, "$options": "i"}},
+                {"first_name": {"$regex": query, "$options": "i"}},
+                {"last_name": {"$regex": query, "$options": "i"}}
+            ]
+        }
+        
+        patients = await db.members.find(search_filter, {"_id": 0}).to_list(10)
+        
+        # Get family balance for each patient
+        results = []
+        for patient in patients:
+            family = await db.families.find_one({"family_id": patient["family_id"]}, {"_id": 0})
+            if family:
+                results.append({
+                    **patient,
+                    "remaining_balance": family["remaining_balance"]
+                })
+        
+        return {"type": "individual", "results": results}
 
 @api_router.get("/patients/{serial_number}")
 async def get_patient(serial_number: str, current_user: dict = Depends(get_current_user)):
