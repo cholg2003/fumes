@@ -780,6 +780,7 @@ const AdminCRUD = () => {
                       <th className="text-left p-3 text-sm font-semibold">Name</th>
                       <th className="text-left p-3 text-sm font-semibold">Family ID</th>
                       <th className="text-left p-3 text-sm font-semibold">Relationship</th>
+                      <th className="text-center p-3 text-sm font-semibold">Status</th>
                       <th className="text-center p-3 text-sm font-semibold">Actions</th>
                     </tr>
                   </thead>
@@ -791,10 +792,40 @@ const AdminCRUD = () => {
                         <td className="p-3 text-sm">{member.family_id}</td>
                         <td className="p-3 text-sm">{member.relationship}</td>
                         <td className="p-3 text-center">
+                          <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
+                            member.status === 'Suspended' 
+                              ? 'bg-red-100 text-red-800' 
+                              : 'bg-green-100 text-green-800'
+                          }`}>
+                            {member.status || 'Active'}
+                          </span>
+                        </td>
+                        <td className="p-3 text-center">
                           <div className="flex items-center justify-center gap-2">
                             <Button variant="ghost" size="sm" onClick={() => openEditDialog('member', member)}>
                               <Edit className="w-4 h-4" />
                             </Button>
+                            {(member.status === 'Suspended') ? (
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                onClick={() => handleMemberUnsuspend(member.serial_number)} 
+                                className="text-green-600"
+                                title="Unsuspend Member"
+                              >
+                                <CheckCircle className="w-4 h-4" />
+                              </Button>
+                            ) : (
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                onClick={() => handleMemberSuspend(member.serial_number)} 
+                                className="text-orange-600"
+                                title="Suspend Member"
+                              >
+                                <Ban className="w-4 h-4" />
+                              </Button>
+                            )}
                             <Button variant="ghost" size="sm" onClick={() => handleMemberDelete(member.serial_number)} className="text-red-600">
                               <Trash2 className="w-4 h-4" />
                             </Button>
