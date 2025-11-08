@@ -514,12 +514,251 @@ class MedicalBillingAPITester:
         
         return False
 
+    def test_suspension_system(self):
+        """Test the family/member suspension system"""
+        print(f"\n🚫 Testing Suspension System...")
+        
+        # First login as superadmin
+        if not self.test_login("superadmin", "SuperAdmin@2024"):
+            self.log_test("Suspension System Setup", False, "Could not login as superadmin")
+            return False
+        
+        # Get existing families and members for testing
+        success, families = self.run_test(
+            "Get Families for Suspension Test",
+            "GET",
+            "admin/families",
+            200
+        )
+        
+        if not success or not families:
+            self.log_test("Suspension System Setup", False, "No families found for testing")
+            return False
+        
+        # Use first family for testing
+        test_family_id = families[0]["family_id"]
+        print(f"   Using family {test_family_id} for suspension tests")
+        
+        # Get members of this family
+        success, members = self.run_test(
+            "Get Members for Suspension Test",
+            "GET",
+            "admin/members",
+            200
+        )
+        
+        family_members = [m for m in members if m["family_id"] == test_family_id]
+        if not family_members:
+            self.log_test("Suspension System Setup", False, f"No members found for family {test_family_id}")
+            return False
+        
+        test_member_serial = family_members[0]["serial_number"]
+        print(f"   Using member {test_member_serial} for suspension tests")
+        
+        # Test 1: Suspend Family (superadmin only)
+        success, response = self.run_test(
+            "Suspend Family - Superadmin",
+            "POST",
+            f"admin/families/{test_family_id}/suspend",
+            200
+        )
+        
+        if success:
+            print(f"   ✅ Family {test_family_id} suspended successfully")
+        
+        # Test 2: Verify all members in family are suspended
+        success, updated_members = self.run_test(
+            "Verify Members Auto-Suspended",
+            "GET",
+            "admin/members",
+            200
+        )
+        
+        if success:
+            suspended_members = [m for m in updated_members if m["family_id"] == test_family_id and m.get("status") == "Suspended"]
+            if len(suspended_members) == len(family_members):
+                self.log_test("Family Suspension Cascade", True, f"All {len(family_members)} members suspended")
+            else:
+                self.log_test("Family Suspension Cascade", False, f"Only {len(suspended_members)}/{len(family_members)} members suspended")
+        
+        # Test 3: Search for suspended family as non-superadmin (should not return results)
+        # Login as regular user first
+        regular_user_token = self.token  # Save superadmin token
+        if self.test_login("general_clerk", "password123"):  # Try regular user
+            success, search_response = self.run_test(
+                "Search Suspended Family - Regular User",
+                "GET",
+                f"patients/search?query={test_family_id}",
+                200
+            )
+            
+            if success:
+                if search_response.get("type") == "family" and not search_response.get("family"):
+                    self.log_test("Suspended Family Hidden from Regular User", True, "Suspended family not visible to regular user")
+                else:
+                    self.log_test("Suspended Family Hidden from Regular User", False, "Suspended family visible to regular user")
+        
+        # Restore superadmin token
+        self.token = regular_user_token
+        
+        # Test 4: Search for suspended family as superadmin (should return results)
+        success, search_response = self.run_test(
+            "Search Suspended Family - Superadmin",
+            "GET",
+            f"patients/search?query={test_family_id}",
+            200
+        )
+        
+        if success and search_response.get("type") == "family" and search_response.get("family"):
+            self.log_test("Suspended Family Visible to Superadmin", True, "Suspended family visible to superadmin")
+        else:
+            self.log_test("Suspended Family Visible to Superadmin", False, "Suspended family not visible to superadmin")
+        
+        # Test 5: Try to create bill for suspended member (should fail with 403)
+        # Get price list first
+        success, price_items = self.run_test(
+            "Get Price List for Suspension Test",
+            "GET",
+            "pricelists",
+            200
+        )
+        
+        if success and price_items:
+            bill_data = {
+                "patient_serial_number": test_member_serial,
+                "bill_items": [{
+                    "item_id": price_items[0]["item_id"],
+                    "item_name": price_items[0]["item_name"],
+                    "item_cost": price_items[0]["cost"]
+                }]
+            }
+            
+            success, response = self.run_test(
+                "Bill Submission for Suspended Member",
+                "POST",
+                "bills/submit",
+                403,  # Should fail
+                data=bill_data
+            )
+        
+        # Test 6: Unsuspend Family
+        success, response = self.run_test(
+            "Unsuspend Family - Superadmin",
+            "POST",
+            f"admin/families/{test_family_id}/unsuspend",
+            200
+        )
+        
+        if success:
+            print(f"   ✅ Family {test_family_id} unsuspended successfully")
+        
+        # Test 7: Verify all members in family are unsuspended
+        success, updated_members = self.run_test(
+            "Verify Members Auto-Unsuspended",
+            "GET",
+            "admin/members",
+            200
+        )
+        
+        if success:
+            active_members = [m for m in updated_members if m["family_id"] == test_family_id and m.get("status") == "Active"]
+            if len(active_members) == len(family_members):
+                self.log_test("Family Unsuspension Cascade", True, f"All {len(family_members)} members unsuspended")
+            else:
+                self.log_test("Family Unsuspension Cascade", False, f"Only {len(active_members)}/{len(family_members)} members unsuspended")
+        
+        # Test 8: Individual Member Suspension
+        success, response = self.run_test(
+            "Suspend Individual Member - Superadmin",
+            "POST",
+            f"admin/members/{test_member_serial}/suspend",
+            200
+        )
+        
+        # Test 9: Search for suspended member as regular user (should not return results)
+        if self.test_login("general_clerk", "password123"):
+            success, search_response = self.run_test(
+                "Search Suspended Member - Regular User",
+                "GET",
+                f"patients/search?query={test_member_serial}",
+                200
+            )
+            
+            if success:
+                results = search_response.get("results", [])
+                suspended_member_found = any(r.get("serial_number") == test_member_serial for r in results)
+                if not suspended_member_found:
+                    self.log_test("Suspended Member Hidden from Regular User", True, "Suspended member not visible to regular user")
+                else:
+                    self.log_test("Suspended Member Hidden from Regular User", False, "Suspended member visible to regular user")
+        
+        # Restore superadmin token
+        self.token = regular_user_token
+        
+        # Test 10: Unsuspend Individual Member
+        success, response = self.run_test(
+            "Unsuspend Individual Member - Superadmin",
+            "POST",
+            f"admin/members/{test_member_serial}/unsuspend",
+            200
+        )
+        
+        # Test 11: Test non-superadmin access to suspension endpoints (should fail with 403)
+        if self.test_login("general_clerk", "password123"):
+            self.run_test(
+                "Suspend Family - Non-Superadmin (Should Fail)",
+                "POST",
+                f"admin/families/{test_family_id}/suspend",
+                403
+            )
+            
+            self.run_test(
+                "Suspend Member - Non-Superadmin (Should Fail)",
+                "POST",
+                f"admin/members/{test_member_serial}/suspend",
+                403
+            )
+        
+        # Test 12: Verify status fields exist in all families and members
+        success, all_families = self.run_test(
+            "Verify Family Status Fields",
+            "GET",
+            "admin/families",
+            200
+        )
+        
+        if success:
+            families_with_status = [f for f in all_families if "status" in f]
+            if len(families_with_status) == len(all_families):
+                self.log_test("Family Status Field Verification", True, f"All {len(all_families)} families have status field")
+            else:
+                self.log_test("Family Status Field Verification", False, f"Only {len(families_with_status)}/{len(all_families)} families have status field")
+        
+        success, all_members = self.run_test(
+            "Verify Member Status Fields",
+            "GET",
+            "admin/members",
+            200
+        )
+        
+        if success:
+            members_with_status = [m for m in all_members if "status" in m]
+            if len(members_with_status) == len(all_members):
+                self.log_test("Member Status Field Verification", True, f"All {len(all_members)} members have status field")
+            else:
+                self.log_test("Member Status Field Verification", False, f"Only {len(members_with_status)}/{len(all_members)} members have status field")
+        
+        return True
+
     def run_comprehensive_test(self):
-        """Run all tests including admin functionality"""
-        print("🏥 Medical Insurance Billing System - Enhanced API Testing")
+        """Run all tests including suspension system"""
+        print("🏥 Medical Insurance Billing System - Suspension System Testing")
         print("=" * 70)
         
-        # Test different user credentials
+        # Test suspension system first (most important for this review)
+        self.test_suspension_system()
+        
+        # Test different user credentials for basic functionality
         test_users = [
             ("general_clerk", "password123"),
             ("city_clerk", "password123"),
