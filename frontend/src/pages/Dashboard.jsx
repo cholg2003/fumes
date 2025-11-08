@@ -16,6 +16,9 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPatient, setSelectedPatient] = useState(null);
+  const [familyMembers, setFamilyMembers] = useState([]);
+  const [familyInfo, setFamilyInfo] = useState(null);
+  const [searchType, setSearchType] = useState(''); // 'individual' or 'family'
   const [priceList, setPriceList] = useState([]);
   const [billItems, setBillItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState('');
