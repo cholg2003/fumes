@@ -22,6 +22,8 @@ const Dashboard = () => {
   const [priceList, setPriceList] = useState([]);
   const [billItems, setBillItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState('');
+  const [itemSearchQuery, setItemSearchQuery] = useState('');
+  const [filteredPriceList, setFilteredPriceList] = useState([]);
   const [bills, setBills] = useState([]);
   const [loading, setLoading] = useState(false);
   const [monthlyStats, setMonthlyStats] = useState({});
