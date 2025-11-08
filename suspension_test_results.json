@@ -1,0 +1,98 @@
+{
+  "timestamp": "2025-11-08T22:22:14.335609",
+  "total_tests": 18,
+  "passed_tests": 17,
+  "success_rate": 94.44444444444444,
+  "results": [
+    {
+      "test": "Superadmin Login",
+      "success": true,
+      "details": ""
+    },
+    {
+      "test": "Regular User Login",
+      "success": true,
+      "details": ""
+    },
+    {
+      "test": "Suspend Family - Superadmin Access",
+      "success": true,
+      "details": ""
+    },
+    {
+      "test": "Suspend Family - Regular User Denied",
+      "success": true,
+      "details": "Regular user should not be able to suspend families"
+    },
+    {
+      "test": "Family Suspension Cascades to Members",
+      "success": true,
+      "details": "All 3 members suspended"
+    },
+    {
+      "test": "Unsuspend Family - Superadmin Access",
+      "success": true,
+      "details": ""
+    },
+    {
+      "test": "Unsuspend Family - Regular User Denied",
+      "success": true,
+      "details": "Regular user should not be able to unsuspend families"
+    },
+    {
+      "test": "Suspend Member - Superadmin Access",
+      "success": true,
+      "details": ""
+    },
+    {
+      "test": "Suspend Member - Regular User Denied",
+      "success": true,
+      "details": "Regular user should not be able to suspend members"
+    },
+    {
+      "test": "Unsuspend Member - Superadmin Access",
+      "success": true,
+      "details": ""
+    },
+    {
+      "test": "Unsuspend Member - Regular User Denied",
+      "success": true,
+      "details": "Regular user should not be able to unsuspend members"
+    },
+    {
+      "test": "Suspended Family Hidden from Regular User",
+      "success": true,
+      "details": ""
+    },
+    {
+      "test": "Suspended Family Visible to Superadmin",
+      "success": true,
+      "details": ""
+    },
+    {
+      "test": "Suspended Member Hidden from Regular User",
+      "success": true,
+      "details": ""
+    },
+    {
+      "test": "Suspended Member Visible to Superadmin",
+      "success": true,
+      "details": ""
+    },
+    {
+      "test": "Get Price List for Bill Test",
+      "success": false,
+      "details": "No price items available"
+    },
+    {
+      "test": "All Families Have Valid Status Field",
+      "success": true,
+      "details": "All 4 families have status field"
+    },
+    {
+      "test": "All Members Have Valid Status Field",
+      "success": true,
+      "details": "All 13 members have status field"
+    }
+  ]
+}
