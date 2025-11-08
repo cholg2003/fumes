@@ -307,8 +307,9 @@ class SuspensionSystemTester:
         """Test bill submission prevention for suspended members/families"""
         print("\n💰 Testing Bill Submission Prevention...")
         
-        # Get price list
-        success, price_items = self.make_request("GET", "pricelists", self.superadmin_token)
+        # Get price list (use regular user token since they have access to their hospital's price list)
+        token_to_use = self.regular_user_token if self.regular_user_token else self.superadmin_token
+        success, price_items = self.make_request("GET", "pricelists", token_to_use)
         if not success or not price_items:
             self.log_test("Get Price List for Bill Test", False, "No price items available")
             return
