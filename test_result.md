@@ -203,40 +203,40 @@ backend:
 
 frontend:
   - task: "Implement searchable price list items in Dashboard"
-    implemented: false
+    implemented: true
     working: "NA"
     file: "frontend/src/pages/Dashboard.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Add search input to filter price list items by Item ID and Item Name (case-insensitive)"
+        comment: "Added search input to filter price list items by Item ID and Item Name (case-insensitive). Added useEffect to filter priceList. Shows count of filtered items and Item ID in dropdown"
 
   - task: "Add suspend/unsuspend UI in AdminCRUD"
-    implemented: false
+    implemented: true
     working: "NA"
     file: "frontend/src/pages/AdminCRUD.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Add status column and suspend/unsuspend buttons in Families and Members tabs (Super Admin only)"
+        comment: "Added Status column and suspend/unsuspend buttons (Ban/CheckCircle icons) in both Families and Members tabs. Added handlers for suspend/unsuspend operations"
 
   - task: "Add status indicators for suspended records"
-    implemented: false
+    implemented: true
     working: "NA"
     file: "frontend/src/pages/AdminCRUD.jsx"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Show visual badges for Active/Suspended status"
+        comment: "Added visual badges (green for Active, red for Suspended) in Status column for both families and members tables"
 
 metadata:
   created_by: "main_agent"
