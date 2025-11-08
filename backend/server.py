@@ -357,10 +357,18 @@ async def submit_bill(bill_submission: BillSubmission, current_user: dict = Depe
     if not patient:
         raise HTTPException(status_code=404, detail="Patient not found")
     
+    # Check if member is suspended
+    if patient.get("status") == "Suspended":
+        raise HTTPException(status_code=403, detail="Cannot create bill for suspended member")
+    
     # Get family balance
     family = await db.families.find_one({"family_id": patient["family_id"]}, {"_id": 0})
     if not family:
         raise HTTPException(status_code=404, detail="Family not found")
+    
+    # Check if family is suspended
+    if family.get("status") == "Suspended":
+        raise HTTPException(status_code=403, detail="Cannot create bill for suspended family")
     
     # Calculate total
     total_amount = sum(item.item_cost for item in bill_submission.bill_items)
