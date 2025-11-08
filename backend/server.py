@@ -166,6 +166,7 @@ class FamilyUpdate(BaseModel):
     principle_member_name: Optional[str] = None
     total_allotment: Optional[float] = None
     remaining_balance: Optional[float] = None
+    status: Optional[str] = None
 
 class MemberUpdate(BaseModel):
     first_name: Optional[str] = None
