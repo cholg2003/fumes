@@ -1,8 +1,8 @@
 {
-  "timestamp": "2025-11-08T22:22:14.335609",
-  "total_tests": 18,
-  "passed_tests": 17,
-  "success_rate": 94.44444444444444,
+  "timestamp": "2025-11-08T22:22:34.065651",
+  "total_tests": 20,
+  "passed_tests": 20,
+  "success_rate": 100.0,
   "results": [
     {
       "test": "Superadmin Login",
@@ -80,9 +80,19 @@
       "details": ""
     },
     {
-      "test": "Get Price List for Bill Test",
-      "success": false,
-      "details": "No price items available"
+      "test": "Bill Submission Blocked for Suspended Member",
+      "success": true,
+      "details": "Should not be able to create bill for suspended member"
+    },
+    {
+      "test": "Bill Submission Blocked for Suspended Family",
+      "success": true,
+      "details": "Should not be able to create bill for member of suspended family"
+    },
+    {
+      "test": "Bill Submission Allowed for Active Member",
+      "success": true,
+      "details": ""
     },
     {
       "test": "All Families Have Valid Status Field",
