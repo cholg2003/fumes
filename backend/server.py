@@ -175,6 +175,7 @@ class MemberUpdate(BaseModel):
     dob: Optional[str] = None
     sex: Optional[str] = None
     relationship: Optional[str] = None
+    status: Optional[str] = None
 
 class PriceListUpdate(BaseModel):
     item_name: Optional[str] = None
