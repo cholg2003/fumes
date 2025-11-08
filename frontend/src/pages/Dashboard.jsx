@@ -55,6 +55,7 @@ const Dashboard = () => {
     try {
       const response = await axios.get(`${API}/pricelists`, axiosConfig);
       setPriceList(response.data);
+      setFilteredPriceList(response.data); // Initialize filtered list
       console.log('Price list loaded:', response.data.length, 'items');
     } catch (error) {
       toast.error('Failed to load price list');
