@@ -125,6 +125,7 @@ class FamilyCreate(BaseModel):
     principle_member_name: str
     total_allotment: float
     remaining_balance: float
+    status: str = "Active"
 
 class MemberCreate(BaseModel):
     serial_number: str
