@@ -136,6 +136,7 @@ class MemberCreate(BaseModel):
     dob: str
     sex: str
     relationship: str  # Principle, Spouse, Father, Mother, Child, Dependent
+    status: str = "Active"
 
 class FamilyWithMembers(BaseModel):
     family_id: str
