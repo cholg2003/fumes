@@ -638,6 +638,7 @@ const AdminCRUD = () => {
                       <th className="text-left p-3 text-sm font-semibold">Principle Member</th>
                       <th className="text-right p-3 text-sm font-semibold">Total Allotment</th>
                       <th className="text-right p-3 text-sm font-semibold">Remaining Balance</th>
+                      <th className="text-center p-3 text-sm font-semibold">Status</th>
                       <th className="text-center p-3 text-sm font-semibold">Actions</th>
                     </tr>
                   </thead>
@@ -649,10 +650,40 @@ const AdminCRUD = () => {
                         <td className="p-3 text-sm text-right">${family.total_allotment.toFixed(2)}</td>
                         <td className="p-3 text-sm text-right font-medium">${family.remaining_balance.toFixed(2)}</td>
                         <td className="p-3 text-center">
+                          <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
+                            family.status === 'Suspended' 
+                              ? 'bg-red-100 text-red-800' 
+                              : 'bg-green-100 text-green-800'
+                          }`}>
+                            {family.status || 'Active'}
+                          </span>
+                        </td>
+                        <td className="p-3 text-center">
                           <div className="flex items-center justify-center gap-2">
                             <Button variant="ghost" size="sm" onClick={() => openEditDialog('family', family)}>
                               <Edit className="w-4 h-4" />
                             </Button>
+                            {(family.status === 'Suspended') ? (
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                onClick={() => handleFamilyUnsuspend(family.family_id)} 
+                                className="text-green-600"
+                                title="Unsuspend Family"
+                              >
+                                <CheckCircle className="w-4 h-4" />
+                              </Button>
+                            ) : (
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                onClick={() => handleFamilySuspend(family.family_id)} 
+                                className="text-orange-600"
+                                title="Suspend Family"
+                              >
+                                <Ban className="w-4 h-4" />
+                              </Button>
+                            )}
                             <Button variant="ghost" size="sm" onClick={() => handleFamilyDelete(family.family_id)} className="text-red-600">
                               <Trash2 className="w-4 h-4" />
                             </Button>
