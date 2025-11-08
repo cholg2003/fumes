@@ -63,6 +63,7 @@ class Member(BaseModel):
     dob: str
     sex: str
     relationship: str
+    status: str = "Active"  # Active or Suspended
 
 class Family(BaseModel):
     model_config = ConfigDict(extra="ignore")
