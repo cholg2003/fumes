@@ -473,31 +473,49 @@ const Dashboard = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-6 space-y-6">
-              <div className="flex gap-3">
-                <div className="flex-1">
-                  <Label className="text-gray-700 font-medium mb-2 block">Select Service/Drug</Label>
-                  <Select value={selectedItem} onValueChange={setSelectedItem}>
-                    <SelectTrigger data-testid="item-select" className="h-11 border-gray-300">
-                      <SelectValue placeholder="Choose an item" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {priceList.map((item) => (
-                        <SelectItem key={item.item_id} value={item.item_id}>
-                          {item.item_name} - ${item.cost.toFixed(2)} ({item.item_type})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+              <div className="space-y-3">
+                <div>
+                  <Label className="text-gray-700 font-medium mb-2 block">Search Items</Label>
+                  <Input
+                    data-testid="item-search-input"
+                    placeholder="Search by Item ID or Item Name"
+                    value={itemSearchQuery}
+                    onChange={(e) => setItemSearchQuery(e.target.value)}
+                    className="h-11 border-gray-300"
+                  />
+                  {filteredPriceList.length === 0 && itemSearchQuery && (
+                    <p className="text-sm text-gray-500 mt-1">No items found matching "{itemSearchQuery}"</p>
+                  )}
+                  {filteredPriceList.length > 0 && itemSearchQuery && (
+                    <p className="text-sm text-gray-600 mt-1">Found {filteredPriceList.length} item(s)</p>
+                  )}
                 </div>
-                <div className="pt-7">
-                  <Button
-                    data-testid="add-item-button"
-                    onClick={handleAddItem}
-                    className="h-11 bg-green-600 hover:bg-green-700"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Item
-                  </Button>
+                <div className="flex gap-3">
+                  <div className="flex-1">
+                    <Label className="text-gray-700 font-medium mb-2 block">Select Service/Drug</Label>
+                    <Select value={selectedItem} onValueChange={setSelectedItem}>
+                      <SelectTrigger data-testid="item-select" className="h-11 border-gray-300">
+                        <SelectValue placeholder="Choose an item" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {filteredPriceList.map((item) => (
+                          <SelectItem key={item.item_id} value={item.item_id}>
+                            {item.item_id} - {item.item_name} - ${item.cost.toFixed(2)} ({item.item_type})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="pt-7">
+                    <Button
+                      data-testid="add-item-button"
+                      onClick={handleAddItem}
+                      className="h-11 bg-green-600 hover:bg-green-700"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Item
+                    </Button>
+                  </div>
                 </div>
               </div>
 
