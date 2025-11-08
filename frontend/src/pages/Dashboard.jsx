@@ -87,15 +87,44 @@ const Dashboard = () => {
     setLoading(true);
     try {
       const response = await axios.get(`${API}/patients/search?query=${searchQuery}`, axiosConfig);
-      if (response.data.length === 0) {
-        toast.error('No patients found');
-        setSelectedPatient(null);
-      } else if (response.data.length === 1) {
-        setSelectedPatient(response.data[0]);
-        toast.success('Patient found');
+      const data = response.data;
+      
+      if (data.type === 'family') {
+        // Family search result
+        if (!data.family) {
+          toast.error('No family found');
+          setSelectedPatient(null);
+          setFamilyMembers([]);
+          setFamilyInfo(null);
+          setSearchType('');
+        } else {
+          setFamilyInfo(data.family);
+          setFamilyMembers(data.members);
+          setSelectedPatient(null); // Clear individual selection
+          setSearchType('family');
+          toast.success(`Found family ${data.family.family_id} with ${data.members.length} members`);
+        }
       } else {
-        setSelectedPatient(response.data[0]);
-        toast.info(`Found ${response.data.length} patients, showing first result`);
+        // Individual search result
+        if (data.results.length === 0) {
+          toast.error('No patients found');
+          setSelectedPatient(null);
+          setFamilyMembers([]);
+          setFamilyInfo(null);
+          setSearchType('');
+        } else if (data.results.length === 1) {
+          setSelectedPatient(data.results[0]);
+          setFamilyMembers([]);
+          setFamilyInfo(null);
+          setSearchType('individual');
+          toast.success('Patient found');
+        } else {
+          setSelectedPatient(data.results[0]);
+          setFamilyMembers([]);
+          setFamilyInfo(null);
+          setSearchType('individual');
+          toast.info(`Found ${data.results.length} patients, showing first result`);
+        }
       }
     } catch (error) {
       toast.error('Search failed');
