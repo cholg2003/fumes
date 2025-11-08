@@ -71,6 +71,7 @@ class Family(BaseModel):
     principle_member_name: str
     total_allotment: float
     remaining_balance: float
+    status: str = "Active"  # Active or Suspended
 
 class PriceListItem(BaseModel):
     model_config = ConfigDict(extra="ignore")
