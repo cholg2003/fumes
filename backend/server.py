@@ -680,6 +680,76 @@ async def delete_member(serial_number: str, admin_user: dict = Depends(get_admin
     
     return {"success": True, "message": "Member deleted successfully"}
 
+@api_router.post("/admin/families/{family_id}/suspend")
+async def suspend_family(family_id: str, current_user: dict = Depends(get_current_user)):
+    # Only superadmin can suspend families
+    if current_user["username"] != "superadmin":
+        raise HTTPException(status_code=403, detail="Only Super Admin can suspend families")
+    
+    # Check if family exists
+    family = await db.families.find_one({"family_id": family_id})
+    if not family:
+        raise HTTPException(status_code=404, detail="Family not found")
+    
+    # Update family status
+    await db.families.update_one({"family_id": family_id}, {"$set": {"status": "Suspended"}})
+    
+    # Suspend all members in the family
+    await db.members.update_many({"family_id": family_id}, {"$set": {"status": "Suspended"}})
+    
+    return {"success": True, "message": "Family and all members suspended successfully"}
+
+@api_router.post("/admin/families/{family_id}/unsuspend")
+async def unsuspend_family(family_id: str, current_user: dict = Depends(get_current_user)):
+    # Only superadmin can unsuspend families
+    if current_user["username"] != "superadmin":
+        raise HTTPException(status_code=403, detail="Only Super Admin can unsuspend families")
+    
+    # Check if family exists
+    family = await db.families.find_one({"family_id": family_id})
+    if not family:
+        raise HTTPException(status_code=404, detail="Family not found")
+    
+    # Update family status
+    await db.families.update_one({"family_id": family_id}, {"$set": {"status": "Active"}})
+    
+    # Unsuspend all members in the family
+    await db.members.update_many({"family_id": family_id}, {"$set": {"status": "Active"}})
+    
+    return {"success": True, "message": "Family and all members unsuspended successfully"}
+
+@api_router.post("/admin/members/{serial_number}/suspend")
+async def suspend_member(serial_number: str, current_user: dict = Depends(get_current_user)):
+    # Only superadmin can suspend members
+    if current_user["username"] != "superadmin":
+        raise HTTPException(status_code=403, detail="Only Super Admin can suspend members")
+    
+    # Check if member exists
+    member = await db.members.find_one({"serial_number": serial_number})
+    if not member:
+        raise HTTPException(status_code=404, detail="Member not found")
+    
+    # Update member status
+    await db.members.update_one({"serial_number": serial_number}, {"$set": {"status": "Suspended"}})
+    
+    return {"success": True, "message": "Member suspended successfully"}
+
+@api_router.post("/admin/members/{serial_number}/unsuspend")
+async def unsuspend_member(serial_number: str, current_user: dict = Depends(get_current_user)):
+    # Only superadmin can unsuspend members
+    if current_user["username"] != "superadmin":
+        raise HTTPException(status_code=403, detail="Only Super Admin can unsuspend members")
+    
+    # Check if member exists
+    member = await db.members.find_one({"serial_number": serial_number})
+    if not member:
+        raise HTTPException(status_code=404, detail="Member not found")
+    
+    # Update member status
+    await db.members.update_one({"serial_number": serial_number}, {"$set": {"status": "Active"}})
+    
+    return {"success": True, "message": "Member unsuspended successfully"}
+
 @api_router.get("/admin/pricelists/all")
 async def get_all_pricelists(admin_user: dict = Depends(get_admin_user)):
     pricelists = await db.pricelists.find({}, {"_id": 0}).to_list(1000)
