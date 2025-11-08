@@ -63,6 +63,20 @@ const Dashboard = () => {
     }
   };
 
+  // Filter price list based on search query
+  useEffect(() => {
+    if (!itemSearchQuery.trim()) {
+      setFilteredPriceList(priceList);
+    } else {
+      const query = itemSearchQuery.toLowerCase();
+      const filtered = priceList.filter(item =>
+        item.item_id.toLowerCase().includes(query) ||
+        item.item_name.toLowerCase().includes(query)
+      );
+      setFilteredPriceList(filtered);
+    }
+  }, [itemSearchQuery, priceList]);
+
   const loadBills = async () => {
     try {
       const response = await axios.get(`${API}/bills`, axiosConfig);
