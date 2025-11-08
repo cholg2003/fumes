@@ -1,143 +1,138 @@
 {
-  "timestamp": "2025-10-27T14:49:42.236982",
-  "total_tests": 27,
-  "passed_tests": 26,
-  "success_rate": 96.29629629629629,
+  "timestamp": "2025-11-08T22:21:13.945905",
+  "total_tests": 26,
+  "passed_tests": 18,
+  "success_rate": 69.23076923076923,
   "results": [
     {
-      "test": "Login - general_clerk",
+      "test": "Login - superadmin",
       "success": true,
       "details": "Status: 200"
     },
     {
-      "test": "Admin Access Control - general_clerk - Get Families",
+      "test": "Get Families for Suspension Test",
       "success": true,
-      "details": "Status: 403"
+      "details": "Status: 200"
     },
     {
-      "test": "Admin Access Control - general_clerk - Get Members",
+      "test": "Get Members for Suspension Test",
       "success": true,
-      "details": "Status: 403"
+      "details": "Status: 200"
     },
     {
-      "test": "Admin Access Control - general_clerk - Get All Pricelists",
+      "test": "Suspend Family - Superadmin",
       "success": true,
-      "details": "Status: 403"
+      "details": "Status: 200"
+    },
+    {
+      "test": "Verify Members Auto-Suspended",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Family Suspension Cascade",
+      "success": true,
+      "details": "All 3 members suspended"
+    },
+    {
+      "test": "Login - general_clerk",
+      "success": false,
+      "details": "Status: 401 (Expected: 200) - Invalid username or password"
+    },
+    {
+      "test": "Search Suspended Family - Superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Suspended Family Visible to Superadmin",
+      "success": true,
+      "details": "Suspended family visible to superadmin"
+    },
+    {
+      "test": "Get Price List for Suspension Test",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Unsuspend Family - Superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Verify Members Auto-Unsuspended",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Family Unsuspension Cascade",
+      "success": true,
+      "details": "All 3 members unsuspended"
+    },
+    {
+      "test": "Suspend Individual Member - Superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Login - general_clerk",
+      "success": false,
+      "details": "Status: 401 (Expected: 200) - Invalid username or password"
+    },
+    {
+      "test": "Unsuspend Individual Member - Superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Login - general_clerk",
+      "success": false,
+      "details": "Status: 401 (Expected: 200) - Invalid username or password"
+    },
+    {
+      "test": "Verify Family Status Fields",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Family Status Field Verification",
+      "success": true,
+      "details": "All 4 families have status field"
+    },
+    {
+      "test": "Verify Member Status Fields",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Member Status Field Verification",
+      "success": true,
+      "details": "All 13 members have status field"
+    },
+    {
+      "test": "Login - general_clerk",
+      "success": false,
+      "details": "Status: 401 (Expected: 200) - Invalid username or password"
     },
     {
       "test": "Login - city_clerk",
-      "success": true,
-      "details": "Status: 200"
-    },
-    {
-      "test": "Admin Access Control - city_clerk - Get Families",
-      "success": true,
-      "details": "Status: 403"
-    },
-    {
-      "test": "Admin Access Control - city_clerk - Get Members",
-      "success": true,
-      "details": "Status: 403"
-    },
-    {
-      "test": "Admin Access Control - city_clerk - Get All Pricelists",
-      "success": true,
-      "details": "Status: 403"
+      "success": false,
+      "details": "Status: 401 (Expected: 200) - Invalid username or password"
     },
     {
       "test": "Login - mercy_admin",
-      "success": true,
-      "details": "Status: 200"
-    },
-    {
-      "test": "Admin - Get All Families",
-      "success": true,
-      "details": "Status: 200"
-    },
-    {
-      "test": "Admin - Create Family",
-      "success": true,
-      "details": "Status: 200"
-    },
-    {
-      "test": "Admin - Get All Members",
-      "success": true,
-      "details": "Status: 200"
-    },
-    {
-      "test": "Admin - Create Member",
-      "success": true,
-      "details": "Status: 200"
-    },
-    {
-      "test": "Admin - Get All Pricelists",
-      "success": true,
-      "details": "Status: 200"
-    },
-    {
-      "test": "Admin - Get Hospitals",
-      "success": true,
-      "details": "Status: 200"
-    },
-    {
-      "test": "Admin - Create Pricelist Item",
-      "success": true,
-      "details": "Status: 200"
-    },
-    {
-      "test": "Admin - Delete Pricelist Item",
-      "success": true,
-      "details": "Status: 200"
-    },
-    {
-      "test": "Get Test Patient Details",
-      "success": true,
-      "details": "Status: 200"
-    },
-    {
-      "test": "Get Price List for Billing",
-      "success": true,
-      "details": "Status: 200"
-    },
-    {
-      "test": "Cross-Hospital Bill Submission",
-      "success": true,
-      "details": "Status: 200"
-    },
-    {
-      "test": "Patient Search - By Serial Number",
-      "success": true,
-      "details": "Status: 200"
-    },
-    {
-      "test": "Patient Search - By Name",
-      "success": true,
-      "details": "Status: 200"
-    },
-    {
-      "test": "Get Patient Details",
-      "success": true,
-      "details": "Status: 200"
-    },
-    {
-      "test": "Get Price List",
-      "success": true,
-      "details": "Status: 200"
-    },
-    {
-      "test": "Balance Validation - Insufficient Funds",
-      "success": true,
-      "details": "Status: 400"
-    },
-    {
-      "test": "Submit Bill",
       "success": false,
-      "details": "Status: 400 (Expected: 200) - Insufficient funds. Available balance: $47.00, Bill amount: $70.00"
+      "details": "Status: 401 (Expected: 200) - Invalid username or password"
     },
     {
-      "test": "Get Bill History",
-      "success": true,
-      "details": "Status: 200"
+      "test": "Login - general_clerk",
+      "success": false,
+      "details": "Status: 401 (Expected: 200) - Invalid username or password"
+    },
+    {
+      "test": "Login - city_clerk",
+      "success": false,
+      "details": "Status: 401 (Expected: 200) - Invalid username or password"
     }
   ]
 }
