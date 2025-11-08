@@ -263,6 +263,51 @@ const AdminCRUD = () => {
     }
   };
 
+  // Suspend/Unsuspend handlers
+  const handleFamilySuspend = async (familyId) => {
+    if (!window.confirm(`Suspend family "${familyId}"? All members will be automatically suspended.`)) return;
+    try {
+      await axios.post(`${API}/admin/families/${familyId}/suspend`, {}, axiosConfig);
+      toast.success('Family suspended successfully');
+      loadData();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Failed to suspend family');
+    }
+  };
+
+  const handleFamilyUnsuspend = async (familyId) => {
+    if (!window.confirm(`Unsuspend family "${familyId}"? All members will be automatically unsuspended.`)) return;
+    try {
+      await axios.post(`${API}/admin/families/${familyId}/unsuspend`, {}, axiosConfig);
+      toast.success('Family unsuspended successfully');
+      loadData();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Failed to unsuspend family');
+    }
+  };
+
+  const handleMemberSuspend = async (serialNumber) => {
+    if (!window.confirm(`Suspend member "${serialNumber}"?`)) return;
+    try {
+      await axios.post(`${API}/admin/members/${serialNumber}/suspend`, {}, axiosConfig);
+      toast.success('Member suspended successfully');
+      loadData();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Failed to suspend member');
+    }
+  };
+
+  const handleMemberUnsuspend = async (serialNumber) => {
+    if (!window.confirm(`Unsuspend member "${serialNumber}"?`)) return;
+    try {
+      await axios.post(`${API}/admin/members/${serialNumber}/unsuspend`, {}, axiosConfig);
+      toast.success('Member unsuspended successfully');
+      loadData();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Failed to unsuspend member');
+    }
+  };
+
   // Pricelist CRUD
   const handlePricelistSubmit = async (e) => {
     e.preventDefault();
