@@ -343,7 +343,7 @@ const Dashboard = () => {
               </Button>
             </div>
 
-            {selectedPatient && (
+            {selectedPatient && searchType === 'individual' && (
               <div className="mt-6 p-6 bg-gradient-to-br from-blue-50 to-white rounded-xl border border-blue-200" data-testid="patient-details">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-3">
@@ -368,6 +368,77 @@ const Dashboard = () => {
                       <div className="text-sm font-medium opacity-90">Available Balance</div>
                       <div className="text-3xl font-bold" data-testid="patient-balance">${selectedPatient.remaining_balance.toFixed(2)}</div>
                     </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {familyInfo && searchType === 'family' && (
+              <div className="mt-6 space-y-4">
+                {/* Family Balance Card */}
+                <div className="p-6 bg-gradient-to-br from-green-50 to-white rounded-xl border border-green-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg font-bold text-gray-800 mb-1">Family: {familyInfo.family_id}</h3>
+                      <p className="text-sm text-gray-600">Principle: {familyInfo.principle_member_name}</p>
+                      <p className="text-sm text-gray-600">Total Allotment: ${familyInfo.total_allotment.toFixed(2)}</p>
+                    </div>
+                    <div className="bg-gradient-to-br from-green-500 to-green-600 text-white px-8 py-6 rounded-2xl shadow-lg text-center">
+                      <DollarSign className="w-8 h-8 mx-auto mb-2" />
+                      <div className="text-sm font-medium opacity-90">Family Balance</div>
+                      <div className="text-3xl font-bold">${familyInfo.remaining_balance.toFixed(2)}</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Family Members Table */}
+                <div className="bg-white rounded-xl border border-blue-200 overflow-hidden">
+                  <div className="bg-gradient-to-r from-blue-50 to-blue-100 px-6 py-4 border-b border-blue-200">
+                    <h3 className="font-bold text-blue-900">Family Members ({familyMembers.length})</h3>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                          <th className="text-left p-3 text-sm font-semibold text-gray-700">Serial Number</th>
+                          <th className="text-left p-3 text-sm font-semibold text-gray-700">Name</th>
+                          <th className="text-left p-3 text-sm font-semibold text-gray-700">DOB</th>
+                          <th className="text-left p-3 text-sm font-semibold text-gray-700">Sex</th>
+                          <th className="text-left p-3 text-sm font-semibold text-gray-700">Relationship</th>
+                          {(role === 'Finance' || role === 'Admin' || isSuperAdmin) && (
+                            <th className="text-center p-3 text-sm font-semibold text-gray-700">Action</th>
+                          )}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {familyMembers.map((member) => (
+                          <tr key={member.serial_number} className="border-b border-gray-100 hover:bg-gray-50">
+                            <td className="p-3 text-sm font-medium text-gray-800">{member.serial_number}</td>
+                            <td className="p-3 text-sm text-gray-800">{member.first_name} {member.middle_name} {member.last_name}</td>
+                            <td className="p-3 text-sm text-gray-600">{member.dob}</td>
+                            <td className="p-3 text-sm text-gray-600">{member.sex}</td>
+                            <td className="p-3 text-sm text-gray-600">{member.relationship}</td>
+                            {(role === 'Finance' || role === 'Admin' || isSuperAdmin) && (
+                              <td className="p-3 text-center">
+                                <Button
+                                  onClick={() => {
+                                    setSelectedPatient({
+                                      ...member,
+                                      remaining_balance: familyInfo.remaining_balance
+                                    });
+                                    setSearchType('individual');
+                                  }}
+                                  size="sm"
+                                  className="bg-blue-600 hover:bg-blue-700"
+                                >
+                                  Create Bill
+                                </Button>
+                              </td>
+                            )}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
