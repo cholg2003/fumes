@@ -259,3 +259,5 @@ test_plan:
 agent_communication:
   - agent: "main"
     message: "Starting implementation of two features: 1) Searchable price list items by Item ID/Name, 2) Family/Member suspension system with status field. Will implement backend changes first, then frontend."
+  - agent: "main"
+    message: "Implementation completed for both features. Backend: Added status field to models, updated search to filter suspended records, added 4 new suspend/unsuspend endpoints, prevented billing for suspended records. Frontend: Added item search in Dashboard, added Status column and suspend/unsuspend buttons in AdminCRUD. Migrated existing data. Ready for testing."
