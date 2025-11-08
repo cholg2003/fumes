@@ -597,7 +597,8 @@ async def create_family_with_members(family_data: FamilyWithMembers, admin_user:
         "family_id": family_data.family_id,
         "principle_member_name": family_data.principle_member_name,
         "total_allotment": family_data.total_allotment,
-        "remaining_balance": family_data.remaining_balance
+        "remaining_balance": family_data.remaining_balance,
+        "status": "Active"
     }
     await db.families.insert_one(family_doc)
     
@@ -619,7 +620,8 @@ async def create_family_with_members(family_data: FamilyWithMembers, admin_user:
             "last_name": member_data["last_name"],
             "dob": member_data["dob"],
             "sex": member_data["sex"],
-            "relationship": member_data["relationship"]
+            "relationship": member_data["relationship"],
+            "status": "Active"
         }
         await db.members.insert_one(member_doc)
         members_created.append(serial_number)
