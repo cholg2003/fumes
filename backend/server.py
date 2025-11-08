@@ -273,11 +273,21 @@ async def search_patient(query: str, current_user: dict = Depends(get_current_us
     
     if is_family_id:
         # Search by Family ID - return all family members
-        family = await db.families.find_one({"family_id": query}, {"_id": 0})
+        # Only show Active families in Dashboard search (suspended families hidden unless superadmin)
+        family_filter = {"family_id": query}
+        if current_user["username"] != "superadmin":
+            family_filter["status"] = {"$ne": "Suspended"}
+        
+        family = await db.families.find_one(family_filter, {"_id": 0})
         if not family:
             return {"type": "family", "family": None, "members": []}
         
-        members = await db.members.find({"family_id": query}, {"_id": 0}).to_list(100)
+        # Get members, filter out suspended if not superadmin
+        member_filter = {"family_id": query}
+        if current_user["username"] != "superadmin":
+            member_filter["status"] = {"$ne": "Suspended"}
+        
+        members = await db.members.find(member_filter, {"_id": 0}).to_list(100)
         
         return {
             "type": "family",
@@ -294,12 +304,20 @@ async def search_patient(query: str, current_user: dict = Depends(get_current_us
             ]
         }
         
+        # Hide suspended members from search unless superadmin
+        if current_user["username"] != "superadmin":
+            search_filter["status"] = {"$ne": "Suspended"}
+        
         patients = await db.members.find(search_filter, {"_id": 0}).to_list(10)
         
-        # Get family balance for each patient
+        # Get family balance for each patient, exclude suspended families
         results = []
         for patient in patients:
-            family = await db.families.find_one({"family_id": patient["family_id"]}, {"_id": 0})
+            family_filter = {"family_id": patient["family_id"]}
+            if current_user["username"] != "superadmin":
+                family_filter["status"] = {"$ne": "Suspended"}
+            
+            family = await db.families.find_one(family_filter, {"_id": 0})
             if family:
                 results.append({
                     **patient,
