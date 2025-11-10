@@ -20,11 +20,11 @@ const Dashboard = () => {
   const [familyInfo, setFamilyInfo] = useState(null);
   const [searchType, setSearchType] = useState(''); // 'individual' or 'family'
   const [priceList, setPriceList] = useState([]);
-  const [billItems, setBillItems] = useState([]);
+  const [claimItems, setClaimItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState('');
   const [itemSearchQuery, setItemSearchQuery] = useState('');
   const [filteredPriceList, setFilteredPriceList] = useState([]);
-  const [bills, setBills] = useState([]);
+  const [claims, setClaims] = useState([]);
   const [loading, setLoading] = useState(false);
   const [monthlyStats, setMonthlyStats] = useState({});
 
@@ -41,7 +41,7 @@ const Dashboard = () => {
       return;
     }
     loadPriceList();
-    loadBills();
+    loadClaims();
     if (isSuperAdmin) {
       loadMonthlyStats();
     }
@@ -77,10 +77,10 @@ const Dashboard = () => {
     }
   }, [itemSearchQuery, priceList]);
 
-  const loadBills = async () => {
+  const loadClaims = async () => {
     try {
       const response = await axios.get(`${API}/bills`, axiosConfig);
-      setBills(response.data);
+      setClaims(response.data);
     } catch (error) {
       toast.error('Failed to load bills');
     }
@@ -163,7 +163,7 @@ const Dashboard = () => {
     console.log('Found item:', item);
     
     if (item) {
-      setBillItems([...billItems, item]);
+      setClaimItems([...claimItems, item]);
       setSelectedItem('');
       toast.success('Item added to bill');
     } else {
@@ -172,22 +172,22 @@ const Dashboard = () => {
   };
 
   const handleRemoveItem = (index) => {
-    const newItems = billItems.filter((_, i) => i !== index);
-    setBillItems(newItems);
+    const newItems = claimItems.filter((_, i) => i !== index);
+    setClaimItems(newItems);
     toast.info('Item removed');
   };
 
   const getTotalBillCost = () => {
-    return billItems.reduce((sum, item) => sum + item.cost, 0);
+    return claimItems.reduce((sum, item) => sum + item.cost, 0);
   };
 
-  const handleSubmitBill = async () => {
+  const handleSubmitClaim = async () => {
     if (!selectedPatient) {
       toast.error('Please select a patient');
       return;
     }
 
-    if (billItems.length === 0) {
+    if (claimItems.length === 0) {
       toast.error('Please add items to the bill');
       return;
     }
@@ -204,7 +204,7 @@ const Dashboard = () => {
         `${API}/bills/submit`,
         {
           patient_serial_number: selectedPatient.serial_number,
-          bill_items: billItems.map(item => ({
+          bill_items: claimItems.map(item => ({
             item_id: item.item_id,
             item_name: item.item_name,
             item_cost: item.cost
@@ -213,13 +213,13 @@ const Dashboard = () => {
         axiosConfig
       );
 
-      toast.success(`Bill created successfully! Bill ID: ${response.data.bill_id}`);
-      setBillItems([]);
+      toast.success(`Claim created successfully! Claim ID: ${response.data.bill_id}`);
+      setClaimItems([]);
       setSelectedPatient({
         ...selectedPatient,
         remaining_balance: response.data.new_balance
       });
-      await loadBills();
+      await loadClaims();
       if (isSuperAdmin) {
         await loadMonthlyStats();
       }
@@ -230,15 +230,15 @@ const Dashboard = () => {
     }
   };
 
-  const handleVoidBill = async (billId) => {
+  const handleVoidClaim = async (billId) => {
     if (!window.confirm('Are you sure you want to void this bill?')) {
       return;
     }
 
     try {
       await axios.post(`${API}/bills/${billId}/void`, {}, axiosConfig);
-      toast.success('Bill voided successfully');
-      await loadBills();
+      toast.success('Claim voided successfully');
+      await loadClaims();
       if (isSuperAdmin) {
         await loadMonthlyStats();
       }
@@ -251,7 +251,7 @@ const Dashboard = () => {
     }
   };
 
-  const handlePrintBill = (billId) => {
+  const handlePrintClaim = (billId) => {
     window.open(`/print/${billId}`, '_blank');
   };
 
@@ -268,7 +268,7 @@ const Dashboard = () => {
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-800">
-              {role === 'Reception' ? 'Patient Search' : role === 'Finance' ? 'Billing Dashboard' : 'Hospital Dashboard'}
+              {role === 'Reception' ? 'Patient Search' : role === 'Finance' ? 'Claims Dashboard' : 'Hospital Dashboard'}
             </h1>
             <p className="text-sm text-gray-600 mt-1">{hospitalName} • {username} • {role}</p>
           </div>
@@ -298,13 +298,13 @@ const Dashboard = () => {
       </div>
 
       <div className="max-w-7xl mx-auto p-6 space-y-6">
-        {/* Monthly Billing Summary - Superadmin Only */}
+        {/* Monthly Claims Summary - Superadmin Only */}
         {isSuperAdmin && Object.keys(monthlyStats).length > 0 && (
           <Card className="border-indigo-200 shadow-md">
             <CardHeader className="bg-gradient-to-r from-indigo-50 to-indigo-100 border-b border-indigo-200">
               <CardTitle className="flex items-center gap-2 text-indigo-900">
                 <DollarSign className="w-5 h-5" />
-                Monthly Billing Summary - {new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}
+                Monthly Claims Summary - {new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-6">
@@ -463,13 +463,13 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        {/* Bill Creation */}
+        {/* Claim Creation */}
         {selectedPatient && (role === 'Finance' || role === 'Admin') && (
           <Card className="border-green-200 shadow-md">
             <CardHeader className="bg-gradient-to-r from-green-50 to-green-100 border-b border-green-200">
               <CardTitle className="flex items-center gap-2 text-green-900">
                 <FileText className="w-5 h-5" />
-                Create New Bill
+                Create New Claim
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-6 space-y-6">
@@ -519,10 +519,10 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {billItems.length > 0 && (
+              {claimItems.length > 0 && (
                 <div className="space-y-4">
                   <div className="bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
-                    <table className="w-full" data-testid="bill-items-table">
+                    <table className="w-full" data-testid="claim-items-table">
                       <thead className="bg-gray-100 border-b border-gray-200">
                         <tr>
                           <th className="text-left p-3 text-sm font-semibold text-gray-700">Item</th>
@@ -532,7 +532,7 @@ const Dashboard = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {billItems.map((item, index) => (
+                        {claimItems.map((item, index) => (
                           <tr key={index} className="border-b border-gray-100 hover:bg-gray-50">
                             <td className="p-3 text-sm text-gray-800">{item.item_name}</td>
                             <td className="p-3 text-sm text-gray-600">{item.item_type}</td>
@@ -556,15 +556,15 @@ const Dashboard = () => {
 
                   <div className="flex items-center justify-between p-6 bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200">
                     <div className="text-xl font-bold text-gray-800">
-                      Total: <span data-testid="total-bill-cost" className="text-blue-600">${getTotalBillCost().toFixed(2)}</span>
+                      Total: <span data-testid="total-claim-cost" className="text-blue-600">${getTotalBillCost().toFixed(2)}</span>
                     </div>
                     <Button
-                      data-testid="submit-bill-button"
-                      onClick={handleSubmitBill}
+                      data-testid="submit-claim-button"
+                      onClick={handleSubmitClaim}
                       disabled={loading}
                       className="h-12 px-8 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold shadow-md"
                     >
-                      Submit Bill
+                      Submit Claim
                     </Button>
                   </div>
                 </div>
@@ -573,24 +573,24 @@ const Dashboard = () => {
           </Card>
         )}
 
-        {/* Bill History */}
+        {/* Claim History */}
         {(role === 'Finance' || role === 'Admin') && (
           <Card className="border-purple-200 shadow-md">
           <CardHeader className="bg-gradient-to-r from-purple-50 to-purple-100 border-b border-purple-200">
             <CardTitle className="flex items-center gap-2 text-purple-900">
               <FileText className="w-5 h-5" />
-              Recent Bills
+              Recent Claims
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-6">
-            {bills.length === 0 ? (
-              <p className="text-center text-gray-500 py-8">No bills created yet</p>
+            {claims.length === 0 ? (
+              <p className="text-center text-gray-500 py-8">No claims created yet</p>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full" data-testid="bills-table">
+                <table className="w-full" data-testid="claims-table">
                   <thead className="bg-gray-100 border-b border-gray-200">
                     <tr>
-                      <th className="text-left p-3 text-sm font-semibold text-gray-700">Bill ID</th>
+                      <th className="text-left p-3 text-sm font-semibold text-gray-700">Claim ID</th>
                       <th className="text-left p-3 text-sm font-semibold text-gray-700">Patient</th>
                       <th className="text-left p-3 text-sm font-semibold text-gray-700">Date</th>
                       <th className="text-right p-3 text-sm font-semibold text-gray-700">Amount</th>
@@ -599,7 +599,7 @@ const Dashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {bills.map((bill) => (
+                    {claims.map((bill) => (
                       <tr key={bill.bill_id} className="border-b border-gray-100 hover:bg-gray-50">
                         <td className="p-3 text-sm font-medium text-gray-800">{bill.bill_id}</td>
                         <td className="p-3 text-sm text-gray-700">{bill.patient_name}</td>
@@ -617,8 +617,8 @@ const Dashboard = () => {
                         <td className="p-3 text-center">
                           <div className="flex items-center justify-center gap-2">
                             <Button
-                              data-testid={`print-bill-${bill.bill_id}`}
-                              onClick={() => handlePrintBill(bill.bill_id)}
+                              data-testid={`print-claim-${bill.bill_id}`}
+                              onClick={() => handlePrintClaim(bill.bill_id)}
                               variant="ghost"
                               size="sm"
                               className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
@@ -627,8 +627,8 @@ const Dashboard = () => {
                             </Button>
                             {bill.status === 'COMPLETED' && (
                               <Button
-                                data-testid={`void-bill-${bill.bill_id}`}
-                                onClick={() => handleVoidBill(bill.bill_id)}
+                                data-testid={`void-claim-${bill.bill_id}`}
+                                onClick={() => handleVoidClaim(bill.bill_id)}
                                 variant="ghost"
                                 size="sm"
                                 className="text-red-600 hover:text-red-700 hover:bg-red-50"
