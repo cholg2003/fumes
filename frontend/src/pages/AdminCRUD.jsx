@@ -314,6 +314,79 @@ const AdminCRUD = () => {
     }
   };
 
+  // Claim CRUD
+  const openClaimEditDialog = async (claim) => {
+    try {
+      // Get claim details
+      const response = await axios.get(`${API}/claims/${claim.claim_id}`, axiosConfig);
+      setClaimForm({
+        claim_id: claim.claim_id,
+        patient_serial_number: response.data.header.patient_serial_number,
+        claim_items: response.data.details.map(item => ({
+          item_id: item.item_id,
+          item_name: item.item_name,
+          item_cost: item.item_cost,
+          quantity: item.quantity || 1
+        }))
+      });
+      setClaimDialog(true);
+    } catch (error) {
+      toast.error('Failed to load claim details');
+    }
+  };
+
+  const handleAddClaimItem = () => {
+    if (!selectedClaimItem) {
+      toast.error('Please select an item');
+      return;
+    }
+    const item = pricelists.find(p => p.item_id === selectedClaimItem);
+    if (item) {
+      setClaimForm({
+        ...claimForm,
+        claim_items: [...claimForm.claim_items, { ...item, quantity: claimItemQuantity, cost: item.cost }]
+      });
+      setSelectedClaimItem('');
+      setClaimItemQuantity(1);
+    }
+  };
+
+  const handleRemoveClaimItem = (index) => {
+    const newItems = claimForm.claim_items.filter((_, i) => i !== index);
+    setClaimForm({ ...claimForm, claim_items: newItems });
+  };
+
+  const getClaimTotal = () => {
+    return claimForm.claim_items.reduce((sum, item) => sum + (item.cost * (item.quantity || 1)), 0);
+  };
+
+  const handleClaimUpdate = async (e) => {
+    e.preventDefault();
+    if (claimForm.claim_items.length === 0) {
+      toast.error('Please add at least one item');
+      return;
+    }
+    setLoading(true);
+    try {
+      await axios.put(`${API}/admin/claims/${claimForm.claim_id}`, {
+        patient_serial_number: claimForm.patient_serial_number,
+        claim_items: claimForm.claim_items.map(item => ({
+          item_id: item.item_id,
+          item_name: item.item_name,
+          item_cost: item.cost,
+          quantity: item.quantity || 1
+        }))
+      }, axiosConfig);
+      toast.success('Claim updated successfully');
+      setClaimDialog(false);
+      loadData();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Failed to update claim');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Pricelist CRUD
   const handlePricelistSubmit = async (e) => {
     e.preventDefault();
