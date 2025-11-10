@@ -157,7 +157,7 @@ backend:
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Updated /patients/search endpoint to filter out suspended families/members from Dashboard. Only superadmin can see suspended records"
+        comment: "Updated /patients/search endpoint - suspension filter REMOVED per user request. All users can now see suspended patients in search. Claims creation still blocked for suspended patients."
       - working: true
         agent: "testing"
         comment: "TESTED: Search filtering works correctly. Suspended families/members hidden from regular users but visible to superadmin. Both family and member search filtering verified."
