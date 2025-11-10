@@ -953,16 +953,16 @@ const AdminCRUD = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {claims.map((bill) => (
-                      <tr key={bill.bill_id} className="border-b hover:bg-gray-50">
-                        <td className="p-3 text-sm font-medium">{bill.bill_id}</td>
-                        <td className="p-3 text-sm">{bill.hospital_name}</td>
-                        <td className="p-3 text-sm">{bill.patient_name}</td>
-                        <td className="p-3 text-sm">{new Date(bill.timestamp).toLocaleDateString()}</td>
-                        <td className="p-3 text-sm text-right font-medium">${bill.total_bill_amount.toFixed(2)}</td>
+                    {claims.map((claim) => (
+                      <tr key={claim.claim_id} className="border-b hover:bg-gray-50">
+                        <td className="p-3 text-sm font-medium">{claim.claim_id}</td>
+                        <td className="p-3 text-sm">{claim.hospital_name}</td>
+                        <td className="p-3 text-sm">{claim.patient_name}</td>
+                        <td className="p-3 text-sm">{new Date(claim.timestamp).toLocaleDateString()}</td>
+                        <td className="p-3 text-sm text-right font-medium">${claim.total_claim_amount.toFixed(2)}</td>
                         <td className="p-3 text-center">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${bill.status === 'COMPLETED' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                            {bill.status}
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${claim.status === 'COMPLETED' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                            {claim.status}
                           </span>
                         </td>
                         <td className="p-3 text-center">
@@ -970,18 +970,18 @@ const AdminCRUD = () => {
                             <Button 
                               variant="ghost" 
                               size="sm" 
-                              onClick={() => window.open(`/print/${bill.bill_id}`, '_blank')}
+                              onClick={() => window.open(`/print/${claim.claim_id}`, '_blank')}
                               className="text-blue-600 hover:bg-blue-50"
-                              title="Print Bill"
+                              title="Print Claim"
                             >
                               <Printer className="w-4 h-4" />
                             </Button>
                             <Button 
                               variant="ghost" 
                               size="sm" 
-                              onClick={() => handleClaimDelete(bill.bill_id)} 
+                              onClick={() => handleClaimDelete(claim.claim_id)} 
                               className="text-red-600 hover:bg-red-50"
-                              title="Delete Bill"
+                              title="Delete Claim"
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>
