@@ -24,12 +24,12 @@ const PrintBill = () => {
     }
 
     try {
-      const response = await axios.get(`${API}/bills/${claimId}`, {
+      const response = await axios.get(`${API}/claims/${claimId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setClaimData(response.data);
     } catch (error) {
-      alert('Failed to load bill data');
+      alert('Failed to load claim data');
     } finally {
       setLoading(false);
     }
