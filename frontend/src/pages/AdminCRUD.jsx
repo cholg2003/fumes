@@ -1049,6 +1049,15 @@ const AdminCRUD = () => {
                             <Button 
                               variant="ghost" 
                               size="sm" 
+                              onClick={() => openClaimEditDialog(claim)}
+                              className="text-green-600 hover:bg-green-50"
+                              title="Edit Claim"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </Button>
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
                               onClick={() => window.open(`/print/${claim.claim_id}`, '_blank')}
                               className="text-blue-600 hover:bg-blue-50"
                               title="Print Claim"
