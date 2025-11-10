@@ -639,18 +639,18 @@ const Dashboard = () => {
                         <td className="p-3 text-center">
                           <div className="flex items-center justify-center gap-2">
                             <Button
-                              data-testid={`print-claim-${bill.bill_id}`}
-                              onClick={() => handlePrintClaim(bill.bill_id)}
+                              data-testid={`print-claim-${claim.claim_id}`}
+                              onClick={() => handlePrintClaim(claim.claim_id)}
                               variant="ghost"
                               size="sm"
                               className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                             >
                               <Printer className="w-4 h-4" />
                             </Button>
-                            {bill.status === 'COMPLETED' && (
+                            {claim.status === 'COMPLETED' && (
                               <Button
-                                data-testid={`void-claim-${bill.bill_id}`}
-                                onClick={() => handleVoidClaim(bill.bill_id)}
+                                data-testid={`void-claim-${claim.claim_id}`}
+                                onClick={() => handleVoidClaim(claim.claim_id)}
                                 variant="ghost"
                                 size="sm"
                                 className="text-red-600 hover:text-red-700 hover:bg-red-50"
