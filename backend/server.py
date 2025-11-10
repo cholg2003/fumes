@@ -109,6 +109,7 @@ class ClaimDetail(BaseModel):
     item_id: str
     item_name: str
     item_cost: float
+    quantity: int = 1
 
 class PatientSearchResult(BaseModel):
     serial_number: str
