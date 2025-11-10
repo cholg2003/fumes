@@ -352,7 +352,7 @@ const AdminCRUD = () => {
   // Bill delete
   const handleClaimDelete = async (claimId) => {
     if (!window.confirm(`Delete claim "${claimId}"? This will refund the amount if the claim was completed.`)) return;
-    try:
+    try {
       await axios.delete(`${API}/admin/claims/${claimId}`, axiosConfig);
       toast.success('Claim deleted successfully');
       loadData();
