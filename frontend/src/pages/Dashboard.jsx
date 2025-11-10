@@ -398,7 +398,6 @@ const Dashboard = () => {
                     <div>
                       <h3 className="text-lg font-bold text-gray-800 mb-1">Family: {familyInfo.family_id}</h3>
                       <p className="text-sm text-gray-600">Principle: {familyInfo.principle_member_name}</p>
-                      <p className="text-sm text-gray-600">Total Allotment: ${familyInfo.total_allotment.toFixed(2)}</p>
                     </div>
                     <div className="bg-gradient-to-br from-green-500 to-green-600 text-white px-8 py-6 rounded-2xl shadow-lg text-center">
                       <DollarSign className="w-8 h-8 mx-auto mb-2" />
