@@ -528,10 +528,10 @@ async def delete_claim(claim_id: str, admin_user: dict = Depends(get_admin_user)
         raise HTTPException(status_code=404, detail="Claim not found")
     
     # If claim is completed, refund the amount
-    if bill["status"] == "COMPLETED":
+    if claim["status"] == "COMPLETED":
         await db.families.update_one(
-            {"family_id": bill["family_id"]},
-            {"$inc": {"remaining_balance": bill["total_claim_amount"]}}
+            {"family_id": claim["family_id"]},
+            {"$inc": {"remaining_balance": claim["total_claim_amount"]}}
         )
     
     # Delete claim details
@@ -541,6 +541,106 @@ async def delete_claim(claim_id: str, admin_user: dict = Depends(get_admin_user)
     await db.claims_header.delete_one({"claim_id": claim_id})
     
     return {"success": True, "message": "Claim deleted successfully"}
+
+@api_router.put("/admin/claims/{claim_id}")
+async def update_claim(claim_id: str, claim_submission: ClaimSubmission, admin_user: dict = Depends(get_admin_user)):
+    # Get original claim
+    original_claim = await db.claims_header.find_one({"claim_id": claim_id}, {"_id": 0})
+    if not original_claim:
+        raise HTTPException(status_code=404, detail="Claim not found")
+    
+    # Get new patient details
+    new_patient = await db.members.find_one(
+        {"serial_number": claim_submission.patient_serial_number},
+        {"_id": 0}
+    )
+    if not new_patient:
+        raise HTTPException(status_code=404, detail="Patient not found")
+    
+    # Check if new member is suspended
+    if new_patient.get("status") == "Suspended":
+        raise HTTPException(status_code=403, detail="Cannot update claim for suspended member")
+    
+    # Get new family balance
+    new_family = await db.families.find_one({"family_id": new_patient["family_id"]}, {"_id": 0})
+    if not new_family:
+        raise HTTPException(status_code=404, detail="Family not found")
+    
+    # Check if new family is suspended
+    if new_family.get("status") == "Suspended":
+        raise HTTPException(status_code=403, detail="Cannot update claim for suspended family")
+    
+    # Calculate new total
+    new_total = sum(item.item_cost * item.quantity for item in claim_submission.claim_items)
+    
+    # Refund original family
+    if original_claim["status"] == "COMPLETED":
+        await db.families.update_one(
+            {"family_id": original_claim["family_id"]},
+            {"$inc": {"remaining_balance": original_claim["total_claim_amount"]}}
+        )
+    
+    # Check if new family has sufficient balance
+    # If same family, add back the refunded amount for the check
+    available_balance = new_family["remaining_balance"]
+    if original_claim["family_id"] == new_family["family_id"] and original_claim["status"] == "COMPLETED":
+        available_balance += original_claim["total_claim_amount"]
+    
+    if new_total > available_balance:
+        # Rollback the refund
+        if original_claim["status"] == "COMPLETED":
+            await db.families.update_one(
+                {"family_id": original_claim["family_id"]},
+                {"$inc": {"remaining_balance": -original_claim["total_claim_amount"]}}
+            )
+        raise HTTPException(
+            status_code=400,
+            detail=f"Insufficient funds. Available balance: ${available_balance:.2f}, New claim amount: ${new_total:.2f}"
+        )
+    
+    # Charge new family
+    await db.families.update_one(
+        {"family_id": new_patient["family_id"]},
+        {"$inc": {"remaining_balance": -new_total}}
+    )
+    
+    # Update claim header
+    await db.claims_header.update_one(
+        {"claim_id": claim_id},
+        {"$set": {
+            "patient_serial_number": new_patient["serial_number"],
+            "patient_name": f"{new_patient['first_name']} {new_patient['last_name']}",
+            "family_id": new_patient["family_id"],
+            "total_claim_amount": new_total,
+            "status": "COMPLETED"
+        }}
+    )
+    
+    # Delete old claim details
+    await db.claims_details.delete_many({"claim_id": claim_id})
+    
+    # Insert new claim details
+    for item in claim_submission.claim_items:
+        claim_detail = {
+            "claim_detail_id": str(uuid.uuid4()),
+            "claim_id": claim_id,
+            "item_id": item.item_id,
+            "item_name": item.item_name,
+            "item_cost": item.item_cost,
+            "quantity": item.quantity
+        }
+        await db.claims_details.insert_one(claim_detail)
+    
+    # Get updated family balance
+    updated_family = await db.families.find_one({"family_id": new_patient["family_id"]}, {"_id": 0})
+    
+    return {
+        "success": True,
+        "message": "Claim updated successfully",
+        "claim_id": claim_id,
+        "new_total": new_total,
+        "new_balance": updated_family["remaining_balance"]
+    }
 
 # Admin Routes
 @api_router.get("/admin/families")
