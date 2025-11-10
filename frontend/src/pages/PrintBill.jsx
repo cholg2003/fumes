@@ -137,14 +137,18 @@ const PrintBill = () => {
               <thead className="bg-gray-100">
                 <tr>
                   <th className="text-left p-3 border-b border-gray-200 font-semibold text-gray-700">Item Name</th>
-                  <th className="text-right p-3 border-b border-gray-200 font-semibold text-gray-700">Cost</th>
+                  <th className="text-right p-3 border-b border-gray-200 font-semibold text-gray-700">Unit Cost</th>
+                  <th className="text-center p-3 border-b border-gray-200 font-semibold text-gray-700">Quantity</th>
+                  <th className="text-right p-3 border-b border-gray-200 font-semibold text-gray-700">Total</th>
                 </tr>
               </thead>
               <tbody data-testid="bill-items-list">
                 {details.map((item, index) => (
                   <tr key={index} className="border-b border-gray-100">
                     <td className="p-3 text-gray-800">{item.item_name}</td>
-                    <td className="p-3 text-right font-medium text-gray-800">${item.item_cost.toFixed(2)}</td>
+                    <td className="p-3 text-right text-gray-600">${item.item_cost.toFixed(2)}</td>
+                    <td className="p-3 text-center font-medium text-gray-800">{item.quantity || 1}</td>
+                    <td className="p-3 text-right font-bold text-gray-800">${(item.item_cost * (item.quantity || 1)).toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
