@@ -177,8 +177,8 @@ const Dashboard = () => {
     toast.info('Item removed');
   };
 
-  const getTotalBillCost = () => {
-    return claimItems.reduce((sum, item) => sum + item.cost, 0);
+  const getTotalClaimCost = () => {
+    return claimItems.reduce((sum, item) => sum + (item.cost * (item.quantity || 1)), 0);
   };
 
   const handleSubmitClaim = async () => {
