@@ -20,8 +20,8 @@ async def seed_database():
     await db.families.delete_many({})
     await db.members.delete_many({})
     await db.pricelists.delete_many({})
-    await db.bills_header.delete_many({})
-    await db.bills_details.delete_many({})
+    await db.claims_header.delete_many({})
+    await db.claims_details.delete_many({})
     await db.hospitals.delete_many({})
     
     # Seed ONLY Super Admin - hospitals and users will be created via admin panel
