@@ -478,7 +478,7 @@ async def get_claim_details(claim_id: str, current_user: dict = Depends(get_curr
 async def get_all_claims_admin(admin_user: dict = Depends(get_admin_user)):
     # Get all claims for admin (not filtered by hospital)
     claims = await db.claims_header.find({}, {"_id": 0}).sort("timestamp", -1).to_list(1000)
-    return bills
+    return claims
 
 @api_router.post("/claims/{claim_id}/void")
 async def void_claim(claim_id: str, current_user: dict = Depends(get_current_user)):
