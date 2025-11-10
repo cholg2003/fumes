@@ -513,6 +513,17 @@ const Dashboard = () => {
                       </SelectContent>
                     </Select>
                   </div>
+                  <div>
+                    <Label className="text-gray-700 font-medium mb-2 block">Quantity</Label>
+                    <Input
+                      type="number"
+                      min="1"
+                      value={itemQuantity}
+                      onChange={(e) => setItemQuantity(parseInt(e.target.value) || 1)}
+                      className="h-11 w-24 border-gray-300"
+                      data-testid="item-quantity-input"
+                    />
+                  </div>
                   <div className="pt-7">
                     <Button
                       data-testid="add-item-button"
