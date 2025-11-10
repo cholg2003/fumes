@@ -33,6 +33,7 @@ const AdminCRUD = () => {
   const [familyDialog, setFamilyDialog] = useState(false);
   const [memberDialog, setMemberDialog] = useState(false);
   const [pricelistDialog, setPricelistDialog] = useState(false);
+  const [claimDialog, setClaimDialog] = useState(false);
 
   // Forms
   const [hospitalForm, setHospitalForm] = useState({ hospital_name: '', address: '', phone: '', email: '' });
