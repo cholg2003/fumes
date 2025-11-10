@@ -42,7 +42,7 @@ const PrintBill = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg text-gray-600">Loading bill...</div>
+        <div className="text-lg text-gray-600">Loading claim...</div>
       </div>
     );
   }
@@ -50,7 +50,7 @@ const PrintBill = () => {
   if (!claimData) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg text-gray-600">Bill not found</div>
+        <div className="text-lg text-gray-600">Claim not found</div>
       </div>
     );
   }
