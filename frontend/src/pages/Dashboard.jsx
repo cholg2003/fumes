@@ -238,13 +238,13 @@ const Dashboard = () => {
     }
   };
 
-  const handleVoidClaim = async (billId) => {
-    if (!window.confirm('Are you sure you want to void this bill?')) {
+  const handleVoidClaim = async (claimId) => {
+    if (!window.confirm('Are you sure you want to void this claim?')) {
       return;
     }
 
     try {
-      await axios.post(`${API}/bills/${billId}/void`, {}, axiosConfig);
+      await axios.post(`${API}/claims/${claimId}/void`, {}, axiosConfig);
       toast.success('Claim voided successfully');
       await loadClaims();
       if (isSuperAdmin) {
@@ -255,12 +255,12 @@ const Dashboard = () => {
         setSelectedPatient(response.data);
       }
     } catch (error) {
-      toast.error(error.response?.data?.detail || 'Failed to void bill');
+      toast.error(error.response?.data?.detail || 'Failed to void claim');
     }
   };
 
-  const handlePrintClaim = (billId) => {
-    window.open(`/print/${billId}`, '_blank');
+  const handlePrintClaim = (claimId) => {
+    window.open(`/print/${claimId}`, '_blank');
   };
 
   const handleLogout = () => {
