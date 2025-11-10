@@ -362,8 +362,8 @@ async def submit_claim(claim_submission: ClaimSubmission, current_user: dict = D
     if family.get("status") == "Suspended":
         raise HTTPException(status_code=403, detail="Cannot create claim for suspended family")
     
-    # Calculate total
-    total_amount = sum(item.item_cost for item in claim_submission.claim_items)
+    # Calculate total (cost * quantity for each item)
+    total_amount = sum(item.item_cost * item.quantity for item in claim_submission.claim_items)
     
     # Check balance
     if total_amount > family["remaining_balance"]:
@@ -373,7 +373,7 @@ async def submit_claim(claim_submission: ClaimSubmission, current_user: dict = D
         )
     
     # Create claim
-    claim_id = f"BILL-{str(uuid.uuid4())[:8].upper()}"
+    claim_id = f"CLAIM-{str(uuid.uuid4())[:8].upper()}"
     timestamp = datetime.now(timezone.utc).isoformat()
     
     # Insert claim header
@@ -396,7 +396,8 @@ async def submit_claim(claim_submission: ClaimSubmission, current_user: dict = D
             "claim_id": claim_id,
             "item_id": item.item_id,
             "item_name": item.item_name,
-            "item_cost": item.item_cost
+            "item_cost": item.item_cost,
+            "quantity": item.quantity
         }
         await db.claims_details.insert_one(claim_detail)
     
