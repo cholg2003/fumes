@@ -621,19 +621,19 @@ const Dashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {claims.map((bill) => (
-                      <tr key={bill.bill_id} className="border-b border-gray-100 hover:bg-gray-50">
-                        <td className="p-3 text-sm font-medium text-gray-800">{bill.bill_id}</td>
-                        <td className="p-3 text-sm text-gray-700">{bill.patient_name}</td>
-                        <td className="p-3 text-sm text-gray-600">{new Date(bill.timestamp).toLocaleDateString()}</td>
-                        <td className="p-3 text-sm text-gray-800 text-right font-medium">${bill.total_bill_amount.toFixed(2)}</td>
+                    {claims.map((claim) => (
+                      <tr key={claim.claim_id} className="border-b border-gray-100 hover:bg-gray-50">
+                        <td className="p-3 text-sm font-medium text-gray-800">{claim.claim_id}</td>
+                        <td className="p-3 text-sm text-gray-700">{claim.patient_name}</td>
+                        <td className="p-3 text-sm text-gray-600">{new Date(claim.timestamp).toLocaleDateString()}</td>
+                        <td className="p-3 text-sm text-gray-800 text-right font-medium">${claim.total_claim_amount.toFixed(2)}</td>
                         <td className="p-3 text-center">
                           <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
-                            bill.status === 'COMPLETED' 
+                            claim.status === 'COMPLETED' 
                               ? 'bg-green-100 text-green-800' 
                               : 'bg-red-100 text-red-800'
                           }`}>
-                            {bill.status}
+                            {claim.status}
                           </span>
                         </td>
                         <td className="p-3 text-center">
