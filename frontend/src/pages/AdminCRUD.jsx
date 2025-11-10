@@ -325,7 +325,7 @@ const AdminCRUD = () => {
         claim_items: response.data.details.map(item => ({
           item_id: item.item_id,
           item_name: item.item_name,
-          item_cost: item.item_cost,
+          cost: item.item_cost,  // Map item_cost to cost
           quantity: item.quantity || 1
         }))
       });
