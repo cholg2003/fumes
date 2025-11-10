@@ -188,11 +188,11 @@ const Dashboard = () => {
     }
 
     if (claimItems.length === 0) {
-      toast.error('Please add items to the bill');
+      toast.error('Please add items to the claim');
       return;
     }
 
-    const totalCost = getTotalBillCost();
+    const totalCost = getTotalClaimCost();
     if (totalCost > selectedPatient.remaining_balance) {
       toast.error(`Insufficient funds! Available: $${selectedPatient.remaining_balance.toFixed(2)}, Required: $${totalCost.toFixed(2)}`);
       return;
@@ -201,19 +201,20 @@ const Dashboard = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `${API}/bills/submit`,
+        `${API}/claims/submit`,
         {
           patient_serial_number: selectedPatient.serial_number,
-          bill_items: claimItems.map(item => ({
+          claim_items: claimItems.map(item => ({
             item_id: item.item_id,
             item_name: item.item_name,
-            item_cost: item.cost
+            item_cost: item.cost,
+            quantity: item.quantity || 1
           }))
         },
         axiosConfig
       );
 
-      toast.success(`Claim created successfully! Claim ID: ${response.data.bill_id}`);
+      toast.success(`Claim created successfully! Claim ID: ${response.data.claim_id}`);
       setClaimItems([]);
       setSelectedPatient({
         ...selectedPatient,
