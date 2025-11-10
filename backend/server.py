@@ -272,20 +272,15 @@ async def search_patient(query: str, current_user: dict = Depends(get_current_us
     is_family_id = query and '-' in query and len(query.split('-')) == 2
     
     if is_family_id:
-        # Search by Family ID - return all family members
-        # Only show Active families in Dashboard search (suspended families hidden unless superadmin)
+        # Search by Family ID - return all family members (including suspended)
         family_filter = {"family_id": query}
-        if current_user["username"] != "superadmin":
-            family_filter["status"] = {"$ne": "Suspended"}
         
         family = await db.families.find_one(family_filter, {"_id": 0})
         if not family:
             return {"type": "family", "family": None, "members": []}
         
-        # Get members, filter out suspended if not superadmin
+        # Get all members (including suspended)
         member_filter = {"family_id": query}
-        if current_user["username"] != "superadmin":
-            member_filter["status"] = {"$ne": "Suspended"}
         
         members = await db.members.find(member_filter, {"_id": 0}).to_list(100)
         
@@ -304,18 +299,13 @@ async def search_patient(query: str, current_user: dict = Depends(get_current_us
             ]
         }
         
-        # Hide suspended members from search unless superadmin
-        if current_user["username"] != "superadmin":
-            search_filter["status"] = {"$ne": "Suspended"}
-        
+        # Show all members (including suspended)
         patients = await db.members.find(search_filter, {"_id": 0}).to_list(10)
         
-        # Get family balance for each patient, exclude suspended families
+        # Get family balance for each patient (including suspended families)
         results = []
         for patient in patients:
             family_filter = {"family_id": patient["family_id"]}
-            if current_user["username"] != "superadmin":
-                family_filter["status"] = {"$ne": "Suspended"}
             
             family = await db.families.find_one(family_filter, {"_id": 0})
             if family:
