@@ -415,14 +415,14 @@ async def submit_claim(claim_submission: ClaimSubmission, current_user: dict = D
         "new_balance": new_balance
     }
 
-@api_router.get("/bills")
-async def get_claims(current_user: dict = Depends(get_current_user)):
+@api_router.get("/claims")
+async def get_claims_list(current_user: dict = Depends(get_current_user)):
     hospital_name = current_user["hospital_name"]
     claims = await db.claims_header.find(
         {"hospital_name": hospital_name},
         {"_id": 0}
     ).sort("timestamp", -1).to_list(100)
-    return bills
+    return claims
 
 @api_router.get("/claims/monthly-stats")
 async def get_monthly_claims_stats(current_user: dict = Depends(get_current_user)):
