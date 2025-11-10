@@ -88,7 +88,7 @@ const Dashboard = () => {
 
   const loadMonthlyStats = async () => {
     try {
-      const response = await axios.get(`${API}/bills/monthly-stats`, axiosConfig);
+      const response = await axios.get(`${API}/claims/monthly-stats`, axiosConfig);
       setMonthlyStats(response.data);
     } catch (error) {
       console.error('Failed to load monthly stats:', error);
