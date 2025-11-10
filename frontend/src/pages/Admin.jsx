@@ -218,7 +218,7 @@ const Admin = () => {
             </div>
           </div>
           <Button
-            onClick={() => navigate('/admin/crud')}
+            onClick={() => navigate('/admincrud')}
             className="bg-purple-600 hover:bg-purple-700"
           >
             Manage All Data (CRUD)
