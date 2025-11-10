@@ -157,6 +157,11 @@ const Dashboard = () => {
       return;
     }
 
+    if (itemQuantity < 1) {
+      toast.error('Quantity must be at least 1');
+      return;
+    }
+
     console.log('Selected item ID:', selectedItem);
     console.log('Price list:', priceList);
     
@@ -164,9 +169,10 @@ const Dashboard = () => {
     console.log('Found item:', item);
     
     if (item) {
-      setClaimItems([...claimItems, item]);
+      setClaimItems([...claimItems, { ...item, quantity: itemQuantity }]);
       setSelectedItem('');
-      toast.success('Item added to bill');
+      setItemQuantity(1); // Reset quantity to 1
+      toast.success(`Added ${itemQuantity}x ${item.item_name} to claim`);
     } else {
       toast.error('Item not found in price list');
     }
