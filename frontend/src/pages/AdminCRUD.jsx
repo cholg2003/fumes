@@ -943,7 +943,7 @@ const AdminCRUD = () => {
                 <table className="w-full">
                   <thead className="bg-gray-100">
                     <tr>
-                      <th className="text-left p-3 text-sm font-semibold">Bill ID</th>
+                      <th className="text-left p-3 text-sm font-semibold">Claim ID</th>
                       <th className="text-left p-3 text-sm font-semibold">Hospital</th>
                       <th className="text-left p-3 text-sm font-semibold">Patient</th>
                       <th className="text-left p-3 text-sm font-semibold">Date</th>
