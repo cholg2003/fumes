@@ -22,6 +22,7 @@ const Dashboard = () => {
   const [priceList, setPriceList] = useState([]);
   const [claimItems, setClaimItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState('');
+  const [itemQuantity, setItemQuantity] = useState(1);
   const [itemSearchQuery, setItemSearchQuery] = useState('');
   const [filteredPriceList, setFilteredPriceList] = useState([]);
   const [claims, setClaims] = useState([]);
