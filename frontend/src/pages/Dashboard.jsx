@@ -79,10 +79,10 @@ const Dashboard = () => {
 
   const loadClaims = async () => {
     try {
-      const response = await axios.get(`${API}/bills`, axiosConfig);
+      const response = await axios.get(`${API}/claims`, axiosConfig);
       setClaims(response.data);
     } catch (error) {
-      toast.error('Failed to load bills');
+      toast.error('Failed to load claims');
     }
   };
 
