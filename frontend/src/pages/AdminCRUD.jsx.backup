@@ -24,7 +24,7 @@ const AdminCRUD = () => {
   const [families, setFamilies] = useState([]);
   const [members, setMembers] = useState([]);
   const [pricelists, setPricelists] = useState([]);
-  const [claims, setClaims] = useState([]);
+  const [bills, setBills] = useState([]);
   const [loading, setLoading] = useState(false);
 
   // Dialog states
@@ -76,7 +76,7 @@ const AdminCRUD = () => {
         axios.get(`${API}/admin/pricelists/all`, axiosConfig)
       ];
       
-      // Claims endpoint differs based on user type
+      // Bills endpoint differs based on user type
       if (isSuperAdmin) {
         requests.unshift(
           axios.get(`${API}/admin/hospitals`, axiosConfig),
@@ -95,12 +95,12 @@ const AdminCRUD = () => {
         setFamilies(responses[2].data);
         setMembers(responses[3].data);
         setPricelists(responses[4].data);
-        setClaims(responses[5].data);
+        setBills(responses[5].data);
       } else {
         setFamilies(responses[0].data);
         setMembers(responses[1].data);
         setPricelists(responses[2].data);
-        setClaims(responses[3].data);
+        setBills(responses[3].data);
         // For hospital admin, only load their hospital info
         setHospitals([{ hospital_name: hospitalName }]);
       }
@@ -212,7 +212,7 @@ const AdminCRUD = () => {
   };
 
   const handleFamilyDelete = async (familyId) => {
-    if (!window.confirm(`Delete family "${familyId}"? This will fail if the family has members or claims.`)) return;
+    if (!window.confirm(`Delete family "${familyId}"? This will fail if the family has members or bills.`)) return;
     try {
       await axios.delete(`${API}/admin/families/${familyId}`, axiosConfig);
       toast.success('Family deleted successfully');
@@ -253,7 +253,7 @@ const AdminCRUD = () => {
   };
 
   const handleMemberDelete = async (serialNumber) => {
-    if (!window.confirm(`Delete member "${serialNumber}"? This will fail if the member has claims.`)) return;
+    if (!window.confirm(`Delete member "${serialNumber}"? This will fail if the member has bills.`)) return;
     try {
       await axios.delete(`${API}/admin/members/${serialNumber}`, axiosConfig);
       toast.success('Member deleted successfully');
@@ -350,7 +350,7 @@ const AdminCRUD = () => {
   };
 
   // Bill delete
-  const handleClaimDelete = async (billId) => {
+  const handleBillDelete = async (billId) => {
     if (!window.confirm(`Delete bill "${billId}"? This will refund the amount if the bill was completed.`)) return;
     try {
       await axios.delete(`${API}/admin/bills/${billId}`, axiosConfig);
@@ -420,7 +420,7 @@ const AdminCRUD = () => {
             <TabsTrigger value="families"><UsersRound className="w-4 h-4 mr-2" />Families</TabsTrigger>
             <TabsTrigger value="members"><Users className="w-4 h-4 mr-2" />Members</TabsTrigger>
             <TabsTrigger value="pricelists"><FileText className="w-4 h-4 mr-2" />Price Lists</TabsTrigger>
-            <TabsTrigger value="bills"><Receipt className="w-4 h-4 mr-2" />Claims</TabsTrigger>
+            <TabsTrigger value="bills"><Receipt className="w-4 h-4 mr-2" />Bills</TabsTrigger>
           </TabsList>
 
           {/* Hospitals Tab - Superadmin Only */}
@@ -931,12 +931,12 @@ const AdminCRUD = () => {
             </Card>
           </TabsContent>
 
-          {/* Claims Tab */}
+          {/* Bills Tab */}
           <TabsContent value="bills">
             <Card>
               <CardHeader>
                 <CardTitle>
-                  {isSuperAdmin ? 'All Claims (View & Delete)' : `${hospitalName} Claims (View & Delete)`}
+                  {isSuperAdmin ? 'All Bills (View & Delete)' : `${hospitalName} Bills (View & Delete)`}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -953,7 +953,7 @@ const AdminCRUD = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {claims.map((bill) => (
+                    {bills.map((bill) => (
                       <tr key={bill.bill_id} className="border-b hover:bg-gray-50">
                         <td className="p-3 text-sm font-medium">{bill.bill_id}</td>
                         <td className="p-3 text-sm">{bill.hospital_name}</td>
@@ -979,7 +979,7 @@ const AdminCRUD = () => {
                             <Button 
                               variant="ghost" 
                               size="sm" 
-                              onClick={() => handleClaimDelete(bill.bill_id)} 
+                              onClick={() => handleBillDelete(bill.bill_id)} 
                               className="text-red-600 hover:bg-red-50"
                               title="Delete Bill"
                             >
