@@ -455,6 +455,20 @@ async def get_monthly_claims_stats(current_user: dict = Depends(get_current_user
     
     return stats
 
+@api_router.get("/claims")
+async def get_claims(current_user: dict = Depends(get_current_user)):
+    # Get claims for current user's hospital
+    hospital_name = current_user["hospital_name"]
+    
+    # Superadmin sees all claims
+    if current_user["username"] == "superadmin":
+        claims = await db.claims_header.find({}, {"_id": 0}).sort("timestamp", -1).to_list(1000)
+    else:
+        # Regular users see only their hospital's claims
+        claims = await db.claims_header.find({"hospital_name": hospital_name}, {"_id": 0}).sort("timestamp", -1).to_list(1000)
+    
+    return claims
+
 @api_router.get("/claims/{claim_id}")
 async def get_claim_details(claim_id: str, current_user: dict = Depends(get_current_user)):
     claim_header = await db.claims_header.find_one({"claim_id": claim_id}, {"_id": 0})
