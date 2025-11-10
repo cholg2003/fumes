@@ -1083,6 +1083,124 @@ const AdminCRUD = () => {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Edit Claim Dialog */}
+        <Dialog open={claimDialog} onOpenChange={setClaimDialog}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Edit Claim - {claimForm.claim_id}</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleClaimUpdate} className="space-y-6">
+              {/* Patient Selection */}
+              <div>
+                <Label>Patient Serial Number</Label>
+                <Select 
+                  value={claimForm.patient_serial_number} 
+                  onValueChange={(value) => setClaimForm({...claimForm, patient_serial_number: value})}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Patient" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {members.map((member) => (
+                      <SelectItem key={member.serial_number} value={member.serial_number}>
+                        {member.serial_number} - {member.first_name} {member.last_name} (Family: {member.family_id})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Items Section */}
+              <div className="border rounded-lg p-4 space-y-4">
+                <h3 className="font-semibold">Claim Items</h3>
+                
+                {/* Add Item */}
+                <div className="flex gap-3">
+                  <div className="flex-1">
+                    <Select value={selectedClaimItem} onValueChange={setSelectedClaimItem}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Item" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {pricelists.map((item) => (
+                          <SelectItem key={item.item_id} value={item.item_id}>
+                            {item.item_id} - {item.item_name} - ${item.cost.toFixed(2)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="w-24">
+                    <Input
+                      type="number"
+                      min="1"
+                      value={claimItemQuantity}
+                      onChange={(e) => setClaimItemQuantity(parseInt(e.target.value) || 1)}
+                      placeholder="Qty"
+                    />
+                  </div>
+                  <Button type="button" onClick={handleAddClaimItem}>
+                    <Plus className="w-4 h-4 mr-1" />
+                    Add
+                  </Button>
+                </div>
+
+                {/* Items Table */}
+                {claimForm.claim_items.length > 0 && (
+                  <table className="w-full border">
+                    <thead className="bg-gray-100">
+                      <tr>
+                        <th className="text-left p-2 text-sm">Item</th>
+                        <th className="text-right p-2 text-sm">Unit Cost</th>
+                        <th className="text-center p-2 text-sm">Qty</th>
+                        <th className="text-right p-2 text-sm">Total</th>
+                        <th className="text-center p-2 text-sm">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {claimForm.claim_items.map((item, index) => (
+                        <tr key={index} className="border-b">
+                          <td className="p-2 text-sm">{item.item_name}</td>
+                          <td className="p-2 text-sm text-right">${item.cost.toFixed(2)}</td>
+                          <td className="p-2 text-sm text-center">{item.quantity || 1}</td>
+                          <td className="p-2 text-sm text-right font-bold">${(item.cost * (item.quantity || 1)).toFixed(2)}</td>
+                          <td className="p-2 text-center">
+                            <Button 
+                              type="button" 
+                              variant="ghost" 
+                              size="sm" 
+                              onClick={() => handleRemoveClaimItem(index)}
+                              className="text-red-600"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                    <tfoot className="bg-blue-50">
+                      <tr>
+                        <td colSpan="3" className="p-2 text-sm font-bold">Total:</td>
+                        <td className="p-2 text-sm text-right font-bold text-blue-600">${getClaimTotal().toFixed(2)}</td>
+                        <td></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                )}
+              </div>
+
+              <div className="flex justify-end gap-3">
+                <Button type="button" variant="outline" onClick={() => setClaimDialog(false)}>
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={loading}>
+                  {loading ? 'Updating...' : 'Update Claim'}
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
