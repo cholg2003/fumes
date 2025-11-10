@@ -82,7 +82,7 @@ const AdminCRUD = () => {
           axios.get(`${API}/admin/hospitals`, axiosConfig),
           axios.get(`${API}/admin/users`, axiosConfig)
         );
-        requests.push(axios.get(`${API}/admin/bills/all`, axiosConfig)); // All bills for superadmin
+        requests.push(axios.get(`${API}/admin/claims/all`, axiosConfig)); // All claims for superadmin
       } else {
         requests.push(axios.get(`${API}/bills`, axiosConfig)); // Only hospital bills
       }
