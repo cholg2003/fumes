@@ -85,6 +85,7 @@ class ClaimItem(BaseModel):
     item_id: str
     item_name: str
     item_cost: float
+    quantity: int = 1
 
 class ClaimSubmission(BaseModel):
     patient_serial_number: str
