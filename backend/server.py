@@ -500,16 +500,16 @@ async def get_all_claims_admin(admin_user: dict = Depends(get_admin_user)):
 @api_router.post("/claims/{claim_id}/void")
 async def void_claim(claim_id: str, current_user: dict = Depends(get_current_user)):
     claim = await db.claims_header.find_one({"claim_id": claim_id}, {"_id": 0})
-    if not bill:
+    if not claim:
         raise HTTPException(status_code=404, detail="Claim not found")
     
-    if bill["status"] == "VOIDED":
+    if claim["status"] == "VOIDED":
         raise HTTPException(status_code=400, detail="Claim already voided")
     
     # Refund the amount to family
     await db.families.update_one(
-        {"family_id": bill["family_id"]},
-        {"$inc": {"remaining_balance": bill["total_claim_amount"]}}
+        {"family_id": claim["family_id"]},
+        {"$inc": {"remaining_balance": claim["total_claim_amount"]}}
     )
     
     # Mark claim as voided
@@ -521,10 +521,10 @@ async def void_claim(claim_id: str, current_user: dict = Depends(get_current_use
     return {"success": True, "message": "Claim voided successfully"}
 
 @api_router.delete("/admin/claims/{claim_id}")
-async def delete_bill(claim_id: str, admin_user: dict = Depends(get_admin_user)):
+async def delete_claim(claim_id: str, admin_user: dict = Depends(get_admin_user)):
     # Get claim to check if it needs refund
     claim = await db.claims_header.find_one({"claim_id": claim_id}, {"_id": 0})
-    if not bill:
+    if not claim:
         raise HTTPException(status_code=404, detail="Claim not found")
     
     # If claim is completed, refund the amount
