@@ -270,19 +270,28 @@ async def setup_password(password_setup: PasswordSetup):
 
 @api_router.get("/patients/search")
 async def search_patient(query: str, current_user: dict = Depends(get_current_user)):
+    # Check if user is superadmin
+    is_superadmin = current_user["username"] == "superadmin"
+    
     # Check if query is a Family ID (e.g., SEC-2413 without the member number)
     is_family_id = query and '-' in query and len(query.split('-')) == 2
     
     if is_family_id:
-        # Search by Family ID - return all family members (including suspended)
+        # Search by Family ID
         family_filter = {"family_id": query}
+        # Hide suspended families from non-superadmin users
+        if not is_superadmin:
+            family_filter["status"] = {"$ne": "Suspended"}
         
         family = await db.families.find_one(family_filter, {"_id": 0})
         if not family:
             return {"type": "family", "family": None, "members": []}
         
-        # Get all members (including suspended)
+        # Get members
         member_filter = {"family_id": query}
+        # Hide suspended members from non-superadmin users
+        if not is_superadmin:
+            member_filter["status"] = {"$ne": "Suspended"}
         
         members = await db.members.find(member_filter, {"_id": 0}).to_list(100)
         
@@ -301,13 +310,19 @@ async def search_patient(query: str, current_user: dict = Depends(get_current_us
             ]
         }
         
-        # Show all members (including suspended)
+        # Hide suspended members from non-superadmin users
+        if not is_superadmin:
+            search_filter["status"] = {"$ne": "Suspended"}
+        
         patients = await db.members.find(search_filter, {"_id": 0}).to_list(10)
         
-        # Get family balance for each patient (including suspended families)
+        # Get family balance for each patient
         results = []
         for patient in patients:
             family_filter = {"family_id": patient["family_id"]}
+            # Hide suspended families from non-superadmin users
+            if not is_superadmin:
+                family_filter["status"] = {"$ne": "Suspended"}
             
             family = await db.families.find_one(family_filter, {"_id": 0})
             if family:
