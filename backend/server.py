@@ -81,30 +81,30 @@ class PriceListItem(BaseModel):
     item_type: str
     cost: float
 
-class BillItem(BaseModel):
+class ClaimItem(BaseModel):
     item_id: str
     item_name: str
     item_cost: float
 
-class BillSubmission(BaseModel):
+class ClaimSubmission(BaseModel):
     patient_serial_number: str
-    bill_items: List[BillItem]
+    claim_items: List[ClaimItem]
 
-class BillHeader(BaseModel):
+class ClaimHeader(BaseModel):
     model_config = ConfigDict(extra="ignore")
-    bill_id: str
+    claim_id: str
     timestamp: str
     hospital_name: str
     patient_serial_number: str
     patient_name: str
     family_id: str
-    total_bill_amount: float
+    total_claim_amount: float
     status: str
 
-class BillDetail(BaseModel):
+class ClaimDetail(BaseModel):
     model_config = ConfigDict(extra="ignore")
-    bill_detail_id: str
-    bill_id: str
+    claim_detail_id: str
+    claim_id: str
     item_id: str
     item_name: str
     item_cost: float
@@ -347,11 +347,11 @@ async def get_price_list(current_user: dict = Depends(get_current_user)):
     items = await db.pricelists.find({"hospital_name": hospital_name}, {"_id": 0}).to_list(1000)
     return items
 
-@api_router.post("/bills/submit")
-async def submit_bill(bill_submission: BillSubmission, current_user: dict = Depends(get_current_user)):
+@api_router.post("/claims/submit")
+async def submit_claim(claim_submission: ClaimSubmission, current_user: dict = Depends(get_current_user)):
     # Get patient details
     patient = await db.members.find_one(
-        {"serial_number": bill_submission.patient_serial_number},
+        {"serial_number": claim_submission.patient_serial_number},
         {"_id": 0}
     )
     if not patient:
@@ -359,7 +359,7 @@ async def submit_bill(bill_submission: BillSubmission, current_user: dict = Depe
     
     # Check if member is suspended
     if patient.get("status") == "Suspended":
-        raise HTTPException(status_code=403, detail="Cannot create bill for suspended member")
+        raise HTTPException(status_code=403, detail="Cannot create claim for suspended member")
     
     # Get family balance
     family = await db.families.find_one({"family_id": patient["family_id"]}, {"_id": 0})
@@ -368,45 +368,45 @@ async def submit_bill(bill_submission: BillSubmission, current_user: dict = Depe
     
     # Check if family is suspended
     if family.get("status") == "Suspended":
-        raise HTTPException(status_code=403, detail="Cannot create bill for suspended family")
+        raise HTTPException(status_code=403, detail="Cannot create claim for suspended family")
     
     # Calculate total
-    total_amount = sum(item.item_cost for item in bill_submission.bill_items)
+    total_amount = sum(item.item_cost for item in claim_submission.claim_items)
     
     # Check balance
     if total_amount > family["remaining_balance"]:
         raise HTTPException(
             status_code=400,
-            detail=f"Insufficient funds. Available balance: ${family['remaining_balance']:.2f}, Bill amount: ${total_amount:.2f}"
+            detail=f"Insufficient funds. Available balance: ${family['remaining_balance']:.2f}, Claim amount: ${total_amount:.2f}"
         )
     
-    # Create bill
-    bill_id = f"BILL-{str(uuid.uuid4())[:8].upper()}"
+    # Create claim
+    claim_id = f"BILL-{str(uuid.uuid4())[:8].upper()}"
     timestamp = datetime.now(timezone.utc).isoformat()
     
-    # Insert bill header
-    bill_header = {
-        "bill_id": bill_id,
+    # Insert claim header
+    claim_header = {
+        "claim_id": claim_id,
         "timestamp": timestamp,
         "hospital_name": current_user["hospital_name"],
         "patient_serial_number": patient["serial_number"],
         "patient_name": f"{patient['first_name']} {patient['last_name']}",
         "family_id": patient["family_id"],
-        "total_bill_amount": total_amount,
+        "total_claim_amount": total_amount,
         "status": "COMPLETED"
     }
-    await db.bills_header.insert_one(bill_header)
+    await db.claims_header.insert_one(claim_header)
     
-    # Insert bill details
-    for item in bill_submission.bill_items:
-        bill_detail = {
-            "bill_detail_id": str(uuid.uuid4()),
-            "bill_id": bill_id,
+    # Insert claim details
+    for item in claim_submission.claim_items:
+        claim_detail = {
+            "claim_detail_id": str(uuid.uuid4()),
+            "claim_id": claim_id,
             "item_id": item.item_id,
             "item_name": item.item_name,
             "item_cost": item.item_cost
         }
-        await db.bills_details.insert_one(bill_detail)
+        await db.claims_details.insert_one(claim_detail)
     
     # Update family balance
     new_balance = family["remaining_balance"] - total_amount
@@ -417,27 +417,27 @@ async def submit_bill(bill_submission: BillSubmission, current_user: dict = Depe
     
     return {
         "success": True,
-        "bill_id": bill_id,
+        "claim_id": claim_id,
         "total_amount": total_amount,
         "new_balance": new_balance
     }
 
 @api_router.get("/bills")
-async def get_bills(current_user: dict = Depends(get_current_user)):
+async def get_claims(current_user: dict = Depends(get_current_user)):
     hospital_name = current_user["hospital_name"]
-    bills = await db.bills_header.find(
+    claims = await db.claims_header.find(
         {"hospital_name": hospital_name},
         {"_id": 0}
     ).sort("timestamp", -1).to_list(100)
     return bills
 
-@api_router.get("/bills/monthly-stats")
-async def get_monthly_billing_stats(current_user: dict = Depends(get_current_user)):
+@api_router.get("/claims/monthly-stats")
+async def get_monthly_claims_stats(current_user: dict = Depends(get_current_user)):
     # Get current month's bills
     now = datetime.now(timezone.utc)
     start_of_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     
-    # Aggregate bills by hospital for current month
+    # Aggregate claims by hospital for current month
     pipeline = [
         {
             "$match": {
@@ -448,92 +448,92 @@ async def get_monthly_billing_stats(current_user: dict = Depends(get_current_use
         {
             "$group": {
                 "_id": "$hospital_name",
-                "total_amount": {"$sum": "$total_bill_amount"},
-                "bill_count": {"$sum": 1}
+                "total_amount": {"$sum": "$total_claim_amount"},
+                "claim_count": {"$sum": 1}
             }
         }
     ]
     
-    results = await db.bills_header.aggregate(pipeline).to_list(100)
+    results = await db.claims_header.aggregate(pipeline).to_list(100)
     
     stats = {}
     for result in results:
         stats[result["_id"]] = {
             "total": result["total_amount"],
-            "count": result["bill_count"]
+            "count": result["claim_count"]
         }
     
     return stats
 
-@api_router.get("/bills/{bill_id}")
-async def get_bill_details(bill_id: str, current_user: dict = Depends(get_current_user)):
-    bill_header = await db.bills_header.find_one({"bill_id": bill_id}, {"_id": 0})
-    if not bill_header:
-        raise HTTPException(status_code=404, detail="Bill not found")
+@api_router.get("/claims/{claim_id}")
+async def get_claim_details(claim_id: str, current_user: dict = Depends(get_current_user)):
+    claim_header = await db.claims_header.find_one({"claim_id": claim_id}, {"_id": 0})
+    if not claim_header:
+        raise HTTPException(status_code=404, detail="Claim not found")
     
     # Check if user has access to this bill
     if current_user["role"] != "Admin" or current_user["hospital_name"] != "System Administration":
         # Regular hospital users can only see their own bills
-        if bill_header["hospital_name"] != current_user["hospital_name"]:
+        if claim_header["hospital_name"] != current_user["hospital_name"]:
             raise HTTPException(status_code=403, detail="Access denied")
     
-    bill_details = await db.bills_details.find({"bill_id": bill_id}, {"_id": 0}).to_list(100)
+    claim_details = await db.claims_details.find({"claim_id": claim_id}, {"_id": 0}).to_list(100)
     
     return {
-        "header": bill_header,
-        "details": bill_details
+        "header": claim_header,
+        "details": claim_details
     }
 
-@api_router.get("/admin/bills/all")
-async def get_all_bills_admin(admin_user: dict = Depends(get_admin_user)):
-    # Get all bills for admin (not filtered by hospital)
-    bills = await db.bills_header.find({}, {"_id": 0}).sort("timestamp", -1).to_list(1000)
+@api_router.get("/admin/claims/all")
+async def get_all_claims_admin(admin_user: dict = Depends(get_admin_user)):
+    # Get all claims for admin (not filtered by hospital)
+    claims = await db.claims_header.find({}, {"_id": 0}).sort("timestamp", -1).to_list(1000)
     return bills
 
-@api_router.post("/bills/{bill_id}/void")
-async def void_bill(bill_id: str, current_user: dict = Depends(get_current_user)):
-    bill = await db.bills_header.find_one({"bill_id": bill_id}, {"_id": 0})
+@api_router.post("/claims/{claim_id}/void")
+async def void_claim(claim_id: str, current_user: dict = Depends(get_current_user)):
+    claim = await db.claims_header.find_one({"claim_id": claim_id}, {"_id": 0})
     if not bill:
-        raise HTTPException(status_code=404, detail="Bill not found")
+        raise HTTPException(status_code=404, detail="Claim not found")
     
     if bill["status"] == "VOIDED":
-        raise HTTPException(status_code=400, detail="Bill already voided")
+        raise HTTPException(status_code=400, detail="Claim already voided")
     
     # Refund the amount to family
     await db.families.update_one(
         {"family_id": bill["family_id"]},
-        {"$inc": {"remaining_balance": bill["total_bill_amount"]}}
+        {"$inc": {"remaining_balance": bill["total_claim_amount"]}}
     )
     
-    # Mark bill as voided
-    await db.bills_header.update_one(
-        {"bill_id": bill_id},
+    # Mark claim as voided
+    await db.claims_header.update_one(
+        {"claim_id": claim_id},
         {"$set": {"status": "VOIDED"}}
     )
     
-    return {"success": True, "message": "Bill voided successfully"}
+    return {"success": True, "message": "Claim voided successfully"}
 
-@api_router.delete("/admin/bills/{bill_id}")
-async def delete_bill(bill_id: str, admin_user: dict = Depends(get_admin_user)):
-    # Get bill to check if it needs refund
-    bill = await db.bills_header.find_one({"bill_id": bill_id}, {"_id": 0})
+@api_router.delete("/admin/claims/{claim_id}")
+async def delete_bill(claim_id: str, admin_user: dict = Depends(get_admin_user)):
+    # Get claim to check if it needs refund
+    claim = await db.claims_header.find_one({"claim_id": claim_id}, {"_id": 0})
     if not bill:
-        raise HTTPException(status_code=404, detail="Bill not found")
+        raise HTTPException(status_code=404, detail="Claim not found")
     
-    # If bill is completed, refund the amount
+    # If claim is completed, refund the amount
     if bill["status"] == "COMPLETED":
         await db.families.update_one(
             {"family_id": bill["family_id"]},
-            {"$inc": {"remaining_balance": bill["total_bill_amount"]}}
+            {"$inc": {"remaining_balance": bill["total_claim_amount"]}}
         )
     
-    # Delete bill details
-    await db.bills_details.delete_many({"bill_id": bill_id})
+    # Delete claim details
+    await db.claims_details.delete_many({"claim_id": claim_id})
     
-    # Delete bill header
-    await db.bills_header.delete_one({"bill_id": bill_id})
+    # Delete claim header
+    await db.claims_header.delete_one({"claim_id": claim_id})
     
-    return {"success": True, "message": "Bill deleted successfully"}
+    return {"success": True, "message": "Claim deleted successfully"}
 
 # Admin Routes
 @api_router.get("/admin/families")
@@ -575,7 +575,7 @@ async def delete_family(family_id: str, admin_user: dict = Depends(get_admin_use
         raise HTTPException(status_code=400, detail="Cannot delete family with existing members. Delete members first.")
     
     # Check if family has bills
-    bills = await db.bills_header.find_one({"family_id": family_id})
+    claims = await db.claims_header.find_one({"family_id": family_id})
     if bills:
         raise HTTPException(status_code=400, detail="Cannot delete family with existing bills.")
     
@@ -672,7 +672,7 @@ async def update_member(serial_number: str, member_update: MemberUpdate, admin_u
 @api_router.delete("/admin/members/{serial_number}")
 async def delete_member(serial_number: str, admin_user: dict = Depends(get_admin_user)):
     # Check if member has bills
-    bills = await db.bills_header.find_one({"patient_serial_number": serial_number})
+    claims = await db.claims_header.find_one({"patient_serial_number": serial_number})
     if bills:
         raise HTTPException(status_code=400, detail="Cannot delete member with existing bills.")
     
