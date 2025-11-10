@@ -17,7 +17,7 @@ function App() {
         <Route path="/setup-password" element={<SetupPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin" element={<Admin />} />
-        <Route path="/admin/crud" element={<AdminCRUD />} />
+        <Route path="/admincrud" element={<AdminCRUD />} />
         <Route path="/print/:claimId" element={<PrintBill />} />
       </Routes>
     </BrowserRouter>
