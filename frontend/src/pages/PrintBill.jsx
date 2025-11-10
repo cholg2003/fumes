@@ -8,13 +8,13 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 const PrintBill = () => {
-  const { billId } = useParams();
-  const [billData, setBillData] = useState(null);
+  const { claimId } = useParams();
+  const [claimData, setClaimData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadBillData();
-  }, [billId]);
+  }, [claimId]);
 
   const loadBillData = async () => {
     const token = localStorage.getItem('token');
@@ -24,10 +24,10 @@ const PrintBill = () => {
     }
 
     try {
-      const response = await axios.get(`${API}/bills/${billId}`, {
+      const response = await axios.get(`${API}/bills/${claimId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setBillData(response.data);
+      setClaimData(response.data);
     } catch (error) {
       alert('Failed to load bill data');
     } finally {
@@ -47,7 +47,7 @@ const PrintBill = () => {
     );
   }
 
-  if (!billData) {
+  if (!claimData) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-lg text-gray-600">Bill not found</div>
@@ -55,7 +55,7 @@ const PrintBill = () => {
     );
   }
 
-  const { header, details } = billData;
+  const { header, details } = claimData;
 
   return (
     <div className="min-h-screen bg-gray-50 p-8 print:p-0 print:bg-white">
@@ -93,8 +93,8 @@ const PrintBill = () => {
               <p className="text-lg text-gray-600 font-medium">{header.hospital_name}</p>
             </div>
             <div className="text-right">
-              <div className="text-sm text-gray-600">Bill ID</div>
-              <div className="text-xl font-bold text-gray-800" data-testid="bill-id">{header.bill_id}</div>
+              <div className="text-sm text-gray-600">Claim ID</div>
+              <div className="text-xl font-bold text-gray-800" data-testid="bill-id">{header.claim_id}</div>
               <div className="text-sm text-gray-600 mt-2">{new Date(header.timestamp).toLocaleString()}</div>
             </div>
           </div>
@@ -151,7 +151,7 @@ const PrintBill = () => {
               <tfoot className="bg-blue-50">
                 <tr>
                   <td className="p-4 font-bold text-gray-800 text-lg">Total Amount</td>
-                  <td className="p-4 text-right font-bold text-blue-600 text-xl" data-testid="bill-total">${header.total_bill_amount.toFixed(2)}</td>
+                  <td className="p-4 text-right font-bold text-blue-600 text-xl" data-testid="bill-total">${header.total_claim_amount.toFixed(2)}</td>
                 </tr>
               </tfoot>
             </table>
