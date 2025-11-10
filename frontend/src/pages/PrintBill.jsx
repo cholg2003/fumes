@@ -68,7 +68,7 @@ const PrintBill = () => {
             data-testid="print-button"
           >
             <Printer className="w-4 h-4 mr-2" />
-            Print Bill
+            Print Claim
           </Button>
           <Button
             onClick={() => window.close()}
