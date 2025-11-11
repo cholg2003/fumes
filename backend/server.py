@@ -1054,6 +1054,38 @@ async def delete_user(username: str, admin_user: dict = Depends(get_admin_user))
     
     return {"success": True, "message": "User deleted successfully"}
 
+@api_router.post("/admin/users/{username}/reset-password")
+async def reset_user_password(username: str, password_reset: PasswordReset, current_user: dict = Depends(get_current_user)):
+    # Only superadmin can reset passwords
+    if current_user["username"] != "superadmin":
+        raise HTTPException(status_code=403, detail="Only superadmin can reset passwords")
+    
+    # Prevent resetting superadmin password via this endpoint
+    if username == "superadmin":
+        raise HTTPException(status_code=400, detail="Cannot reset superadmin password via this endpoint")
+    
+    # Check if user exists
+    user = await db.users.find_one({"username": username}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Hash the temporary password
+    hashed_password = pwd_context.hash(password_reset.temporary_password)
+    
+    # Update user password and set first_login to true
+    await db.users.update_one(
+        {"username": username},
+        {"$set": {
+            "password": hashed_password,
+            "first_login": True
+        }}
+    )
+    
+    return {
+        "success": True,
+        "message": f"Password reset for user '{username}'. User must change password on next login."
+    }
+
 # Include the router in the main app
 app.include_router(api_router)
 
