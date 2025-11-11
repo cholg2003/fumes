@@ -45,6 +45,9 @@ class PasswordSetup(BaseModel):
     temporary_password: str
     new_password: str
 
+class PasswordReset(BaseModel):
+    temporary_password: str
+
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str
