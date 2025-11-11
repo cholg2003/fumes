@@ -1127,6 +1127,40 @@ const AdminCRUD = () => {
           </TabsContent>
         </Tabs>
 
+        {/* Reset Password Dialog */}
+        <Dialog open={resetPasswordDialog} onOpenChange={setResetPasswordDialog}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Reset Password - {selectedUser?.username}</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handlePasswordReset} className="space-y-4">
+              <div>
+                <Label>Temporary Password</Label>
+                <Input
+                  type="text"
+                  value={tempPassword}
+                  onChange={(e) => setTempPassword(e.target.value)}
+                  placeholder="Enter temporary password"
+                  required
+                  minLength={6}
+                  autoFocus
+                />
+                <p className="text-sm text-gray-500 mt-1">
+                  User will be required to change this password on next login.
+                </p>
+              </div>
+              <div className="flex justify-end gap-3">
+                <Button type="button" variant="outline" onClick={() => setResetPasswordDialog(false)}>
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={loading}>
+                  {loading ? 'Resetting...' : 'Reset Password'}
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
+
         {/* Edit Claim Dialog */}
         <Dialog open={claimDialog} onOpenChange={setClaimDialog}>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
