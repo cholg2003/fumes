@@ -189,6 +189,35 @@ const AdminCRUD = () => {
     }
   };
 
+  const openResetPasswordDialog = (user) => {
+    setSelectedUser(user);
+    setTempPassword('');
+    setResetPasswordDialog(true);
+  };
+
+  const handlePasswordReset = async (e) => {
+    e.preventDefault();
+    if (!tempPassword || tempPassword.length < 6) {
+      toast.error('Password must be at least 6 characters');
+      return;
+    }
+    setLoading(true);
+    try {
+      await axios.post(
+        `${API}/admin/users/${selectedUser.username}/reset-password`,
+        { temporary_password: tempPassword },
+        axiosConfig
+      );
+      toast.success(`Password reset for ${selectedUser.username}. User must change password on next login.`);
+      setResetPasswordDialog(false);
+      setTempPassword('');
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Failed to reset password');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Family CRUD
   const handleFamilySubmit = async (e) => {
     e.preventDefault();
