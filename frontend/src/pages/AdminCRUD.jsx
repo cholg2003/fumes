@@ -34,6 +34,9 @@ const AdminCRUD = () => {
   const [memberDialog, setMemberDialog] = useState(false);
   const [pricelistDialog, setPricelistDialog] = useState(false);
   const [claimDialog, setClaimDialog] = useState(false);
+  const [resetPasswordDialog, setResetPasswordDialog] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [tempPassword, setTempPassword] = useState('');
 
   // Forms
   const [hospitalForm, setHospitalForm] = useState({ hospital_name: '', address: '', phone: '', email: '' });
