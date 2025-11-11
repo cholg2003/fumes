@@ -688,6 +688,17 @@ const AdminCRUD = () => {
                             <Button variant="ghost" size="sm" onClick={() => openEditDialog('user', user)}>
                               <Edit className="w-4 h-4" />
                             </Button>
+                            {isSuperAdmin && user.username !== 'superadmin' && (
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                onClick={() => openResetPasswordDialog(user)} 
+                                className="text-orange-600 hover:bg-orange-50"
+                                title="Reset Password"
+                              >
+                                <Key className="w-4 h-4" />
+                              </Button>
+                            )}
                             <Button variant="ghost" size="sm" onClick={() => handleUserDelete(user.username)} className="text-red-600" disabled={user.username === 'superadmin'}>
                               <Trash2 className="w-4 h-4" />
                             </Button>
