@@ -1,0 +1,108 @@
+{
+  "timestamp": "2025-11-12T05:31:30.488942",
+  "total_tests": 20,
+  "passed_tests": 17,
+  "success_rate": 85.0,
+  "results": [
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "POST /api/admin/hospitals/{hospital_name}/deposit - Valid Amount",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "POST /api/admin/hospitals/{hospital_name}/deposit - Negative Amount",
+      "success": true,
+      "details": "Status: 400"
+    },
+    {
+      "test": "POST /api/admin/hospitals/{hospital_name}/deposit - Zero Amount",
+      "success": true,
+      "details": "Status: 400"
+    },
+    {
+      "test": "POST /api/admin/hospitals/{hospital_name}/deposit - Non-existent Hospital",
+      "success": true,
+      "details": "Status: 404"
+    },
+    {
+      "test": "POST /api/admin/hospitals/{hospital_name}/deposit - Invalid Token",
+      "success": true,
+      "details": "Status: 401"
+    },
+    {
+      "test": "GET /api/hospital/balance - Authenticated User",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "GET /api/claims - Get Claims for Testing",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "POST /api/claims/{claim_id}/pay - Mark PAID claim again",
+      "success": true,
+      "details": "Status: 400"
+    },
+    {
+      "test": "POST /api/claims/{claim_id}/pay - Non-existent claim",
+      "success": true,
+      "details": "Status: 404"
+    },
+    {
+      "test": "GET /api/claims - Verify Status Changes",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Claim Status Change Verification",
+      "success": false,
+      "details": "No new PAID claims found"
+    },
+    {
+      "test": "GET /api/hospital/balance - Check Current Balance",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "GET /api/patients/{serial_number} - Get Patient for Test",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "GET /api/pricelists - Get Price List for Test",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "POST /api/claims/submit - Create High Value Claim",
+      "success": false,
+      "details": "Status: 422 (Expected: 400) - [{'type': 'missing', 'loc': ['body'], 'msg': 'Field required', 'input': None, 'url': 'https://errors.pydantic.dev/2.12/v/missing'}]"
+    },
+    {
+      "test": "GET /api/claims - Get System Administration Claims",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "POST /api/claims/{claim_id}/pay - Different Hospital User",
+      "success": true,
+      "details": "Status: 401"
+    },
+    {
+      "test": "GET /api/hospital/balance - Authenticated User",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Balance Deduction Verification",
+      "success": false,
+      "details": "Balance not deducted. Initial: $1500.00, Final: $1500.00"
+    }
+  ]
+}
