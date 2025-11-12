@@ -664,6 +664,57 @@ async def update_claim(claim_id: str, claim_submission: ClaimSubmission, admin_u
         "new_balance": updated_family["remaining_balance"]
     }
 
+@api_router.post("/claims/{claim_id}/pay")
+async def mark_claim_as_paid(claim_id: str, current_user: dict = Depends(get_current_user)):
+    # Get claim
+    claim = await db.claims_header.find_one({"claim_id": claim_id}, {"_id": 0})
+    if not claim:
+        raise HTTPException(status_code=404, detail="Claim not found")
+    
+    # Check if claim belongs to user's hospital
+    if claim["hospital_name"] != current_user["hospital_name"]:
+        raise HTTPException(status_code=403, detail="Cannot mark claim from another hospital as paid")
+    
+    # Check if claim is completed
+    if claim["status"] != "COMPLETED":
+        raise HTTPException(status_code=400, detail="Only completed claims can be marked as paid")
+    
+    # Get hospital
+    hospital = await db.hospitals.find_one({"hospital_name": current_user["hospital_name"]})
+    if not hospital:
+        raise HTTPException(status_code=404, detail="Hospital not found")
+    
+    # Get current balance
+    current_balance = hospital.get("deposit_balance", 0.0)
+    claim_amount = claim["total_claim_amount"]
+    
+    # Check if hospital has sufficient balance
+    if current_balance < claim_amount:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Insufficient hospital balance. Available: ${current_balance:.2f}, Required: ${claim_amount:.2f}"
+        )
+    
+    # Deduct from hospital balance
+    new_balance = current_balance - claim_amount
+    await db.hospitals.update_one(
+        {"hospital_name": current_user["hospital_name"]},
+        {"$set": {"deposit_balance": new_balance}}
+    )
+    
+    # Update claim status to PAID
+    await db.claims_header.update_one(
+        {"claim_id": claim_id},
+        {"$set": {"status": "PAID"}}
+    )
+    
+    return {
+        "success": True,
+        "message": f"Claim marked as paid. Amount deducted: ${claim_amount:.2f}",
+        "new_hospital_balance": new_balance
+    }
+
+
 # Admin Routes
 @api_router.get("/admin/families")
 async def get_all_families(admin_user: dict = Depends(get_admin_user)):
