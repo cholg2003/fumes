@@ -727,10 +727,14 @@ async def create_family_with_members(family_data: FamilyWithMembers, admin_user:
     }
     await db.families.insert_one(family_doc)
     
-    # Create members with auto-generated serial numbers
+    # Create members with provided or auto-generated serial numbers
     members_created = []
     for index, member_data in enumerate(family_data.members):
-        serial_number = f"{family_data.family_id}-{index:02d}"
+        # Use serial number from CSV if provided, otherwise auto-generate
+        if "serial_number" in member_data and member_data["serial_number"]:
+            serial_number = member_data["serial_number"]
+        else:
+            serial_number = f"{family_data.family_id}-{index:02d}"
         
         # Check if serial number already exists
         existing_member = await db.members.find_one({"serial_number": serial_number})
