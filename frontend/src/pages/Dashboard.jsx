@@ -44,6 +44,7 @@ const Dashboard = () => {
     }
     loadPriceList();
     loadClaims();
+    loadHospitalBalance();
     if (isSuperAdmin) {
       loadMonthlyStats();
     }
