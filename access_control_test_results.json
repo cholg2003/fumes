@@ -1,8 +1,8 @@
 {
-  "timestamp": "2025-11-12T06:33:12.351000",
-  "total_tests": 29,
-  "passed_tests": 26,
-  "success_rate": 89.65517241379311,
+  "timestamp": "2025-11-12T06:34:25.405453",
+  "total_tests": 44,
+  "passed_tests": 44,
+  "success_rate": 100.0,
   "results": [
     {
       "test": "Login - superadmin",
@@ -45,9 +45,34 @@
       "details": "Status: 200"
     },
     {
-      "test": "Login - Gaga",
-      "success": false,
-      "details": "Status: 401 (Expected: 200) - Invalid username or password"
+      "test": "Login - test_admin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Non-superadmin Admin user cannot void claim (403)",
+      "success": true,
+      "details": "Status: 403"
+    },
+    {
+      "test": "Login - test_finance",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Finance user cannot void claim (403)",
+      "success": true,
+      "details": "Status: 403"
+    },
+    {
+      "test": "Login - test_reception",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Reception user cannot void claim (403)",
+      "success": true,
+      "details": "Status: 403"
     },
     {
       "test": "Login - superadmin",
@@ -100,9 +125,34 @@
       "details": "Status: 200"
     },
     {
-      "test": "Login - Gaga",
-      "success": false,
-      "details": "Status: 401 (Expected: 200) - Invalid username or password"
+      "test": "Login - test_admin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Non-superadmin Admin user cannot mark as paid (403)",
+      "success": true,
+      "details": "Status: 403"
+    },
+    {
+      "test": "Login - test_finance",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Finance user cannot mark as paid (403)",
+      "success": true,
+      "details": "Status: 403"
+    },
+    {
+      "test": "Login - test_reception",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Reception user cannot mark as paid (403)",
+      "success": true,
+      "details": "Status: 403"
     },
     {
       "test": "Login - superadmin",
@@ -130,14 +180,39 @@
       "details": "Status: 200"
     },
     {
+      "test": "Get Current Balance for Insufficient Test",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Patient for Insufficient Balance Test",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
       "test": "Marking non-existent claim should fail (404)",
       "success": true,
       "details": "Status: 404"
     },
     {
-      "test": "Login - Gaga",
-      "success": false,
-      "details": "Status: 401 (Expected: 200) - Invalid username or password"
+      "test": "Login - test_admin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Void Error Message Check - Non-superadmin",
+      "success": true,
+      "details": "Status: 403"
+    },
+    {
+      "test": "Mark as Paid Error Message Check - Non-superadmin",
+      "success": true,
+      "details": "Status: 403"
     },
     {
       "test": "Login - superadmin",
