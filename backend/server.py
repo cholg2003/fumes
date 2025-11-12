@@ -574,6 +574,10 @@ async def get_all_claims_admin(admin_user: dict = Depends(get_admin_user)):
 
 @api_router.post("/claims/{claim_id}/void")
 async def void_claim(claim_id: str, current_user: dict = Depends(get_current_user)):
+    # Only superadmin can void claims
+    if current_user["username"] != "superadmin":
+        raise HTTPException(status_code=403, detail="Only superadmin can void claims")
+    
     claim = await db.claims_header.find_one({"claim_id": claim_id}, {"_id": 0})
     if not claim:
         raise HTTPException(status_code=404, detail="Claim not found")
