@@ -723,14 +723,14 @@ async def update_claim(claim_id: str, claim_submission: ClaimSubmission, admin_u
 
 @api_router.post("/claims/{claim_id}/pay")
 async def mark_claim_as_paid(claim_id: str, current_user: dict = Depends(get_current_user)):
+    # Only superadmin can mark claims as paid
+    if current_user["username"] != "superadmin":
+        raise HTTPException(status_code=403, detail="Only superadmin can mark claims as paid")
+    
     # Get claim
     claim = await db.claims_header.find_one({"claim_id": claim_id}, {"_id": 0})
     if not claim:
         raise HTTPException(status_code=404, detail="Claim not found")
-    
-    # Check if claim belongs to user's hospital
-    if claim["hospital_name"] != current_user["hospital_name"]:
-        raise HTTPException(status_code=403, detail="Cannot mark claim from another hospital as paid")
     
     # Check if claim is completed
     if claim["status"] != "COMPLETED":
