@@ -381,28 +381,35 @@ const Dashboard = () => {
           </Card>
         )}
 
-        {/* Monthly Claims Summary - Superadmin Only */}
-        {isSuperAdmin && Object.keys(monthlyStats).length > 0 && (
-          <Card className="border-indigo-200 shadow-md">
-            <CardHeader className="bg-gradient-to-r from-indigo-50 to-indigo-100 border-b border-indigo-200">
-              <CardTitle className="flex items-center gap-2 text-indigo-900">
+        {/* Hospital Claims Overview - Superadmin Only */}
+        {isSuperAdmin && Object.keys(hospitalStats).length > 0 && (
+          <Card className="border-red-200 shadow-md">
+            <CardHeader className="bg-gradient-to-r from-red-50 to-red-100 border-b border-red-200">
+              <CardTitle className="flex items-center gap-2 text-red-900">
                 <DollarSign className="w-5 h-5" />
-                Monthly Claims Summary - {new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}
+                Outstanding Claims by Hospital
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {Object.entries(monthlyStats).map(([hospital, stats]) => (
-                  <div key={hospital} className="bg-gradient-to-br from-indigo-50 to-white p-6 rounded-xl border border-indigo-200 shadow-sm">
+                {Object.entries(hospitalStats).map(([hospital, stats]) => (
+                  <div key={hospital} className="bg-gradient-to-br from-red-50 to-white p-6 rounded-xl border border-red-200 shadow-sm">
                     <h3 className="font-semibold text-gray-800 mb-3">{hospital}</h3>
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600">Total Bills:</span>
-                        <span className="text-lg font-bold text-indigo-600">{stats.count}</span>
+                        <span className="text-sm text-gray-600">Completed Claims:</span>
+                        <span className="text-sm font-medium text-blue-600">{stats.completed_count} (${stats.total_completed.toFixed(2)})</span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600">Total Amount:</span>
-                        <span className="text-2xl font-bold text-green-600">${stats.total.toFixed(2)}</span>
+                        <span className="text-sm text-gray-600">Paid Claims:</span>
+                        <span className="text-sm font-medium text-green-600">{stats.paid_count} (${stats.total_paid.toFixed(2)})</span>
+                      </div>
+                      <div className="border-t pt-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-semibold text-gray-700">Outstanding:</span>
+                          <span className="text-2xl font-bold text-red-600">-${stats.outstanding.toFixed(2)}</span>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1 text-right">Insurance owes hospital</p>
                       </div>
                     </div>
                   </div>
