@@ -50,6 +50,14 @@ const AdminCRUD = () => {
   const [selectedClaimItem, setSelectedClaimItem] = useState('');
   const [claimItemQuantity, setClaimItemQuantity] = useState(1);
 
+  // Search states
+  const [hospitalSearch, setHospitalSearch] = useState('');
+  const [userSearch, setUserSearch] = useState('');
+  const [familySearch, setFamilySearch] = useState('');
+  const [memberSearch, setMemberSearch] = useState('');
+  const [pricelistSearch, setPricelistSearch] = useState('');
+  const [claimSearch, setClaimSearch] = useState('');
+
   // Edit states
   const [editMode, setEditMode] = useState({ type: '', data: null });
 
