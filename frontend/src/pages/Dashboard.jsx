@@ -281,6 +281,7 @@ const Dashboard = () => {
       toast.success(response.data.message);
       await loadClaims();
       await loadHospitalBalance(); // Refresh the balance
+      await loadHospitalStats(); // Refresh the stats
       if (selectedPatient) {
         const patientResponse = await axios.get(`${API}/patients/${selectedPatient.serial_number}`, axiosConfig);
         setSelectedPatient(patientResponse.data);
