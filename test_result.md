@@ -219,6 +219,42 @@ backend:
         agent: "main"
         comment: "Created and ran migration script. Updated 4 families and 13 members with status='Active'"
 
+  - task: "Hospital deposit endpoint - POST /api/admin/hospitals/{hospital_name}/deposit"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Hospital deposit endpoint working perfectly. Successfully validates positive amounts, rejects negative/zero amounts, handles non-existent hospitals (404), and enforces superadmin-only access. Deposit balance correctly updated."
+
+  - task: "Hospital balance endpoint - GET /api/hospital/balance"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Hospital balance endpoint working correctly. Returns current hospital deposit balance for authenticated users. Proper authentication required."
+
+  - task: "Claim payment endpoint - POST /api/claims/{claim_id}/pay"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Claim payment endpoint working excellently. Successfully marks COMPLETED claims as PAID, deducts amount from hospital balance, rejects already PAID claims (400), handles non-existent claims (404), enforces hospital ownership permissions, and correctly updates claim status from COMPLETED to PAID."
+
 frontend:
   - task: "Implement searchable price list items in Dashboard"
     implemented: true
