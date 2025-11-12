@@ -909,14 +909,9 @@ SEC-3002,Sarah Smith,7500,7500,Sarah,Ann,Smith,1975-06-10,Female,Principle`;
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Families</CardTitle>
-                <div className="flex gap-2">
-                  <Button variant="outline" onClick={() => { setCsvFile(null); setCsvData([]); setUploadResult(null); setBulkFamilyDialog(true); }}>
-                    <Upload className="w-4 h-4 mr-2" />Bulk Upload
-                  </Button>
-                  <Button onClick={() => { setEditMode({ type: '', data: null }); setFamilyForm({ family_id: '', principle_member_name: '', total_allotment: '', remaining_balance: '' }); setFamilyDialog(true); }}>
-                    <Plus className="w-4 h-4 mr-2" />Add Family
-                  </Button>
-                </div>
+                <Button variant="outline" onClick={() => { setCsvFile(null); setCsvData([]); setUploadResult(null); setBulkFamilyDialog(true); }}>
+                  <Upload className="w-4 h-4 mr-2" />Bulk Upload (CSV)
+                </Button>
                 <Dialog open={familyDialog} onOpenChange={setFamilyDialog}>
                   <DialogTrigger asChild>
                     <span className="hidden"></span>
