@@ -731,7 +731,7 @@ const Dashboard = () => {
                             >
                               <Printer className="w-4 h-4" />
                             </Button>
-                            {claim.status === 'COMPLETED' && (role === 'Admin' || role === 'Finance') && (
+                            {claim.status === 'COMPLETED' && isSuperAdmin && (
                               <>
                                 <Button
                                   data-testid={`pay-claim-${claim.claim_id}`}
