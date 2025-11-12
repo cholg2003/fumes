@@ -769,28 +769,38 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                       <th className="text-left p-3 text-sm font-semibold">Address</th>
                       <th className="text-left p-3 text-sm font-semibold">Phone</th>
                       <th className="text-left p-3 text-sm font-semibold">Email</th>
+                      <th className="text-right p-3 text-sm font-semibold">Deposit Balance</th>
                       <th className="text-center p-3 text-sm font-semibold">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredHospitals.map((hospital) => (
-                      <tr key={hospital.hospital_name} className="border-b hover:bg-gray-50">
-                        <td className="p-3 text-sm font-medium">{hospital.hospital_name}</td>
-                        <td className="p-3 text-sm">{hospital.address}</td>
-                        <td className="p-3 text-sm">{hospital.phone}</td>
-                        <td className="p-3 text-sm">{hospital.email}</td>
-                        <td className="p-3 text-center">
-                          <div className="flex items-center justify-center gap-2">
-                            <Button variant="ghost" size="sm" onClick={() => openEditDialog('hospital', hospital)}>
-                              <Edit className="w-4 h-4" />
-                            </Button>
-                            <Button variant="ghost" size="sm" onClick={() => handleHospitalDelete(hospital.hospital_name)} className="text-red-600">
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                    {filteredHospitals.map((hospital) => {
+                      const balance = hospital.deposit_balance || 0;
+                      return (
+                        <tr key={hospital.hospital_name} className="border-b hover:bg-gray-50">
+                          <td className="p-3 text-sm font-medium">{hospital.hospital_name}</td>
+                          <td className="p-3 text-sm">{hospital.address}</td>
+                          <td className="p-3 text-sm">{hospital.phone}</td>
+                          <td className="p-3 text-sm">{hospital.email}</td>
+                          <td className={`p-3 text-sm text-right font-semibold ${balance > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                            ${balance.toFixed(2)}
+                          </td>
+                          <td className="p-3 text-center">
+                            <div className="flex items-center justify-center gap-2">
+                              <Button variant="ghost" size="sm" onClick={() => { setSelectedHospital(hospital); setDepositAmount(''); setDepositDialog(true); }} title="Add Deposit">
+                                <Plus className="w-4 h-4 text-green-600" />
+                              </Button>
+                              <Button variant="ghost" size="sm" onClick={() => openEditDialog('hospital', hospital)}>
+                                <Edit className="w-4 h-4" />
+                              </Button>
+                              <Button variant="ghost" size="sm" onClick={() => handleHospitalDelete(hospital.hospital_name)} className="text-red-600">
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </CardContent>
