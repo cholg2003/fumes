@@ -808,6 +808,67 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
           </TabsContent>
           )}
 
+          {/* Deposit Dialog */}
+          <Dialog open={depositDialog} onOpenChange={setDepositDialog}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add Deposit to {selectedHospital?.hospital_name}</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                if (!selectedHospital || !depositAmount) return;
+                setLoading(true);
+                try {
+                  const response = await axios.post(
+                    `${API}/admin/hospitals/${selectedHospital.hospital_name}/deposit`,
+                    { amount: parseFloat(depositAmount) },
+                    axiosConfig
+                  );
+                  toast.success(response.data.message);
+                  setDepositDialog(false);
+                  setDepositAmount('');
+                  loadData(); // Reload hospitals to show updated balance
+                } catch (error) {
+                  toast.error(error.response?.data?.detail || 'Failed to add deposit');
+                } finally {
+                  setLoading(false);
+                }
+              }} className="space-y-4">
+                <div>
+                  <Label>Current Balance</Label>
+                  <div className={`text-2xl font-bold ${(selectedHospital?.deposit_balance || 0) > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    ${(selectedHospital?.deposit_balance || 0).toFixed(2)}
+                  </div>
+                </div>
+                <div>
+                  <Label>Deposit Amount ($)</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    min="0.01"
+                    value={depositAmount}
+                    onChange={(e) => setDepositAmount(e.target.value)}
+                    placeholder="Enter amount"
+                    required
+                  />
+                </div>
+                {depositAmount && (
+                  <div className="bg-blue-50 p-3 rounded">
+                    <p className="text-sm text-gray-700">
+                      New Balance: <span className="font-bold text-green-600">
+                        ${((selectedHospital?.deposit_balance || 0) + parseFloat(depositAmount || 0)).toFixed(2)}
+                      </span>
+                    </p>
+                  </div>
+                )}
+                <Button type="submit" disabled={loading} className="w-full">
+                  {loading ? 'Processing...' : 'Add Deposit'}
+                </Button>
+              </form>
+            </DialogContent>
+          </Dialog>
+
+
           {/* Users Tab - Superadmin Only */}
           {isSuperAdmin && (
           <TabsContent value="users">
