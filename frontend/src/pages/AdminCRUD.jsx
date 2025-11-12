@@ -31,12 +31,18 @@ const AdminCRUD = () => {
   const [hospitalDialog, setHospitalDialog] = useState(false);
   const [userDialog, setUserDialog] = useState(false);
   const [familyDialog, setFamilyDialog] = useState(false);
+  const [bulkFamilyDialog, setBulkFamilyDialog] = useState(false);
   const [memberDialog, setMemberDialog] = useState(false);
   const [pricelistDialog, setPricelistDialog] = useState(false);
   const [claimDialog, setClaimDialog] = useState(false);
   const [resetPasswordDialog, setResetPasswordDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [tempPassword, setTempPassword] = useState('');
+  
+  // CSV upload state
+  const [csvFile, setCsvFile] = useState(null);
+  const [csvData, setCsvData] = useState([]);
+  const [uploadResult, setUploadResult] = useState(null);
 
   // Forms
   const [hospitalForm, setHospitalForm] = useState({ hospital_name: '', address: '', phone: '', email: '' });
