@@ -7,7 +7,7 @@ import { Label } from '../components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { toast } from 'sonner';
-import { LogOut, Search, User, DollarSign, Plus, Trash2, FileText, Ban, Printer, Settings } from 'lucide-react';
+import { LogOut, Search, User, DollarSign, Plus, Trash2, FileText, Ban, Printer, Settings, CheckCircle } from 'lucide-react';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
