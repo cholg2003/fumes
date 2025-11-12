@@ -300,12 +300,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Implement searchable price list items in Dashboard"
-    - "Add status field to Family and Member models"
-    - "Update patient search endpoint to filter suspended records"
-    - "Add suspend/unsuspend endpoints"
-    - "Prevent billing for suspended families/members"
-    - "Add suspend/unsuspend UI in AdminCRUD"
+    - "Hospital deposit endpoint - POST /api/admin/hospitals/{hospital_name}/deposit"
+    - "Hospital balance endpoint - GET /api/hospital/balance"
+    - "Claim payment endpoint - POST /api/claims/{claim_id}/pay"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
