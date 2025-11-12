@@ -619,6 +619,22 @@ const AdminCRUD = () => {
                 </Dialog>
               </CardHeader>
               <CardContent>
+                <div className="mb-4">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      placeholder="Search hospitals by name or address..."
+                      value={hospitalSearch}
+                      onChange={(e) => setHospitalSearch(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                  {hospitalSearch && (
+                    <p className="text-sm text-gray-500 mt-2">
+                      Found {filteredHospitals.length} hospital(s)
+                    </p>
+                  )}
+                </div>
                 <table className="w-full">
                   <thead className="bg-gray-100">
                     <tr>
@@ -630,7 +646,7 @@ const AdminCRUD = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {hospitals.map((hospital) => (
+                    {filteredHospitals.map((hospital) => (
                       <tr key={hospital.hospital_name} className="border-b hover:bg-gray-50">
                         <td className="p-3 text-sm font-medium">{hospital.hospital_name}</td>
                         <td className="p-3 text-sm">{hospital.address}</td>
