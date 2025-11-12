@@ -1,9 +1,79 @@
 {
-  "timestamp": "2025-11-12T05:30:29.139187",
-  "total_tests": 49,
-  "passed_tests": 35,
-  "success_rate": 71.42857142857143,
+  "timestamp": "2025-11-12T06:22:03.692605",
+  "total_tests": 61,
+  "passed_tests": 45,
+  "success_rate": 73.77049180327869,
   "results": [
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Hospital Statistics - All Hospitals",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Hospital Stats Structure - System Administration",
+      "success": true,
+      "details": "All required fields present"
+    },
+    {
+      "test": "Outstanding Calculation - System Administration",
+      "success": true,
+      "details": "Outstanding ($0) equals total_completed ($0)"
+    },
+    {
+      "test": "Hospital Stats Structure - Gaga Medical Complex",
+      "success": true,
+      "details": "All required fields present"
+    },
+    {
+      "test": "Outstanding Calculation - Gaga Medical Complex",
+      "success": true,
+      "details": "Outstanding ($15.0) equals total_completed ($15.0)"
+    },
+    {
+      "test": "Login - mercy_admin",
+      "success": false,
+      "details": "Status: 401 (Expected: 200) - Invalid username or password"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get All Claims for Verification",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Hospital Stats for Calculation Verification",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Calculation Verification - System Administration Completed Amount",
+      "success": true,
+      "details": "$0"
+    },
+    {
+      "test": "Calculation Verification - System Administration Paid Amount",
+      "success": true,
+      "details": "$425.0"
+    },
+    {
+      "test": "Calculation Verification - System Administration Completed Count",
+      "success": true,
+      "details": "0"
+    },
+    {
+      "test": "Calculation Verification - System Administration Paid Count",
+      "success": true,
+      "details": "5"
+    },
     {
       "test": "Login - superadmin",
       "success": true,
@@ -46,11 +116,6 @@
     },
     {
       "test": "Get Claims for Payment Testing",
-      "success": true,
-      "details": "Status: 200"
-    },
-    {
-      "test": "Mark Completed Claim as Paid",
       "success": true,
       "details": "Status: 200"
     },
@@ -100,19 +165,14 @@
       "details": "Status: 200"
     },
     {
-      "test": "Claim Status Change Verification",
-      "success": true,
-      "details": "Claim CLAIM-6FBB460B status changed to PAID"
-    },
-    {
       "test": "Verify Final Hospital Balance",
       "success": true,
       "details": "Status: 200"
     },
     {
       "test": "Hospital Balance Deduction Verification",
-      "success": true,
-      "details": "Balance correctly deducted from $1300.00 to $1250.00"
+      "success": false,
+      "details": "Balance not deducted properly. Initial: $2125.00, Final: $2125.00"
     },
     {
       "test": "Login - superadmin",
