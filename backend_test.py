@@ -1016,11 +1016,14 @@ class MedicalBillingAPITester:
         return True
 
     def run_comprehensive_test(self):
-        """Run all tests including suspension system"""
-        print("🏥 Medical Insurance Billing System - Suspension System Testing")
-        print("=" * 70)
+        """Run all tests including hospital payment and deposit system"""
+        print("🏥 Medical Insurance Billing System - Hospital Payment & Deposit System Testing")
+        print("=" * 80)
         
-        # Test suspension system first (most important for this review)
+        # Test hospital payment and deposit system first (most important for this review)
+        self.test_hospital_payment_deposit_system()
+        
+        # Test suspension system 
         self.test_suspension_system()
         
         # Test different user credentials for basic functionality
