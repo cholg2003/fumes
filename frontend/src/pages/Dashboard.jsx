@@ -340,26 +340,43 @@ const Dashboard = () => {
 
       <div className="max-w-7xl mx-auto p-6 space-y-6">
 
-        {/* Hospital Deposit Balance - For Admin and Finance */}
+        {/* Hospital Financial Status - For Admin and Finance */}
         {(role === 'Admin' || role === 'Finance') && !isSuperAdmin && (
-          <Card className={`shadow-md ${hospitalBalance > 0 ? 'border-green-300' : 'border-red-300'}`}>
-            <CardHeader className={`bg-gradient-to-r ${hospitalBalance > 0 ? 'from-green-50 to-green-100 border-green-200' : 'from-red-50 to-red-100 border-red-200'} border-b`}>
-              <CardTitle className={`flex items-center justify-between ${hospitalBalance > 0 ? 'text-green-900' : 'text-red-900'}`}>
-                <span className="flex items-center gap-2">
-                  <DollarSign className="w-5 h-5" />
-                  Hospital Deposit Balance
-                </span>
-                <span className={`text-3xl font-bold ${hospitalBalance > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  ${hospitalBalance.toFixed(2)}
-                </span>
+          <Card className={`shadow-md ${totalClaims > hospitalBalance ? 'border-green-300' : 'border-red-300'}`}>
+            <CardHeader className={`bg-gradient-to-r ${totalClaims > hospitalBalance ? 'from-green-50 to-green-100 border-green-200' : 'from-red-50 to-red-100 border-red-200'} border-b`}>
+              <CardTitle className={`${totalClaims > hospitalBalance ? 'text-green-900' : 'text-red-900'}`}>
+                <div className="flex items-center justify-between">
+                  <span className="flex items-center gap-2">
+                    <DollarSign className="w-5 h-5" />
+                    Financial Status
+                  </span>
+                </div>
               </CardTitle>
             </CardHeader>
-            <CardContent className="pt-4">
-              <p className="text-sm text-gray-600">
-                {hospitalBalance > 0 
-                  ? 'Funds available for processing claims.' 
-                  : 'No funds available. Please contact insurance company for deposit.'}
-              </p>
+            <CardContent className="pt-6">
+              <div className="grid grid-cols-3 gap-6">
+                <div className="text-center">
+                  <p className="text-sm text-gray-600 mb-2">Total Claims</p>
+                  <p className="text-2xl font-bold text-blue-600">${totalClaims.toFixed(2)}</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-sm text-gray-600 mb-2">Deposit Balance</p>
+                  <p className="text-2xl font-bold text-purple-600">${hospitalBalance.toFixed(2)}</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-sm text-gray-600 mb-2">Net Balance</p>
+                  <p className={`text-3xl font-bold ${totalClaims > hospitalBalance ? 'text-green-600' : 'text-red-600'}`}>
+                    {totalClaims > hospitalBalance ? '+' : ''}${(totalClaims - hospitalBalance).toFixed(2)}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {totalClaims > hospitalBalance 
+                      ? 'Insurance owes hospital' 
+                      : totalClaims < hospitalBalance
+                      ? 'Hospital owes insurance'
+                      : 'Balanced'}
+                  </p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         )}
