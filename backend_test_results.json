@@ -1,9 +1,174 @@
 {
-  "timestamp": "2025-11-12T06:22:03.692605",
-  "total_tests": 61,
-  "passed_tests": 45,
-  "success_rate": 73.77049180327869,
+  "timestamp": "2025-11-12T06:32:09.244390",
+  "total_tests": 95,
+  "passed_tests": 73,
+  "success_rate": 76.84210526315789,
   "results": [
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Claims for Access Control Testing",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Patient for Test Claim Creation",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Price List for Test Claim Creation",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Create Test Claim for Access Control Testing",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Void Claim - Superadmin (Should Succeed)",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Login - mercy_admin",
+      "success": false,
+      "details": "Status: 401 (Expected: 200) - Invalid username or password"
+    },
+    {
+      "test": "Login - general_clerk",
+      "success": false,
+      "details": "Status: 401 (Expected: 200) - Invalid username or password"
+    },
+    {
+      "test": "Login - city_clerk",
+      "success": false,
+      "details": "Status: 401 (Expected: 200) - Invalid username or password"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Void Already Voided Claim (Should Fail with 400)",
+      "success": true,
+      "details": "Status: 400"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Void Non-existent Claim (Should Fail with 404)",
+      "success": true,
+      "details": "Status: 404"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Patient for Payment Test Claim",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Price List for Payment Test Claim",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Create Test Claim for Payment Testing",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Add Deposit for Payment Testing",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Mark Claim as Paid - Superadmin (Should Succeed)",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Login - mercy_admin",
+      "success": false,
+      "details": "Status: 401 (Expected: 200) - Invalid username or password"
+    },
+    {
+      "test": "Login - general_clerk",
+      "success": false,
+      "details": "Status: 401 (Expected: 200) - Invalid username or password"
+    },
+    {
+      "test": "Login - city_clerk",
+      "success": false,
+      "details": "Status: 401 (Expected: 200) - Invalid username or password"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Mark Already Paid Claim as Paid (Should Fail with 400)",
+      "success": true,
+      "details": "Status: 400"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Mark Voided Claim as Paid (Should Fail with 400)",
+      "success": true,
+      "details": "Status: 400"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Mark Non-existent Claim as Paid (Should Fail with 404)",
+      "success": true,
+      "details": "Status: 404"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Current Balance for Insufficient Funds Test",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Patient for High Value Claim",
+      "success": true,
+      "details": "Status: 200"
+    },
     {
       "test": "Login - superadmin",
       "success": true,
@@ -62,7 +227,7 @@
     {
       "test": "Calculation Verification - System Administration Paid Amount",
       "success": true,
-      "details": "$425.0"
+      "details": "$505.0"
     },
     {
       "test": "Calculation Verification - System Administration Completed Count",
@@ -72,7 +237,7 @@
     {
       "test": "Calculation Verification - System Administration Paid Count",
       "success": true,
-      "details": "5"
+      "details": "7"
     },
     {
       "test": "Login - superadmin",
@@ -125,6 +290,11 @@
       "details": "Status: 400"
     },
     {
+      "test": "Mark Voided Claim as Paid (Should Fail)",
+      "success": true,
+      "details": "Status: 400"
+    },
+    {
       "test": "Mark Non-existent Claim as Paid (Should Fail)",
       "success": true,
       "details": "Status: 404"
@@ -172,7 +342,7 @@
     {
       "test": "Hospital Balance Deduction Verification",
       "success": false,
-      "details": "Balance not deducted properly. Initial: $2125.00, Final: $2125.00"
+      "details": "Balance not deducted properly. Initial: $3545.00, Final: $3545.00"
     },
     {
       "test": "Login - superadmin",
