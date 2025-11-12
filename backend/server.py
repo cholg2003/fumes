@@ -715,6 +715,19 @@ async def mark_claim_as_paid(claim_id: str, current_user: dict = Depends(get_cur
     }
 
 
+@api_router.get("/hospital/balance")
+async def get_hospital_balance(current_user: dict = Depends(get_current_user)):
+    # Get hospital
+    hospital = await db.hospitals.find_one({"hospital_name": current_user["hospital_name"]})
+    if not hospital:
+        raise HTTPException(status_code=404, detail="Hospital not found")
+    
+    return {
+        "hospital_name": current_user["hospital_name"],
+        "deposit_balance": hospital.get("deposit_balance", 0.0)
+    }
+
+
 # Admin Routes
 @api_router.get("/admin/families")
 async def get_all_families(admin_user: dict = Depends(get_admin_user)):
