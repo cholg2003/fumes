@@ -372,7 +372,7 @@ class AccessControlTester:
                 403
             )
         
-        # Test 3: Marking already PAID claim should fail (400)
+        # Test 5: Marking already PAID claim should fail (400)
         if paid_claim_id:
             if self.login("superadmin", "SuperAdmin@2024"):
                 success, response = self.run_test(
@@ -382,7 +382,7 @@ class AccessControlTester:
                     400
                 )
         
-        # Test 4: Marking VOIDED claim should fail (400)
+        # Test 6: Marking VOIDED claim should fail (400)
         if voided_claim_id:
             if self.login("superadmin", "SuperAdmin@2024"):
                 success, response = self.run_test(
@@ -392,7 +392,68 @@ class AccessControlTester:
                     400
                 )
         
-        # Test 5: Marking non-existent claim should fail (404)
+        # Test 7: Marking with insufficient balance should fail (400)
+        # Create a high-value claim to test insufficient balance
+        if self.login("superadmin", "SuperAdmin@2024"):
+            # Get current balance
+            success, balance_response = self.run_test(
+                "Get Current Balance for Insufficient Test",
+                "GET",
+                "hospital/balance",
+                200
+            )
+            
+            if success:
+                current_balance = balance_response.get('deposit_balance', 0)
+                
+                # Get patient with high remaining balance
+                success, patient_data = self.run_test(
+                    "Get Patient for Insufficient Balance Test",
+                    "GET",
+                    "patients/SEC-2413-01",
+                    200
+                )
+                
+                if success and patient_data and patient_data.get('remaining_balance', 0) > current_balance + 500:
+                    success, price_items = self.run_test(
+                        "Get Price List for Insufficient Balance Test",
+                        "GET",
+                        "pricelists",
+                        200
+                    )
+                    
+                    if success and price_items:
+                        # Create claim with amount higher than hospital balance
+                        high_amount = current_balance + 500
+                        
+                        claim_data = {
+                            "patient_serial_number": patient_data["serial_number"],
+                            "claim_items": [{
+                                "item_id": price_items[0]["item_id"],
+                                "item_name": price_items[0]["item_name"],
+                                "item_cost": high_amount,
+                                "quantity": 1
+                            }]
+                        }
+                        
+                        success, claim_response = self.run_test(
+                            "Create High Value Claim for Insufficient Balance Test",
+                            "POST",
+                            "claims/submit",
+                            200,
+                            data=claim_data
+                        )
+                        
+                        if success:
+                            high_claim_id = claim_response.get('claim_id')
+                            success, response = self.run_test(
+                                "Marking with insufficient balance should fail (400)",
+                                "POST",
+                                f"claims/{high_claim_id}/pay",
+                                400
+                            )
+        
+        # Test 8: Marking non-existent claim should fail (404)
         if self.login("superadmin", "SuperAdmin@2024"):
             success, response = self.run_test(
                 "Marking non-existent claim should fail (404)",
