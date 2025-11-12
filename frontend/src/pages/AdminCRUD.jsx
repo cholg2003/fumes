@@ -909,12 +909,20 @@ SEC-3002,Sarah Smith,7500,7500,Sarah,Ann,Smith,1975-06-10,Female,Principle`;
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Families</CardTitle>
-                <Dialog open={familyDialog} onOpenChange={setFamilyDialog}>
-                  <DialogTrigger asChild>
-                    <Button onClick={() => { setEditMode({ type: '', data: null }); setFamilyForm({ family_id: '', principle_member_name: '', total_allotment: '', remaining_balance: '' }); }}>
-                      <Plus className="w-4 h-4 mr-2" />Add Family
-                    </Button>
-                  </DialogTrigger>
+                <div className="flex gap-2">
+                  <Dialog open={bulkFamilyDialog} onOpenChange={setBulkFamilyDialog}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" onClick={() => { setCsvFile(null); setCsvData([]); setUploadResult(null); }}>
+                        <Upload className="w-4 h-4 mr-2" />Bulk Upload
+                      </Button>
+                    </DialogTrigger>
+                  </Dialog>
+                  <Dialog open={familyDialog} onOpenChange={setFamilyDialog}>
+                    <DialogTrigger asChild>
+                      <Button onClick={() => { setEditMode({ type: '', data: null }); setFamilyForm({ family_id: '', principle_member_name: '', total_allotment: '', remaining_balance: '' }); }}>
+                        <Plus className="w-4 h-4 mr-2" />Add Family
+                      </Button>
+                    </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
                       <DialogTitle>{editMode.type === 'family' ? 'Edit Family' : 'Add Family'}</DialogTitle>
