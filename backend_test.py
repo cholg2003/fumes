@@ -883,6 +883,305 @@ class MedicalBillingAPITester:
         
         return True
 
+    def test_access_control_void_and_pay_endpoints(self):
+        """Test access control for void and mark as paid endpoints - SUPERADMIN ONLY"""
+        print(f"\n🔒 Testing Access Control for Void and Mark as Paid Endpoints...")
+        
+        # First, ensure we have test data - create a claim if needed
+        if not self.test_login("superadmin", "SuperAdmin@2024"):
+            self.log_test("Access Control Test Setup", False, "Could not login as superadmin")
+            return False
+        
+        # Get existing claims to work with
+        success, claims = self.run_test(
+            "Get Claims for Access Control Testing",
+            "GET",
+            "claims",
+            200
+        )
+        
+        completed_claim_id = None
+        paid_claim_id = None
+        voided_claim_id = None
+        
+        if success and claims:
+            for claim in claims:
+                if claim.get("status") == "COMPLETED" and not completed_claim_id:
+                    completed_claim_id = claim.get("claim_id")
+                elif claim.get("status") == "PAID" and not paid_claim_id:
+                    paid_claim_id = claim.get("claim_id")
+                elif claim.get("status") == "VOIDED" and not voided_claim_id:
+                    voided_claim_id = claim.get("claim_id")
+        
+        # If no COMPLETED claim exists, create one for testing
+        if not completed_claim_id:
+            # Get patient and price list to create a test claim
+            success, patient_data = self.run_test(
+                "Get Patient for Test Claim Creation",
+                "GET",
+                "patients/SEC-2413-01",
+                200
+            )
+            
+            success, price_items = self.run_test(
+                "Get Price List for Test Claim Creation",
+                "GET",
+                "pricelists",
+                200
+            )
+            
+            if success and patient_data and price_items:
+                claim_data = {
+                    "patient_serial_number": patient_data["serial_number"],
+                    "claim_items": [{
+                        "item_id": price_items[0]["item_id"],
+                        "item_name": price_items[0]["item_name"],
+                        "item_cost": min(price_items[0]["cost"], 50.0),  # Use small amount
+                        "quantity": 1
+                    }]
+                }
+                
+                success, claim_response = self.run_test(
+                    "Create Test Claim for Access Control Testing",
+                    "POST",
+                    "claims/submit",
+                    200,
+                    data=claim_data
+                )
+                
+                if success:
+                    completed_claim_id = claim_response.get('claim_id')
+                    print(f"   Created test claim: {completed_claim_id}")
+        
+        print(f"   Test claims - COMPLETED: {completed_claim_id}, PAID: {paid_claim_id}, VOIDED: {voided_claim_id}")
+        
+        # Test different user roles
+        test_users = [
+            ("mercy_admin", "password123", "Admin"),
+            ("general_clerk", "password123", "Finance"),  # Assuming this is Finance role
+            ("city_clerk", "password123", "Reception")    # Assuming this is Reception role
+        ]
+        
+        # === VOID CLAIM ENDPOINT TESTS ===
+        print(f"\n   🚫 Testing VOID endpoint access control...")
+        
+        # Test 1: Superadmin can void COMPLETED claim (should succeed)
+        if completed_claim_id:
+            success, response = self.run_test(
+                "Void Claim - Superadmin (Should Succeed)",
+                "POST",
+                f"claims/{completed_claim_id}/void",
+                200
+            )
+            
+            if success:
+                print(f"   ✅ Superadmin successfully voided claim {completed_claim_id}")
+                voided_claim_id = completed_claim_id  # Now this claim is voided
+                completed_claim_id = None  # No longer completed
+        
+        # Test 2-4: Non-superadmin users cannot void claims (should fail with 403)
+        for username, password, role in test_users:
+            if self.test_login(username, password):
+                # Try to void a claim (use any claim ID, should fail regardless)
+                test_claim_id = voided_claim_id or paid_claim_id or "DUMMY-CLAIM"
+                success, response = self.run_test(
+                    f"Void Claim - {role} User (Should Fail with 403)",
+                    "POST",
+                    f"claims/{test_claim_id}/void",
+                    403
+                )
+        
+        # Test 5: Voiding already VOIDED claim should fail (400)
+        if voided_claim_id:
+            if self.test_login("superadmin", "SuperAdmin@2024"):
+                success, response = self.run_test(
+                    "Void Already Voided Claim (Should Fail with 400)",
+                    "POST",
+                    f"claims/{voided_claim_id}/void",
+                    400
+                )
+        
+        # Test 6: Voiding non-existent claim should fail (404)
+        if self.test_login("superadmin", "SuperAdmin@2024"):
+            success, response = self.run_test(
+                "Void Non-existent Claim (Should Fail with 404)",
+                "POST",
+                "claims/NONEXISTENT-CLAIM-ID/void",
+                404
+            )
+        
+        # === MARK AS PAID ENDPOINT TESTS ===
+        print(f"\n   💰 Testing MARK AS PAID endpoint access control...")
+        
+        # Create another COMPLETED claim for payment testing if needed
+        if not completed_claim_id:
+            if self.test_login("superadmin", "SuperAdmin@2024"):
+                success, patient_data = self.run_test(
+                    "Get Patient for Payment Test Claim",
+                    "GET",
+                    "patients/SEC-2413-01",
+                    200
+                )
+                
+                success, price_items = self.run_test(
+                    "Get Price List for Payment Test Claim",
+                    "GET",
+                    "pricelists",
+                    200
+                )
+                
+                if success and patient_data and price_items:
+                    claim_data = {
+                        "patient_serial_number": patient_data["serial_number"],
+                        "claim_items": [{
+                            "item_id": price_items[0]["item_id"],
+                            "item_name": price_items[0]["item_name"],
+                            "item_cost": min(price_items[0]["cost"], 30.0),
+                            "quantity": 1
+                        }]
+                    }
+                    
+                    success, claim_response = self.run_test(
+                        "Create Test Claim for Payment Testing",
+                        "POST",
+                        "claims/submit",
+                        200,
+                        data=claim_data
+                    )
+                    
+                    if success:
+                        completed_claim_id = claim_response.get('claim_id')
+                        print(f"   Created test claim for payment: {completed_claim_id}")
+        
+        # Ensure hospital has sufficient balance for payment tests
+        if self.test_login("superadmin", "SuperAdmin@2024"):
+            success, response = self.run_test(
+                "Add Deposit for Payment Testing",
+                "POST",
+                "admin/hospitals/System Administration/deposit",
+                200,
+                data={"amount": 1000.0}
+            )
+        
+        # Test 1: Superadmin can mark COMPLETED claim as PAID (should succeed)
+        if completed_claim_id:
+            if self.test_login("superadmin", "SuperAdmin@2024"):
+                success, response = self.run_test(
+                    "Mark Claim as Paid - Superadmin (Should Succeed)",
+                    "POST",
+                    f"claims/{completed_claim_id}/pay",
+                    200
+                )
+                
+                if success:
+                    print(f"   ✅ Superadmin successfully marked claim {completed_claim_id} as paid")
+                    paid_claim_id = completed_claim_id  # Now this claim is paid
+                    completed_claim_id = None  # No longer completed
+        
+        # Test 2-4: Non-superadmin users cannot mark claims as paid (should fail with 403)
+        for username, password, role in test_users:
+            if self.test_login(username, password):
+                # Try to mark a claim as paid (use any claim ID, should fail regardless)
+                test_claim_id = paid_claim_id or voided_claim_id or "DUMMY-CLAIM"
+                success, response = self.run_test(
+                    f"Mark Claim as Paid - {role} User (Should Fail with 403)",
+                    "POST",
+                    f"claims/{test_claim_id}/pay",
+                    403
+                )
+        
+        # Test 5: Marking already PAID claim should fail (400)
+        if paid_claim_id:
+            if self.test_login("superadmin", "SuperAdmin@2024"):
+                success, response = self.run_test(
+                    "Mark Already Paid Claim as Paid (Should Fail with 400)",
+                    "POST",
+                    f"claims/{paid_claim_id}/pay",
+                    400
+                )
+        
+        # Test 6: Marking VOIDED claim should fail (400)
+        if voided_claim_id:
+            if self.test_login("superadmin", "SuperAdmin@2024"):
+                success, response = self.run_test(
+                    "Mark Voided Claim as Paid (Should Fail with 400)",
+                    "POST",
+                    f"claims/{voided_claim_id}/pay",
+                    400
+                )
+        
+        # Test 7: Marking non-existent claim should fail (404)
+        if self.test_login("superadmin", "SuperAdmin@2024"):
+            success, response = self.run_test(
+                "Mark Non-existent Claim as Paid (Should Fail with 404)",
+                "POST",
+                "claims/NONEXISTENT-CLAIM-ID/pay",
+                404
+            )
+        
+        # Test 8: Marking with insufficient balance should fail (400)
+        # First, reduce hospital balance to very low amount
+        if self.test_login("superadmin", "SuperAdmin@2024"):
+            # Get current balance
+            success, balance_response = self.run_test(
+                "Get Current Balance for Insufficient Funds Test",
+                "GET",
+                "hospital/balance",
+                200
+            )
+            
+            if success:
+                current_balance = balance_response.get('deposit_balance', 0)
+                
+                # Create a high-value claim if we have sufficient family balance
+                success, patient_data = self.run_test(
+                    "Get Patient for High Value Claim",
+                    "GET",
+                    "patients/SEC-2413-01",
+                    200
+                )
+                
+                if success and patient_data and patient_data.get('remaining_balance', 0) > current_balance + 100:
+                    success, price_items = self.run_test(
+                        "Get Price List for High Value Claim",
+                        "GET",
+                        "pricelists",
+                        200
+                    )
+                    
+                    if success and price_items:
+                        high_amount = current_balance + 100  # More than hospital balance
+                        
+                        claim_data = {
+                            "patient_serial_number": patient_data["serial_number"],
+                            "claim_items": [{
+                                "item_id": price_items[0]["item_id"],
+                                "item_name": price_items[0]["item_name"],
+                                "item_cost": high_amount,
+                                "quantity": 1
+                            }]
+                        }
+                        
+                        success, claim_response = self.run_test(
+                            "Create High Value Claim for Insufficient Balance Test",
+                            "POST",
+                            "claims/submit",
+                            200,
+                            data=claim_data
+                        )
+                        
+                        if success:
+                            high_claim_id = claim_response.get('claim_id')
+                            success, response = self.run_test(
+                                "Mark High Value Claim as Paid - Insufficient Hospital Balance (Should Fail with 400)",
+                                "POST",
+                                f"claims/{high_claim_id}/pay",
+                                400
+                            )
+        
+        print(f"   ✅ Access control testing completed for void and mark as paid endpoints")
+        return True
+
     def test_hospital_payment_deposit_system(self):
         """Test the Hospital Payment and Deposit System feature"""
         print(f"\n💰 Testing Hospital Payment and Deposit System...")
