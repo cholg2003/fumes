@@ -300,13 +300,122 @@ const AdminCRUD = () => {
   };
 
   const handleFamilyDelete = async (familyId) => {
-    if (!window.confirm(`Delete family "${familyId}"? This will fail if the family has members or claims.`)) return;
+    if (!window.confirm(`Delete family "${familyId}"? This will fail if the family has members or bills.`)) return;
     try {
       await axios.delete(`${API}/admin/families/${familyId}`, axiosConfig);
       toast.success('Family deleted successfully');
       loadData();
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Failed to delete family');
+    }
+  };
+
+  // CSV Bulk Upload for Families
+  const downloadCSVTemplate = () => {
+    const template = `family_id,principle_member_name,total_allotment,remaining_balance,member_first_name,member_middle_name,member_last_name,member_dob,member_sex,member_relationship
+SEC-3001,John Doe,5000,5000,John,Michael,Doe,1980-01-15,Male,Principle
+SEC-3001,John Doe,5000,5000,Jane,Marie,Doe,1982-03-20,Female,Spouse
+SEC-3002,Sarah Smith,7500,7500,Sarah,Ann,Smith,1975-06-10,Female,Principle`;
+    
+    const blob = new Blob([template], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'family_bulk_upload_template.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setCsvFile(file);
+      parseCSV(file);
+    }
+  };
+
+  const parseCSV = (file) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target.result;
+      const lines = text.split('\n').filter(line => line.trim());
+      const headers = lines[0].split(',').map(h => h.trim());
+      
+      const data = [];
+      for (let i = 1; i < lines.length; i++) {
+        const values = lines[i].split(',').map(v => v.trim());
+        const row = {};
+        headers.forEach((header, index) => {
+          row[header] = values[index];
+        });
+        data.push(row);
+      }
+      
+      setCsvData(data);
+      toast.success(`Parsed ${data.length} rows from CSV`);
+    };
+    reader.readAsText(file);
+  };
+
+  const handleBulkFamilyUpload = async () => {
+    if (csvData.length === 0) {
+      toast.error('No data to upload');
+      return;
+    }
+
+    setLoading(true);
+    setUploadResult(null);
+
+    try {
+      // Group data by family_id
+      const familyGroups = {};
+      csvData.forEach(row => {
+        if (!familyGroups[row.family_id]) {
+          familyGroups[row.family_id] = {
+            family_id: row.family_id,
+            principle_member_name: row.principle_member_name,
+            total_allotment: parseFloat(row.total_allotment),
+            remaining_balance: parseFloat(row.remaining_balance),
+            members: []
+          };
+        }
+        
+        familyGroups[row.family_id].members.push({
+          first_name: row.member_first_name,
+          middle_name: row.member_middle_name || '',
+          last_name: row.member_last_name,
+          dob: row.member_dob,
+          sex: row.member_sex,
+          relationship: row.member_relationship
+        });
+      });
+
+      // Upload each family
+      const results = [];
+      for (const familyData of Object.values(familyGroups)) {
+        try {
+          const response = await axios.post(`${API}/admin/families/bulk`, familyData, axiosConfig);
+          results.push({ success: true, family: familyData.family_id, message: response.data.message });
+        } catch (error) {
+          results.push({ success: false, family: familyData.family_id, error: error.response?.data?.detail || 'Failed' });
+        }
+      }
+
+      setUploadResult(results);
+      
+      const successCount = results.filter(r => r.success).length;
+      const failCount = results.filter(r => !r.success).length;
+      
+      if (failCount === 0) {
+        toast.success(`Successfully uploaded ${successCount} families!`);
+        loadData();
+      } else {
+        toast.warning(`Uploaded ${successCount} families, ${failCount} failed`);
+      }
+    } catch (error) {
+      toast.error('Upload failed');
+    } finally {
+      setLoading(false);
     }
   };
 
