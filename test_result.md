@@ -300,9 +300,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Hospital deposit endpoint - POST /api/admin/hospitals/{hospital_name}/deposit"
-    - "Hospital balance endpoint - GET /api/hospital/balance"
-    - "Claim payment endpoint - POST /api/claims/{claim_id}/pay"
+    - "Hospital statistics endpoint - GET /api/claims/hospital-stats"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
