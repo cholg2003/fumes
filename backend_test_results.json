@@ -1,9 +1,119 @@
 {
-  "timestamp": "2025-11-08T22:21:13.945905",
-  "total_tests": 26,
-  "passed_tests": 18,
-  "success_rate": 69.23076923076923,
+  "timestamp": "2025-11-12T05:30:29.139187",
+  "total_tests": 49,
+  "passed_tests": 35,
+  "success_rate": 71.42857142857143,
   "results": [
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Add Hospital Deposit - Valid Amount",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Add Hospital Deposit - Negative Amount (Should Fail)",
+      "success": true,
+      "details": "Status: 400"
+    },
+    {
+      "test": "Add Hospital Deposit - Zero Amount (Should Fail)",
+      "success": true,
+      "details": "Status: 400"
+    },
+    {
+      "test": "Add Hospital Deposit - Non-existent Hospital (Should Fail)",
+      "success": true,
+      "details": "Status: 404"
+    },
+    {
+      "test": "Login - general_clerk",
+      "success": false,
+      "details": "Status: 401 (Expected: 200) - Invalid username or password"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Hospital Balance - Authenticated User",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Claims for Payment Testing",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Mark Completed Claim as Paid",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Mark Already Paid Claim as Paid (Should Fail)",
+      "success": true,
+      "details": "Status: 400"
+    },
+    {
+      "test": "Mark Non-existent Claim as Paid (Should Fail)",
+      "success": true,
+      "details": "Status: 404"
+    },
+    {
+      "test": "Get Current Balance for Insufficient Funds Test",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Patient for High Amount Claim",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Price List for High Amount Claim",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Create High Amount Claim",
+      "success": false,
+      "details": "Status: 422 (Expected: 400) - [{'type': 'missing', 'loc': ['body'], 'msg': 'Field required', 'input': None, 'url': 'https://errors.pydantic.dev/2.12/v/missing'}]"
+    },
+    {
+      "test": "Login - mercy_admin",
+      "success": false,
+      "details": "Status: 401 (Expected: 200) - Invalid username or password"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Verify Claim Status Changes",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Claim Status Change Verification",
+      "success": true,
+      "details": "Claim CLAIM-6FBB460B status changed to PAID"
+    },
+    {
+      "test": "Verify Final Hospital Balance",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Hospital Balance Deduction Verification",
+      "success": true,
+      "details": "Balance correctly deducted from $1300.00 to $1250.00"
+    },
     {
       "test": "Login - superadmin",
       "success": true,
@@ -55,6 +165,11 @@
       "details": "Status: 200"
     },
     {
+      "test": "Bill Submission for Suspended Member",
+      "success": false,
+      "details": "Status: 404 (Expected: 403) - Not Found"
+    },
+    {
       "test": "Unsuspend Family - Superadmin",
       "success": true,
       "details": "Status: 200"
@@ -96,8 +211,8 @@
     },
     {
       "test": "Family Status Field Verification",
-      "success": true,
-      "details": "All 4 families have status field"
+      "success": false,
+      "details": "Only 4/7 families have status field"
     },
     {
       "test": "Verify Member Status Fields",
@@ -106,8 +221,8 @@
     },
     {
       "test": "Member Status Field Verification",
-      "success": true,
-      "details": "All 13 members have status field"
+      "success": false,
+      "details": "Only 14/24 members have status field"
     },
     {
       "test": "Login - general_clerk",
