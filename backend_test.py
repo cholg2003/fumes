@@ -1153,7 +1153,10 @@ class MedicalBillingAPITester:
         print("🏥 Medical Insurance Billing System - Hospital Payment & Deposit System Testing")
         print("=" * 80)
         
-        # Test hospital payment and deposit system first (most important for this review)
+        # Test NEW hospital statistics endpoint first (most important for this review)
+        self.test_hospital_stats_endpoint()
+        
+        # Test hospital payment and deposit system 
         self.test_hospital_payment_deposit_system()
         
         # Test suspension system 
