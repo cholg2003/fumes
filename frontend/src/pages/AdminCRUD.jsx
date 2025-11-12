@@ -950,6 +950,115 @@ SEC-3002,Sarah Smith,7500,7500,Sarah,Ann,Smith,1975-06-10,Female,Principle`;
                     </form>
                   </DialogContent>
                 </Dialog>
+                {/* Bulk Family Upload Dialog */}
+                <Dialog open={bulkFamilyDialog} onOpenChange={setBulkFamilyDialog}>
+                  <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle>Bulk Family Upload</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-6">
+                      {/* Template Download */}
+                      <div className="border rounded-lg p-4 bg-blue-50">
+                        <h3 className="font-semibold mb-2">Step 1: Download Template</h3>
+                        <p className="text-sm text-gray-600 mb-3">
+                          Download the CSV template and fill it with your family and member data.
+                        </p>
+                        <Button onClick={downloadCSVTemplate} variant="outline">
+                          <Download className="w-4 h-4 mr-2" />
+                          Download CSV Template
+                        </Button>
+                      </div>
+
+                      {/* File Upload */}
+                      <div className="border rounded-lg p-4">
+                        <h3 className="font-semibold mb-2">Step 2: Upload CSV File</h3>
+                        <div className="space-y-3">
+                          <Input
+                            type="file"
+                            accept=".csv"
+                            onChange={handleFileChange}
+                            className="cursor-pointer"
+                          />
+                          {csvFile && (
+                            <p className="text-sm text-green-600">
+                              Selected: {csvFile.name}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Preview Data */}
+                      {csvData.length > 0 && (
+                        <div className="border rounded-lg p-4">
+                          <h3 className="font-semibold mb-2">Step 3: Preview Data ({csvData.length} rows)</h3>
+                          <div className="max-h-60 overflow-y-auto">
+                            <table className="w-full text-sm">
+                              <thead className="bg-gray-100 sticky top-0">
+                                <tr>
+                                  <th className="text-left p-2">Family ID</th>
+                                  <th className="text-left p-2">Principle Member</th>
+                                  <th className="text-left p-2">Allotment</th>
+                                  <th className="text-left p-2">Member Name</th>
+                                  <th className="text-left p-2">Relationship</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {csvData.slice(0, 10).map((row, index) => (
+                                  <tr key={index} className="border-b">
+                                    <td className="p-2">{row.family_id}</td>
+                                    <td className="p-2">{row.principle_member_name}</td>
+                                    <td className="p-2">${row.total_allotment}</td>
+                                    <td className="p-2">{row.member_first_name} {row.member_last_name}</td>
+                                    <td className="p-2">{row.member_relationship}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                            {csvData.length > 10 && (
+                              <p className="text-sm text-gray-500 mt-2">
+                                Showing first 10 rows of {csvData.length} total rows
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Upload Results */}
+                      {uploadResult && (
+                        <div className="border rounded-lg p-4">
+                          <h3 className="font-semibold mb-2">Upload Results</h3>
+                          <div className="space-y-2 max-h-40 overflow-y-auto">
+                            {uploadResult.map((result, index) => (
+                              <div key={index} className={`p-2 rounded text-sm ${
+                                result.success ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                              }`}>
+                                <strong>{result.family}:</strong> {
+                                  result.success ? result.message : result.error
+                                }
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Action Buttons */}
+                      <div className="flex justify-end gap-3">
+                        <Button 
+                          variant="outline" 
+                          onClick={() => setBulkFamilyDialog(false)}
+                        >
+                          Cancel
+                        </Button>
+                        <Button 
+                          onClick={handleBulkFamilyUpload}
+                          disabled={loading || csvData.length === 0}
+                        >
+                          {loading ? 'Uploading...' : `Upload ${csvData.length} Families`}
+                        </Button>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </CardHeader>
               <CardContent>
                 <div className="mb-4">
