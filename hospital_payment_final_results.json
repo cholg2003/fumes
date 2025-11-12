@@ -1,0 +1,94 @@
+{
+  "timestamp": "2025-11-12T05:32:30.837688",
+  "total_tests": 17,
+  "passed_tests": 16,
+  "success_rate": 94.11764705882352,
+  "all_passed": false,
+  "results": [
+    {
+      "test": "Login as superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Add valid deposit ($300)",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Reject negative deposit (-$50)",
+      "success": true,
+      "details": "Status: 400"
+    },
+    {
+      "test": "Reject zero deposit ($0)",
+      "success": true,
+      "details": "Status: 400"
+    },
+    {
+      "test": "Reject deposit to non-existent hospital",
+      "success": true,
+      "details": "Status: 404"
+    },
+    {
+      "test": "Get hospital balance",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get patient data for new claim",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get price list for new claim",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Create new COMPLETED claim for testing",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Mark COMPLETED claim as PAID (CLAIM-7F1E1CC7)",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get existing claims",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Reject payment of already PAID claim (CLAIM-7F1E1CC7)",
+      "success": true,
+      "details": "Status: 400"
+    },
+    {
+      "test": "Reject payment of non-existent claim",
+      "success": true,
+      "details": "Status: 404"
+    },
+    {
+      "test": "Check current balance for insufficient funds test",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Reject high-value claim ($2200.00) - insufficient family balance",
+      "success": false,
+      "details": "Status: 422 (Expected: 400) - [{'type': 'missing', 'loc': ['body'], 'msg': 'Field required', 'input': None, 'url': 'https://errors.pydantic.dev/2.12/v/missing'}]"
+    },
+    {
+      "test": "Verify final hospital balance",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Balance correctly deducted after payment",
+      "success": true,
+      "details": "$1800.00 \u2192 $1700.00"
+    }
+  ]
+}
