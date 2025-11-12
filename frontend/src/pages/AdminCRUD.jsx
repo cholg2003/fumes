@@ -1124,6 +1124,22 @@ const AdminCRUD = () => {
                 </Dialog>
               </CardHeader>
               <CardContent>
+                <div className="mb-4">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      placeholder="Search by Item ID, item name, or hospital..."
+                      value={pricelistSearch}
+                      onChange={(e) => setPricelistSearch(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                  {pricelistSearch && (
+                    <p className="text-sm text-gray-500 mt-2">
+                      Found {filteredPricelists.length} item(s)
+                    </p>
+                  )}
+                </div>
                 <table className="w-full">
                   <thead className="bg-gray-100">
                     <tr>
@@ -1136,7 +1152,7 @@ const AdminCRUD = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {pricelists.map((item, index) => (
+                    {filteredPricelists.map((item, index) => (
                       <tr key={index} className="border-b hover:bg-gray-50">
                         <td className="p-3 text-sm">{item.hospital_name}</td>
                         <td className="p-3 text-sm font-medium">{item.item_id}</td>
