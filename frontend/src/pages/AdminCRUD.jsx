@@ -950,6 +950,9 @@ SEC-3002,Sarah Smith,7500,7500,Sarah,Ann,Smith,1975-06-10,Female,Principle`;
                 </Dialog>
                 {/* Bulk Family Upload Dialog */}
                 <Dialog open={bulkFamilyDialog} onOpenChange={setBulkFamilyDialog}>
+                  <DialogTrigger asChild>
+                    <span className="hidden"></span>
+                  </DialogTrigger>
                   <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
                       <DialogTitle>Bulk Family Upload</DialogTitle>
