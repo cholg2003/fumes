@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Medical Insurance Billing System - Add searchable price list items by Item ID/Name and implement family/member suspension functionality"
+user_problem_statement: "Medical Insurance Billing System - Hospital Payment and Deposit System feature testing"
 
 backend:
   - task: "Add searchable price list items by Item ID"
