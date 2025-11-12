@@ -98,6 +98,16 @@ const Dashboard = () => {
     }
   };
 
+  const loadHospitalBalance = async () => {
+    try {
+      const response = await axios.get(`${API}/hospital/balance`, axiosConfig);
+      setHospitalBalance(response.data.deposit_balance);
+    } catch (error) {
+      console.error('Failed to load hospital balance:', error);
+    }
+  };
+
+
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
       toast.error('Please enter a search term');
