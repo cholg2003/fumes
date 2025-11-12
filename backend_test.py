@@ -750,6 +750,271 @@ class MedicalBillingAPITester:
         
         return True
 
+    def test_hospital_payment_deposit_system(self):
+        """Test the Hospital Payment and Deposit System feature"""
+        print(f"\n💰 Testing Hospital Payment and Deposit System...")
+        
+        # First login as superadmin for deposit operations
+        if not self.test_login("superadmin", "SuperAdmin@2024"):
+            self.log_test("Hospital Payment System Setup", False, "Could not login as superadmin")
+            return False
+        
+        # Test 1: Add deposit to hospital (positive amount)
+        test_hospital = "System Administration"
+        deposit_amount = 500.0
+        
+        success, response = self.run_test(
+            "Add Hospital Deposit - Valid Amount",
+            "POST",
+            f"admin/hospitals/{test_hospital}/deposit",
+            200,
+            data={"amount": deposit_amount}
+        )
+        
+        if success:
+            print(f"   ✅ Added ${deposit_amount} deposit to {test_hospital}")
+            print(f"   New balance: ${response.get('new_balance', 0):.2f}")
+        
+        # Test 2: Try to add negative deposit (should fail)
+        success, response = self.run_test(
+            "Add Hospital Deposit - Negative Amount (Should Fail)",
+            "POST",
+            f"admin/hospitals/{test_hospital}/deposit",
+            400,
+            data={"amount": -100.0}
+        )
+        
+        # Test 3: Try to add zero deposit (should fail)
+        success, response = self.run_test(
+            "Add Hospital Deposit - Zero Amount (Should Fail)",
+            "POST",
+            f"admin/hospitals/{test_hospital}/deposit",
+            400,
+            data={"amount": 0.0}
+        )
+        
+        # Test 4: Try to add deposit to non-existent hospital (should fail)
+        success, response = self.run_test(
+            "Add Hospital Deposit - Non-existent Hospital (Should Fail)",
+            "POST",
+            "admin/hospitals/NonExistentHospital/deposit",
+            404,
+            data={"amount": 100.0}
+        )
+        
+        # Test 5: Try to add deposit as non-admin user (should fail)
+        # Login as regular user
+        regular_user_token = self.token  # Save superadmin token
+        if self.test_login("general_clerk", "password123"):
+            success, response = self.run_test(
+                "Add Hospital Deposit - Non-Admin User (Should Fail)",
+                "POST",
+                f"admin/hospitals/{test_hospital}/deposit",
+                403,
+                data={"amount": 100.0}
+            )
+        
+        # Restore superadmin token
+        self.token = regular_user_token
+        
+        # Test 6: Get hospital balance as authenticated user
+        # Login as System Administration user to test balance endpoint
+        if self.test_login("superadmin", "SuperAdmin@2024"):  # Superadmin belongs to System Administration
+            success, response = self.run_test(
+                "Get Hospital Balance - Authenticated User",
+                "GET",
+                "hospital/balance",
+                200
+            )
+            
+            if success:
+                hospital_name = response.get('hospital_name')
+                balance = response.get('deposit_balance', 0)
+                print(f"   Hospital: {hospital_name}")
+                print(f"   Current balance: ${balance:.2f}")
+                
+                # Store balance for payment tests
+                initial_balance = balance
+        
+        # Test 7: Get existing claims to test payment functionality
+        success, claims = self.run_test(
+            "Get Claims for Payment Testing",
+            "GET",
+            "claims",
+            200
+        )
+        
+        completed_claim_id = None
+        paid_claim_id = None
+        voided_claim_id = None
+        
+        if success and claims:
+            # Find claims with different statuses
+            for claim in claims:
+                if claim.get("status") == "COMPLETED" and not completed_claim_id:
+                    completed_claim_id = claim.get("claim_id")
+                elif claim.get("status") == "PAID" and not paid_claim_id:
+                    paid_claim_id = claim.get("claim_id")
+                elif claim.get("status") == "VOIDED" and not voided_claim_id:
+                    voided_claim_id = claim.get("claim_id")
+            
+            print(f"   Found claims - COMPLETED: {completed_claim_id}, PAID: {paid_claim_id}, VOIDED: {voided_claim_id}")
+        
+        # Test 8: Mark completed claim as paid (should succeed)
+        if completed_claim_id:
+            success, response = self.run_test(
+                "Mark Completed Claim as Paid",
+                "POST",
+                f"claims/{completed_claim_id}/pay",
+                200
+            )
+            
+            if success:
+                deducted_amount = response.get('message', '').split('$')[1].split('.')[0] if '$' in response.get('message', '') else 'Unknown'
+                new_balance = response.get('new_hospital_balance', 0)
+                print(f"   ✅ Claim {completed_claim_id} marked as paid")
+                print(f"   Amount deducted: ${deducted_amount}")
+                print(f"   New hospital balance: ${new_balance:.2f}")
+        
+        # Test 9: Try to mark already paid claim as paid again (should fail)
+        if paid_claim_id:
+            success, response = self.run_test(
+                "Mark Already Paid Claim as Paid (Should Fail)",
+                "POST",
+                f"claims/{paid_claim_id}/pay",
+                400
+            )
+        
+        # Test 10: Try to mark voided claim as paid (should fail)
+        if voided_claim_id:
+            success, response = self.run_test(
+                "Mark Voided Claim as Paid (Should Fail)",
+                "POST",
+                f"claims/{voided_claim_id}/pay",
+                400
+            )
+        
+        # Test 11: Try to mark non-existent claim as paid (should fail)
+        success, response = self.run_test(
+            "Mark Non-existent Claim as Paid (Should Fail)",
+            "POST",
+            "claims/NONEXISTENT-CLAIM/pay",
+            404
+        )
+        
+        # Test 12: Create a scenario with insufficient balance
+        # First, get current balance
+        success, balance_response = self.run_test(
+            "Get Current Balance for Insufficient Funds Test",
+            "GET",
+            "hospital/balance",
+            200
+        )
+        
+        if success:
+            current_balance = balance_response.get('deposit_balance', 0)
+            
+            # Create a test claim with amount higher than balance
+            # First get a patient and price list
+            success, patient_data = self.run_test(
+                "Get Patient for High Amount Claim",
+                "GET",
+                "patients/SEC-2413-01",
+                200
+            )
+            
+            success, price_items = self.run_test(
+                "Get Price List for High Amount Claim",
+                "GET",
+                "pricelists",
+                200
+            )
+            
+            if success and patient_data and price_items:
+                # Create a claim with high amount
+                high_amount = current_balance + 1000  # More than current balance
+                
+                claim_data = {
+                    "patient_serial_number": patient_data["serial_number"],
+                    "claim_items": [{
+                        "item_id": price_items[0]["item_id"],
+                        "item_name": price_items[0]["item_name"],
+                        "item_cost": high_amount,
+                        "quantity": 1
+                    }]
+                }
+                
+                # This should fail due to insufficient family balance, but let's try
+                success, claim_response = self.run_test(
+                    "Create High Amount Claim",
+                    "POST",
+                    "claims/submit",
+                    400  # Should fail due to insufficient family balance
+                )
+                
+                # If somehow it succeeds, try to pay it (should fail due to insufficient hospital balance)
+                if success and claim_response.get('claim_id'):
+                    high_claim_id = claim_response['claim_id']
+                    success, response = self.run_test(
+                        "Mark High Amount Claim as Paid - Insufficient Hospital Balance (Should Fail)",
+                        "POST",
+                        f"claims/{high_claim_id}/pay",
+                        400
+                    )
+        
+        # Test 13: Test claim from different hospital (permission check)
+        # Login as a different hospital user
+        if self.test_login("mercy_admin", "password123"):  # Different hospital
+            # Try to mark a System Administration claim as paid
+            if completed_claim_id:
+                success, response = self.run_test(
+                    "Mark Claim from Different Hospital as Paid (Should Fail)",
+                    "POST",
+                    f"claims/{completed_claim_id}/pay",
+                    403
+                )
+        
+        # Test 14: Verify claim status changes from COMPLETED to PAID
+        # Login back as System Administration user
+        if self.test_login("superadmin", "SuperAdmin@2024"):
+            # Get updated claims list to verify status changes
+            success, updated_claims = self.run_test(
+                "Verify Claim Status Changes",
+                "GET",
+                "claims",
+                200
+            )
+            
+            if success and updated_claims:
+                # Check if our completed claim is now marked as PAID
+                for claim in updated_claims:
+                    if claim.get("claim_id") == completed_claim_id:
+                        if claim.get("status") == "PAID":
+                            self.log_test("Claim Status Change Verification", True, f"Claim {completed_claim_id} status changed to PAID")
+                        else:
+                            self.log_test("Claim Status Change Verification", False, f"Claim {completed_claim_id} status is {claim.get('status')}, expected PAID")
+                        break
+        
+        # Test 15: Verify hospital balance is correctly deducted
+        success, final_balance_response = self.run_test(
+            "Verify Final Hospital Balance",
+            "GET",
+            "hospital/balance",
+            200
+        )
+        
+        if success:
+            final_balance = final_balance_response.get('deposit_balance', 0)
+            print(f"   Final hospital balance: ${final_balance:.2f}")
+            
+            # The balance should be less than initial balance if we successfully paid claims
+            if final_balance < initial_balance:
+                self.log_test("Hospital Balance Deduction Verification", True, f"Balance correctly deducted from ${initial_balance:.2f} to ${final_balance:.2f}")
+            else:
+                self.log_test("Hospital Balance Deduction Verification", False, f"Balance not deducted properly. Initial: ${initial_balance:.2f}, Final: ${final_balance:.2f}")
+        
+        return True
+
     def run_comprehensive_test(self):
         """Run all tests including suspension system"""
         print("🏥 Medical Insurance Billing System - Suspension System Testing")
