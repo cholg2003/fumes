@@ -312,10 +312,13 @@ const AdminCRUD = () => {
 
   // CSV Bulk Upload for Families
   const downloadCSVTemplate = () => {
-    const template = `family_id,principle_member_name,total_allotment,remaining_balance,member_first_name,member_middle_name,member_last_name,member_dob,member_sex,member_relationship
-SEC-3001,John Doe,5000,5000,John,Michael,Doe,1980-01-15,Male,Principle
-SEC-3001,John Doe,5000,5000,Jane,Marie,Doe,1982-03-20,Female,Spouse
-SEC-3002,Sarah Smith,7500,7500,Sarah,Ann,Smith,1975-06-10,Female,Principle`;
+    const template = `family_id,principle_member_name,total_allotment,serial_number,first_name,middle_name,last_name,dob,sex,relationship
+GS-2384,Yor Chan Awong,5000,GS-2384-00,Yor,Chan,Awong,1982-01-01,Male,Principle
+GS-2384,Yor Chan Awong,5000,GS-2384-01,Abul,Chol,Dau,1989-01-01,Female,Spouse
+GS-2384,Yor Chan Awong,5000,GS-2384-02,Khamisa,Yor,Chan,2000-01-01,Female,Child
+GS-2384,Yor Chan Awong,5000,GS-2384-03,Ayul,Yor,Chan,2003-01-01,Male,Child
+GS-3001,John Doe,7500,GS-3001-00,John,Michael,Doe,1980-01-15,Male,Principle
+GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
     
     const blob = new Blob([template], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
@@ -324,6 +327,7 @@ SEC-3002,Sarah Smith,7500,7500,Sarah,Ann,Smith,1975-06-10,Female,Principle`;
     a.download = 'family_bulk_upload_template.csv';
     a.click();
     window.URL.revokeObjectURL(url);
+    toast.success('Template downloaded! Fill it with your family data.');
   };
 
   const handleFileChange = (e) => {
