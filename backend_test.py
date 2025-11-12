@@ -1448,11 +1448,14 @@ class MedicalBillingAPITester:
         return True
 
     def run_comprehensive_test(self):
-        """Run all tests including hospital payment and deposit system"""
-        print("🏥 Medical Insurance Billing System - Hospital Payment & Deposit System Testing")
+        """Run all tests including access control for void and mark as paid endpoints"""
+        print("🏥 Medical Insurance Billing System - Access Control Testing for Void and Mark as Paid")
         print("=" * 80)
         
-        # Test NEW hospital statistics endpoint first (most important for this review)
+        # Test ACCESS CONTROL for void and mark as paid endpoints (MAIN FOCUS)
+        self.test_access_control_void_and_pay_endpoints()
+        
+        # Test NEW hospital statistics endpoint 
         self.test_hospital_stats_endpoint()
         
         # Test hospital payment and deposit system 
