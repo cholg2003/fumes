@@ -987,6 +987,22 @@ const AdminCRUD = () => {
                 </Dialog>
               </CardHeader>
               <CardContent>
+                <div className="mb-4">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      placeholder="Search members by serial number, name, or family ID..."
+                      value={memberSearch}
+                      onChange={(e) => setMemberSearch(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                  {memberSearch && (
+                    <p className="text-sm text-gray-500 mt-2">
+                      Found {filteredMembers.length} member(s)
+                    </p>
+                  )}
+                </div>
                 <table className="w-full">
                   <thead className="bg-gray-100">
                     <tr>
@@ -999,7 +1015,7 @@ const AdminCRUD = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {members.map((member) => (
+                    {filteredMembers.map((member) => (
                       <tr key={member.serial_number} className="border-b hover:bg-gray-50">
                         <td className="p-3 text-sm font-medium">{member.serial_number}</td>
                         <td className="p-3 text-sm">{member.first_name} {member.middle_name} {member.last_name}</td>
