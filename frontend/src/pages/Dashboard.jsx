@@ -271,6 +271,26 @@ const Dashboard = () => {
     }
   };
 
+  const handleMarkAsPaid = async (claimId, claimAmount) => {
+    if (!window.confirm(`Mark this claim as paid? This will deduct $${claimAmount.toFixed(2)} from your hospital balance.`)) {
+      return;
+    }
+
+    try {
+      const response = await axios.post(`${API}/claims/${claimId}/pay`, {}, axiosConfig);
+      toast.success(response.data.message);
+      await loadClaims();
+      await loadHospitalBalance(); // Refresh the balance
+      if (selectedPatient) {
+        const patientResponse = await axios.get(`${API}/patients/${selectedPatient.serial_number}`, axiosConfig);
+        setSelectedPatient(patientResponse.data);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Failed to mark claim as paid');
+    }
+  };
+
+
   const handlePrintClaim = (claimId) => {
     window.open(`/print/${claimId}`, '_blank');
   };
