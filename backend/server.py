@@ -868,10 +868,10 @@ async def update_member(serial_number: str, member_update: MemberUpdate, admin_u
 
 @api_router.delete("/admin/members/{serial_number}")
 async def delete_member(serial_number: str, admin_user: dict = Depends(get_admin_user)):
-    # Check if member has bills
+    # Check if member has claims
     claims = await db.claims_header.find_one({"patient_serial_number": serial_number})
-    if bills:
-        raise HTTPException(status_code=400, detail="Cannot delete member with existing bills.")
+    if claims:
+        raise HTTPException(status_code=400, detail="Cannot delete member with existing claims.")
     
     result = await db.members.delete_one({"serial_number": serial_number})
     if result.deleted_count == 0:
