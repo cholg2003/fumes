@@ -480,6 +480,59 @@ async def get_monthly_claims_stats(current_user: dict = Depends(get_current_user
     
     return stats
 
+@api_router.get("/claims/hospital-stats")
+async def get_hospital_claims_stats(current_user: dict = Depends(get_current_user)):
+    """Get overall claims statistics per hospital (for superadmin) or current hospital"""
+    
+    # Aggregate all claims by hospital
+    pipeline = [
+        {
+            "$group": {
+                "_id": "$hospital_name",
+                "total_completed": {
+                    "$sum": {
+                        "$cond": [{"$eq": ["$status", "COMPLETED"]}, "$total_claim_amount", 0]
+                    }
+                },
+                "total_paid": {
+                    "$sum": {
+                        "$cond": [{"$eq": ["$status", "PAID"]}, "$total_claim_amount", 0]
+                    }
+                },
+                "completed_count": {
+                    "$sum": {
+                        "$cond": [{"$eq": ["$status", "COMPLETED"]}, 1, 0]
+                    }
+                },
+                "paid_count": {
+                    "$sum": {
+                        "$cond": [{"$eq": ["$status", "PAID"]}, 1, 0]
+                    }
+                }
+            }
+        }
+    ]
+    
+    results = await db.claims_header.aggregate(pipeline).to_list(100)
+    
+    stats = {}
+    for result in results:
+        hospital = result["_id"]
+        total_completed = result["total_completed"]
+        total_paid = result["total_paid"]
+        outstanding = total_completed  # Outstanding is what's still COMPLETED (not yet paid)
+        
+        stats[hospital] = {
+            "total_completed": total_completed,
+            "total_paid": total_paid,
+            "outstanding": outstanding,
+            "completed_count": result["completed_count"],
+            "paid_count": result["paid_count"]
+        }
+    
+    return stats
+
+
 @api_router.get("/claims")
 async def get_claims(current_user: dict = Depends(get_current_user)):
     # Get claims for current user's hospital
