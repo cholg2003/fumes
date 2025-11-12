@@ -375,22 +375,24 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
       const familyGroups = {};
       csvData.forEach(row => {
         if (!familyGroups[row.family_id]) {
+          const allotment = parseFloat(row.total_allotment);
           familyGroups[row.family_id] = {
             family_id: row.family_id,
             principle_member_name: row.principle_member_name,
-            total_allotment: parseFloat(row.total_allotment),
-            remaining_balance: parseFloat(row.remaining_balance),
+            total_allotment: allotment,
+            remaining_balance: allotment, // Automatically set equal to total_allotment
             members: []
           };
         }
         
         familyGroups[row.family_id].members.push({
-          first_name: row.member_first_name,
-          middle_name: row.member_middle_name || '',
-          last_name: row.member_last_name,
-          dob: row.member_dob,
-          sex: row.member_sex,
-          relationship: row.member_relationship
+          serial_number: row.serial_number, // Include serial number from CSV
+          first_name: row.first_name,
+          middle_name: row.middle_name || '',
+          last_name: row.last_name,
+          dob: row.dob,
+          sex: row.sex,
+          relationship: row.relationship
         });
       });
 
@@ -412,6 +414,9 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
       
       if (failCount === 0) {
         toast.success(`Successfully uploaded ${successCount} families!`);
+        setCsvFile(null);
+        setCsvData([]);
+        setBulkFamilyDialog(false);
         loadData();
       } else {
         toast.warning(`Uploaded ${successCount} families, ${failCount} failed`);
