@@ -234,10 +234,30 @@ class AccessControlTester:
                     print(f"   ✅ Superadmin successfully voided claim")
         
         # Test 2: Non-superadmin Admin user cannot void claim (should fail with 403)
-        if self.login("Gaga", "password123"):  # This is a non-superadmin admin
+        if self.login("test_admin", "TestAdmin@2024"):  # This is a non-superadmin admin
             test_claim_id = voided_claim_id or paid_claim_id or "DUMMY-CLAIM"
             success, response = self.run_test(
                 "Non-superadmin Admin user cannot void claim (403)",
+                "POST",
+                f"claims/{test_claim_id}/void",
+                403
+            )
+        
+        # Test 3: Finance user cannot void claim (should fail with 403)
+        if self.login("test_finance", "TestFinance@2024"):
+            test_claim_id = voided_claim_id or paid_claim_id or "DUMMY-CLAIM"
+            success, response = self.run_test(
+                "Finance user cannot void claim (403)",
+                "POST",
+                f"claims/{test_claim_id}/void",
+                403
+            )
+        
+        # Test 4: Reception user cannot void claim (should fail with 403)
+        if self.login("test_reception", "TestReception@2024"):
+            test_claim_id = voided_claim_id or paid_claim_id or "DUMMY-CLAIM"
+            success, response = self.run_test(
+                "Reception user cannot void claim (403)",
                 "POST",
                 f"claims/{test_claim_id}/void",
                 403
