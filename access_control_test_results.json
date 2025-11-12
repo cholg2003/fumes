@@ -1,0 +1,153 @@
+{
+  "timestamp": "2025-11-12T06:33:12.351000",
+  "total_tests": 29,
+  "passed_tests": 26,
+  "success_rate": 89.65517241379311,
+  "results": [
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Add Hospital Deposit for Testing",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Existing Claims",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Patient for Test Claims",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Price List for Test Claims",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Create COMPLETED Test Claim",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Superadmin can void COMPLETED claim",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Login - Gaga",
+      "success": false,
+      "details": "Status: 401 (Expected: 200) - Invalid username or password"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Voiding already VOIDED claim should fail (400)",
+      "success": true,
+      "details": "Status: 400"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Voiding non-existent claim should fail (404)",
+      "success": true,
+      "details": "Status: 404"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Patient for Payment Test",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Price List for Payment Test",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Create New COMPLETED Claim for Payment Test",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Superadmin can mark COMPLETED claim as PAID",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Login - Gaga",
+      "success": false,
+      "details": "Status: 401 (Expected: 200) - Invalid username or password"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Marking already PAID claim should fail (400)",
+      "success": true,
+      "details": "Status: 400"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Marking VOIDED claim should fail (400)",
+      "success": true,
+      "details": "Status: 400"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Marking non-existent claim should fail (404)",
+      "success": true,
+      "details": "Status: 404"
+    },
+    {
+      "test": "Login - Gaga",
+      "success": false,
+      "details": "Status: 401 (Expected: 200) - Invalid username or password"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Already Paid Error Message Check",
+      "success": true,
+      "details": "Status: 400"
+    }
+  ]
+}
