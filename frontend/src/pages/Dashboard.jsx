@@ -688,6 +688,8 @@ const Dashboard = () => {
                           <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
                             claim.status === 'COMPLETED' 
                               ? 'bg-green-100 text-green-800' 
+                              : claim.status === 'PAID'
+                              ? 'bg-blue-100 text-blue-800'
                               : 'bg-red-100 text-red-800'
                           }`}>
                             {claim.status}
@@ -704,16 +706,28 @@ const Dashboard = () => {
                             >
                               <Printer className="w-4 h-4" />
                             </Button>
-                            {claim.status === 'COMPLETED' && (
-                              <Button
-                                data-testid={`void-claim-${claim.claim_id}`}
-                                onClick={() => handleVoidClaim(claim.claim_id)}
-                                variant="ghost"
-                                size="sm"
-                                className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                              >
-                                <Ban className="w-4 h-4" />
-                              </Button>
+                            {claim.status === 'COMPLETED' && (role === 'Admin' || role === 'Finance') && (
+                              <>
+                                <Button
+                                  data-testid={`pay-claim-${claim.claim_id}`}
+                                  onClick={() => handleMarkAsPaid(claim.claim_id, claim.total_claim_amount)}
+                                  variant="ghost"
+                                  size="sm"
+                                  className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                                  title="Mark as Paid"
+                                >
+                                  <CheckCircle className="w-4 h-4" />
+                                </Button>
+                                <Button
+                                  data-testid={`void-claim-${claim.claim_id}`}
+                                  onClick={() => handleVoidClaim(claim.claim_id)}
+                                  variant="ghost"
+                                  size="sm"
+                                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                >
+                                  <Ban className="w-4 h-4" />
+                                </Button>
+                              </>
                             )}
                           </div>
                         </td>
