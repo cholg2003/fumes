@@ -244,9 +244,7 @@ const Dashboard = () => {
         remaining_balance: response.data.new_balance
       });
       await loadClaims();
-      if (isSuperAdmin) {
-        await loadMonthlyStats();
-      }
+      await loadHospitalStats();
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Failed to submit bill');
     } finally {
@@ -263,9 +261,7 @@ const Dashboard = () => {
       await axios.post(`${API}/claims/${claimId}/void`, {}, axiosConfig);
       toast.success('Claim voided successfully');
       await loadClaims();
-      if (isSuperAdmin) {
-        await loadMonthlyStats();
-      }
+      await loadHospitalStats();
       if (selectedPatient) {
         const response = await axios.get(`${API}/patients/${selectedPatient.serial_number}`, axiosConfig);
         setSelectedPatient(response.data);
