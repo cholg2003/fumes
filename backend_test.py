@@ -750,6 +750,139 @@ class MedicalBillingAPITester:
         
         return True
 
+    def test_hospital_stats_endpoint(self):
+        """Test the NEW Hospital Statistics endpoint"""
+        print(f"\n📊 Testing Hospital Statistics Endpoint...")
+        
+        # Test 1: Login as superadmin to test hospital stats
+        if not self.test_login("superadmin", "SuperAdmin@2024"):
+            self.log_test("Hospital Stats Setup", False, "Could not login as superadmin")
+            return False
+        
+        # Test 2: Get hospital statistics (new endpoint)
+        success, stats_response = self.run_test(
+            "Get Hospital Statistics - All Hospitals",
+            "GET",
+            "claims/hospital-stats",
+            200
+        )
+        
+        if success and isinstance(stats_response, dict):
+            print(f"   Found statistics for {len(stats_response)} hospitals")
+            
+            # Verify structure for each hospital
+            for hospital_name, stats in stats_response.items():
+                print(f"   Hospital: {hospital_name}")
+                
+                # Check required fields
+                required_fields = ['total_completed', 'total_paid', 'outstanding', 'completed_count', 'paid_count']
+                missing_fields = [field for field in required_fields if field not in stats]
+                
+                if not missing_fields:
+                    self.log_test(f"Hospital Stats Structure - {hospital_name}", True, "All required fields present")
+                    
+                    # Verify outstanding equals total_completed (key requirement)
+                    total_completed = stats.get('total_completed', 0)
+                    outstanding = stats.get('outstanding', 0)
+                    
+                    if total_completed == outstanding:
+                        self.log_test(f"Outstanding Calculation - {hospital_name}", True, f"Outstanding (${outstanding}) equals total_completed (${total_completed})")
+                    else:
+                        self.log_test(f"Outstanding Calculation - {hospital_name}", False, f"Outstanding (${outstanding}) != total_completed (${total_completed})")
+                    
+                    # Print detailed stats
+                    print(f"     Total Completed: ${stats.get('total_completed', 0)}")
+                    print(f"     Total Paid: ${stats.get('total_paid', 0)}")
+                    print(f"     Outstanding: ${stats.get('outstanding', 0)}")
+                    print(f"     Completed Count: {stats.get('completed_count', 0)}")
+                    print(f"     Paid Count: {stats.get('paid_count', 0)}")
+                    
+                else:
+                    self.log_test(f"Hospital Stats Structure - {hospital_name}", False, f"Missing fields: {missing_fields}")
+        
+        # Test 3: Login as hospital admin and test access
+        if self.test_login("mercy_admin", "password123"):
+            success, hospital_stats = self.run_test(
+                "Get Hospital Statistics - Hospital Admin",
+                "GET",
+                "claims/hospital-stats",
+                200
+            )
+            
+            if success:
+                print(f"   Hospital admin can access stats for {len(hospital_stats)} hospitals")
+        
+        # Test 4: Verify calculations by cross-checking with claims data
+        if self.test_login("superadmin", "SuperAdmin@2024"):
+            # Get all claims to verify calculations
+            success, all_claims = self.run_test(
+                "Get All Claims for Verification",
+                "GET",
+                "claims",
+                200
+            )
+            
+            if success and all_claims:
+                # Calculate expected stats manually
+                expected_stats = {}
+                for claim in all_claims:
+                    hospital = claim.get('hospital_name')
+                    status = claim.get('status')
+                    amount = claim.get('total_claim_amount', 0)
+                    
+                    if hospital not in expected_stats:
+                        expected_stats[hospital] = {
+                            'total_completed': 0,
+                            'total_paid': 0,
+                            'completed_count': 0,
+                            'paid_count': 0
+                        }
+                    
+                    if status == 'COMPLETED':
+                        expected_stats[hospital]['total_completed'] += amount
+                        expected_stats[hospital]['completed_count'] += 1
+                    elif status == 'PAID':
+                        expected_stats[hospital]['total_paid'] += amount
+                        expected_stats[hospital]['paid_count'] += 1
+                
+                # Compare with API response
+                success, api_stats = self.run_test(
+                    "Get Hospital Stats for Calculation Verification",
+                    "GET",
+                    "claims/hospital-stats",
+                    200
+                )
+                
+                if success:
+                    for hospital, expected in expected_stats.items():
+                        if hospital in api_stats:
+                            api_data = api_stats[hospital]
+                            
+                            # Verify completed amounts
+                            if abs(api_data.get('total_completed', 0) - expected['total_completed']) < 0.01:
+                                self.log_test(f"Calculation Verification - {hospital} Completed Amount", True, f"${expected['total_completed']}")
+                            else:
+                                self.log_test(f"Calculation Verification - {hospital} Completed Amount", False, f"Expected: ${expected['total_completed']}, Got: ${api_data.get('total_completed', 0)}")
+                            
+                            # Verify paid amounts
+                            if abs(api_data.get('total_paid', 0) - expected['total_paid']) < 0.01:
+                                self.log_test(f"Calculation Verification - {hospital} Paid Amount", True, f"${expected['total_paid']}")
+                            else:
+                                self.log_test(f"Calculation Verification - {hospital} Paid Amount", False, f"Expected: ${expected['total_paid']}, Got: ${api_data.get('total_paid', 0)}")
+                            
+                            # Verify counts
+                            if api_data.get('completed_count', 0) == expected['completed_count']:
+                                self.log_test(f"Calculation Verification - {hospital} Completed Count", True, f"{expected['completed_count']}")
+                            else:
+                                self.log_test(f"Calculation Verification - {hospital} Completed Count", False, f"Expected: {expected['completed_count']}, Got: {api_data.get('completed_count', 0)}")
+                            
+                            if api_data.get('paid_count', 0) == expected['paid_count']:
+                                self.log_test(f"Calculation Verification - {hospital} Paid Count", True, f"{expected['paid_count']}")
+                            else:
+                                self.log_test(f"Calculation Verification - {hospital} Paid Count", False, f"Expected: {expected['paid_count']}, Got: {api_data.get('paid_count', 0)}")
+        
+        return True
+
     def test_hospital_payment_deposit_system(self):
         """Test the Hospital Payment and Deposit System feature"""
         print(f"\n💰 Testing Hospital Payment and Deposit System...")
