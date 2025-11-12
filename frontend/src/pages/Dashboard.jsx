@@ -28,6 +28,7 @@ const Dashboard = () => {
   const [claims, setClaims] = useState([]);
   const [loading, setLoading] = useState(false);
   const [monthlyStats, setMonthlyStats] = useState({});
+  const [hospitalBalance, setHospitalBalance] = useState(0);
 
   const token = localStorage.getItem('token');
   const hospitalName = localStorage.getItem('hospital_name');
