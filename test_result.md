@@ -307,6 +307,18 @@ test_plan:
   test_all: false
   test_priority: "high_first"
 
+  - task: "Hospital statistics endpoint - GET /api/claims/hospital-stats"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED: NEW Hospital statistics endpoint working perfectly. Returns overall claims statistics (not monthly) for all hospitals. Verified structure includes all required fields (total_completed, total_paid, outstanding, completed_count, paid_count). Outstanding calculation correct (equals total_completed). Manual calculation verification passed. Current data: System Administration (0 completed, 5 paid claims $425), Gaga Medical Complex (1 completed $15, 0 paid). Accessible by both superadmin and hospital admin users."
+
 agent_communication:
   - agent: "main"
     message: "Starting implementation of two features: 1) Searchable price list items by Item ID/Name, 2) Family/Member suspension system with status field. Will implement backend changes first, then frontend."
@@ -318,3 +330,5 @@ agent_communication:
     message: "BACKEND TESTING COMPLETE: All suspension system features working perfectly. Tested 20 scenarios with 100% success rate. Key findings: 1) Family/member suspension endpoints work with proper superadmin-only access control, 2) Cascade suspension (family->members) working correctly, 3) Search filtering properly hides suspended records from regular users while showing to superadmin, 4) Bill submission prevention working for both suspended members and families, 5) All data migration successful (4 families, 13 members have status fields). No critical issues found. Ready for frontend testing or user acceptance."
   - agent: "testing"
     message: "HOSPITAL PAYMENT & DEPOSIT SYSTEM TESTING COMPLETE: Comprehensive testing of newly implemented feature with 94.1% success rate (16/17 tests passed). All core functionality working perfectly: 1) Deposit endpoint validates amounts and enforces superadmin access, 2) Balance endpoint returns correct hospital balance, 3) Payment endpoint successfully marks COMPLETED claims as PAID and deducts from hospital balance, 4) Proper error handling for edge cases (already paid claims, non-existent claims, insufficient balance), 5) Hospital balance correctly updated after payments. Only minor issue: request format validation (422 vs 400 status code). Feature is production-ready."
+  - agent: "testing"
+    message: "HOSPITAL STATISTICS ENDPOINT TESTING COMPLETE: NEW endpoint GET /api/claims/hospital-stats working perfectly with 100% success rate. Key findings: 1) Returns overall claims statistics (not monthly) for all hospitals, 2) Correct data structure with all required fields (total_completed, total_paid, outstanding, completed_count, paid_count), 3) Outstanding calculation accurate (equals total_completed as expected), 4) Manual calculation verification passed - API results match database calculations, 5) Accessible by both superadmin and hospital admin users, 6) Current data shows System Administration: 0 completed claims, 5 paid claims ($425 total), Gaga Medical Complex: 1 completed claim ($15), 0 paid claims. Feature is production-ready and meets all requirements."
