@@ -263,7 +263,7 @@ class AccessControlTester:
                 403
             )
         
-        # Test 3: Voiding already VOIDED claim should fail (400)
+        # Test 5: Voiding already VOIDED claim should fail (400)
         if voided_claim_id:
             if self.login("superadmin", "SuperAdmin@2024"):
                 success, response = self.run_test(
@@ -273,7 +273,7 @@ class AccessControlTester:
                     400
                 )
         
-        # Test 4: Voiding non-existent claim should fail (404)
+        # Test 6: Voiding non-existent claim should fail (404)
         if self.login("superadmin", "SuperAdmin@2024"):
             success, response = self.run_test(
                 "Voiding non-existent claim should fail (404)",
