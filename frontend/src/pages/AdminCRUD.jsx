@@ -923,6 +923,9 @@ SEC-3002,Sarah Smith,7500,7500,Sarah,Ann,Smith,1975-06-10,Female,Principle`;
                         <Plus className="w-4 h-4 mr-2" />Add Family
                       </Button>
                     </DialogTrigger>
+                  </Dialog>
+                </div>
+                <Dialog open={familyDialog} onOpenChange={setFamilyDialog}>
                   <DialogContent>
                     <DialogHeader>
                       <DialogTitle>{editMode.type === 'family' ? 'Edit Family' : 'Add Family'}</DialogTitle>
