@@ -767,10 +767,10 @@ async def delete_family(family_id: str, admin_user: dict = Depends(get_admin_use
     if members:
         raise HTTPException(status_code=400, detail="Cannot delete family with existing members. Delete members first.")
     
-    # Check if family has bills
+    # Check if family has claims
     claims = await db.claims_header.find_one({"family_id": family_id})
-    if bills:
-        raise HTTPException(status_code=400, detail="Cannot delete family with existing bills.")
+    if claims:
+        raise HTTPException(status_code=400, detail="Cannot delete family with existing claims.")
     
     result = await db.families.delete_one({"family_id": family_id})
     if result.deleted_count == 0:
