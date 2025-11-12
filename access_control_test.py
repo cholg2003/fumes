@@ -466,10 +466,10 @@ class AccessControlTester:
         """Test expected error messages"""
         print(f"\n📝 Testing Expected Error Messages...")
         
-        if self.login("Gaga", "password123"):  # Non-superadmin user
+        if self.login("test_admin", "TestAdmin@2024"):  # Non-superadmin user
             # Test void error message
             success, response = self.run_test(
-                "Void Error Message Check",
+                "Void Error Message Check - Non-superadmin",
                 "POST",
                 f"claims/{voided_claim_id or 'DUMMY'}/void",
                 403
@@ -477,7 +477,7 @@ class AccessControlTester:
             
             # Test mark as paid error message
             success, response = self.run_test(
-                "Mark as Paid Error Message Check",
+                "Mark as Paid Error Message Check - Non-superadmin",
                 "POST",
                 f"claims/{paid_claim_id or 'DUMMY'}/pay",
                 403
