@@ -88,12 +88,17 @@ const Dashboard = () => {
     }
   };
 
-  const loadMonthlyStats = async () => {
+  const loadHospitalStats = async () => {
     try {
-      const response = await axios.get(`${API}/claims/monthly-stats`, axiosConfig);
-      setMonthlyStats(response.data);
+      const response = await axios.get(`${API}/claims/hospital-stats`, axiosConfig);
+      setHospitalStats(response.data);
+      
+      // For non-superadmin, calculate total claims for their hospital
+      if (!isSuperAdmin && hospitalName && response.data[hospitalName]) {
+        setTotalClaims(response.data[hospitalName].total_completed);
+      }
     } catch (error) {
-      console.error('Failed to load monthly stats:', error);
+      console.error('Failed to load hospital stats:', error);
     }
   };
 
