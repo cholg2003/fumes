@@ -38,6 +38,9 @@ const AdminCRUD = () => {
   const [resetPasswordDialog, setResetPasswordDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [tempPassword, setTempPassword] = useState('');
+  const [depositDialog, setDepositDialog] = useState(false);
+  const [selectedHospital, setSelectedHospital] = useState(null);
+  const [depositAmount, setDepositAmount] = useState('');
   
   // CSV upload state
   const [csvFile, setCsvFile] = useState(null);
