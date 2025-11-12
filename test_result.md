@@ -300,7 +300,8 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Hospital statistics endpoint - GET /api/claims/hospital-stats"
+    - "Access control for void claims endpoint - POST /api/claims/{claim_id}/void"
+    - "Access control for mark as paid endpoint - POST /api/claims/{claim_id}/pay"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
