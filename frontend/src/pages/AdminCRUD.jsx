@@ -829,6 +829,22 @@ const AdminCRUD = () => {
                 </Dialog>
               </CardHeader>
               <CardContent>
+                <div className="mb-4">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      placeholder="Search families by Family ID or member name..."
+                      value={familySearch}
+                      onChange={(e) => setFamilySearch(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                  {familySearch && (
+                    <p className="text-sm text-gray-500 mt-2">
+                      Found {filteredFamilies.length} family/families
+                    </p>
+                  )}
+                </div>
                 <table className="w-full">
                   <thead className="bg-gray-100">
                     <tr>
@@ -841,7 +857,7 @@ const AdminCRUD = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {families.map((family) => (
+                    {filteredFamilies.map((family) => (
                       <tr key={family.family_id} className="border-b hover:bg-gray-50">
                         <td className="p-3 text-sm font-medium">{family.family_id}</td>
                         <td className="p-3 text-sm">{family.principle_member_name}</td>
