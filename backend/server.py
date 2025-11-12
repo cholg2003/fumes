@@ -1012,6 +1012,33 @@ async def delete_hospital(hospital_name: str, admin_user: dict = Depends(get_adm
     
     return {"success": True, "message": "Hospital deleted successfully"}
 
+@api_router.post("/admin/hospitals/{hospital_name}/deposit")
+async def add_deposit(hospital_name: str, deposit: DepositRequest, admin_user: dict = Depends(get_admin_user)):
+    # Check if hospital exists
+    hospital = await db.hospitals.find_one({"hospital_name": hospital_name})
+    if not hospital:
+        raise HTTPException(status_code=404, detail="Hospital not found")
+    
+    if deposit.amount <= 0:
+        raise HTTPException(status_code=400, detail="Deposit amount must be positive")
+    
+    # Get current balance
+    current_balance = hospital.get("deposit_balance", 0.0)
+    new_balance = current_balance + deposit.amount
+    
+    # Update hospital balance
+    await db.hospitals.update_one(
+        {"hospital_name": hospital_name},
+        {"$set": {"deposit_balance": new_balance}}
+    )
+    
+    return {
+        "success": True,
+        "message": f"Deposit of ${deposit.amount:.2f} added successfully",
+        "new_balance": new_balance
+    }
+
+
 @api_router.post("/admin/users")
 async def create_user(user_data: UserCreate, admin_user: dict = Depends(get_admin_user)):
     # Check if username exists
