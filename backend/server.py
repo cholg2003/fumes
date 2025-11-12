@@ -159,6 +159,10 @@ class HospitalCreate(BaseModel):
     address: Optional[str] = ""
     phone: Optional[str] = ""
     email: Optional[str] = ""
+    deposit_balance: float = 0.0
+
+class DepositRequest(BaseModel):
+    amount: float
 
 class UserCreate(BaseModel):
     username: str
