@@ -149,6 +149,42 @@ const AdminCRUD = () => {
     }
   };
 
+  // Filter functions
+  const filteredHospitals = hospitals.filter(h => 
+    h.hospital_name.toLowerCase().includes(hospitalSearch.toLowerCase()) ||
+    h.address.toLowerCase().includes(hospitalSearch.toLowerCase())
+  );
+
+  const filteredUsers = users.filter(u =>
+    u.username.toLowerCase().includes(userSearch.toLowerCase()) ||
+    u.hospital_name.toLowerCase().includes(userSearch.toLowerCase()) ||
+    u.role.toLowerCase().includes(userSearch.toLowerCase())
+  );
+
+  const filteredFamilies = families.filter(f =>
+    f.family_id.toLowerCase().includes(familySearch.toLowerCase()) ||
+    f.principle_member_name.toLowerCase().includes(familySearch.toLowerCase())
+  );
+
+  const filteredMembers = members.filter(m =>
+    m.serial_number.toLowerCase().includes(memberSearch.toLowerCase()) ||
+    m.first_name.toLowerCase().includes(memberSearch.toLowerCase()) ||
+    m.last_name.toLowerCase().includes(memberSearch.toLowerCase()) ||
+    m.family_id.toLowerCase().includes(memberSearch.toLowerCase())
+  );
+
+  const filteredPricelists = pricelists.filter(p =>
+    p.item_id.toLowerCase().includes(pricelistSearch.toLowerCase()) ||
+    p.item_name.toLowerCase().includes(pricelistSearch.toLowerCase()) ||
+    p.hospital_name.toLowerCase().includes(pricelistSearch.toLowerCase())
+  );
+
+  const filteredClaims = claims.filter(c =>
+    c.claim_id.toLowerCase().includes(claimSearch.toLowerCase()) ||
+    c.patient_name.toLowerCase().includes(claimSearch.toLowerCase()) ||
+    c.hospital_name.toLowerCase().includes(claimSearch.toLowerCase())
+  );
+
   const handleHospitalDelete = async (hospitalName) => {
     if (!window.confirm(`Delete hospital "${hospitalName}"? This will fail if the hospital has users or price lists.`)) return;
     try {
