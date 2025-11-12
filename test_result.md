@@ -317,6 +317,30 @@ test_plan:
         agent: "testing"
         comment: "TESTED: NEW Hospital statistics endpoint working perfectly. Returns overall claims statistics (not monthly) for all hospitals. Verified structure includes all required fields (total_completed, total_paid, outstanding, completed_count, paid_count). Outstanding calculation correct (equals total_completed). Manual calculation verification passed. Current data: System Administration (0 completed, 5 paid claims $425), Gaga Medical Complex (1 completed $15, 0 paid). Accessible by both superadmin and hospital admin users."
 
+  - task: "Access control for void claims endpoint - POST /api/claims/{claim_id}/void"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Access control changes working perfectly. Superadmin can void COMPLETED claims (✅), Non-superadmin Admin/Finance/Reception users cannot void claims (403 ✅), Voiding already VOIDED claim fails (400 ✅), Voiding non-existent claim fails (404 ✅). Error message 'Only superadmin can void claims' correctly returned for unauthorized access."
+
+  - task: "Access control for mark as paid endpoint - POST /api/claims/{claim_id}/pay"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Access control changes working perfectly. Superadmin can mark COMPLETED claims as PAID (✅), Non-superadmin Admin/Finance/Reception users cannot mark claims as paid (403 ✅), Marking already PAID claim fails (400 ✅), Marking VOIDED claim fails (400 ✅), Marking non-existent claim fails (404 ✅). Error messages 'Only superadmin can mark claims as paid' and 'Only completed claims can be marked as paid' correctly returned."
+
 agent_communication:
   - agent: "main"
     message: "Starting implementation of two features: 1) Searchable price list items by Item ID/Name, 2) Family/Member suspension system with status field. Will implement backend changes first, then frontend."
