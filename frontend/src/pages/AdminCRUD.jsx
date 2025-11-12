@@ -1186,6 +1186,22 @@ const AdminCRUD = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
+                <div className="mb-4">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      placeholder="Search by Claim ID, patient name, or hospital..."
+                      value={claimSearch}
+                      onChange={(e) => setClaimSearch(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                  {claimSearch && (
+                    <p className="text-sm text-gray-500 mt-2">
+                      Found {filteredClaims.length} claim(s)
+                    </p>
+                  )}
+                </div>
                 <table className="w-full">
                   <thead className="bg-gray-100">
                     <tr>
@@ -1199,7 +1215,7 @@ const AdminCRUD = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {claims.map((claim) => (
+                    {filteredClaims.map((claim) => (
                       <tr key={claim.claim_id} className="border-b hover:bg-gray-50">
                         <td className="p-3 text-sm font-medium">{claim.claim_id}</td>
                         <td className="p-3 text-sm">{claim.hospital_name}</td>
