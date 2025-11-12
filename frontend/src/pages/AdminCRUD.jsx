@@ -1000,21 +1000,21 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                             <table className="w-full text-sm">
                               <thead className="bg-gray-100 sticky top-0">
                                 <tr>
+                                  <th className="text-left p-2">Serial Number</th>
                                   <th className="text-left p-2">Family ID</th>
-                                  <th className="text-left p-2">Principle Member</th>
-                                  <th className="text-left p-2">Allotment</th>
                                   <th className="text-left p-2">Member Name</th>
+                                  <th className="text-left p-2">DOB</th>
                                   <th className="text-left p-2">Relationship</th>
                                 </tr>
                               </thead>
                               <tbody>
                                 {csvData.slice(0, 10).map((row, index) => (
                                   <tr key={index} className="border-b">
+                                    <td className="p-2 font-mono text-xs">{row.serial_number}</td>
                                     <td className="p-2">{row.family_id}</td>
-                                    <td className="p-2">{row.principle_member_name}</td>
-                                    <td className="p-2">${row.total_allotment}</td>
-                                    <td className="p-2">{row.member_first_name} {row.member_last_name}</td>
-                                    <td className="p-2">{row.member_relationship}</td>
+                                    <td className="p-2">{row.first_name} {row.last_name}</td>
+                                    <td className="p-2">{row.dob}</td>
+                                    <td className="p-2">{row.relationship}</td>
                                   </tr>
                                 ))}
                               </tbody>
