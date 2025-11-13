@@ -523,10 +523,10 @@ async def get_hospital_claims_stats(current_user: dict = Depends(get_current_use
         outstanding = total_pending  # Outstanding is what's still PENDING (not yet paid)
         
         stats[hospital] = {
-            "total_completed": total_completed,
+            "total_pending": total_pending,
             "total_paid": total_paid,
             "outstanding": outstanding,
-            "completed_count": result["completed_count"],
+            "pending_count": result["pending_count"],
             "paid_count": result["paid_count"]
         }
     
