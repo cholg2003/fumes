@@ -407,7 +407,7 @@ async def submit_claim(claim_submission: ClaimSubmission, current_user: dict = D
         "patient_name": f"{patient['first_name']} {patient['last_name']}",
         "family_id": patient["family_id"],
         "total_claim_amount": total_amount,
-        "status": "COMPLETED"
+        "status": "PENDING"
     }
     await db.claims_header.insert_one(claim_header)
     
