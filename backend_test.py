@@ -1841,6 +1841,420 @@ class MedicalBillingAPITester:
         print(f"   ✅ Superadmin-only access control testing completed")
         return True
 
+    def test_claim_status_editing_feature(self):
+        """Test the new Claim Status Editing feature with balance adjustments"""
+        print(f"\n🔄 Testing Claim Status Editing Feature...")
+        
+        # Login as superadmin for claim editing
+        if not self.test_login("superadmin", "SuperAdmin@2024"):
+            self.log_test("Claim Status Editing Setup", False, "Could not login as superadmin")
+            return False
+        
+        # Ensure hospital has sufficient balance for testing
+        success, response = self.run_test(
+            "Add Hospital Deposit for Status Testing",
+            "POST",
+            "admin/hospitals/System Administration/deposit",
+            200,
+            data={"amount": 2000.0}
+        )
+        
+        # Get initial balances
+        success, hospital_balance = self.run_test(
+            "Get Initial Hospital Balance",
+            "GET",
+            "hospital/balance",
+            200
+        )
+        
+        initial_hospital_balance = hospital_balance.get('deposit_balance', 0) if success else 0
+        print(f"   Initial hospital balance: ${initial_hospital_balance:.2f}")
+        
+        # Get patient for testing
+        success, patient_data = self.run_test(
+            "Get Patient for Status Testing",
+            "GET",
+            "patients/SEC-2413-01",
+            200
+        )
+        
+        if not success or not patient_data:
+            self.log_test("Claim Status Editing Setup", False, "Could not get patient data")
+            return False
+        
+        initial_family_balance = patient_data.get('remaining_balance', 0)
+        print(f"   Initial family balance: ${initial_family_balance:.2f}")
+        
+        # Get price list
+        success, price_items = self.run_test(
+            "Get Price List for Status Testing",
+            "GET",
+            "pricelists",
+            200
+        )
+        
+        if not success or not price_items:
+            self.log_test("Claim Status Editing Setup", False, "Could not get price list")
+            return False
+        
+        # Create test claim with PENDING status
+        test_amount = min(50.0, price_items[0]["cost"])
+        claim_data = {
+            "patient_serial_number": patient_data["serial_number"],
+            "claim_items": [{
+                "item_id": price_items[0]["item_id"],
+                "item_name": price_items[0]["item_name"],
+                "item_cost": test_amount,
+                "quantity": 1
+            }]
+        }
+        
+        success, claim_response = self.run_test(
+            "Create Test Claim for Status Editing",
+            "POST",
+            "claims/submit",
+            200,
+            data=claim_data
+        )
+        
+        if not success:
+            self.log_test("Claim Status Editing Setup", False, "Could not create test claim")
+            return False
+        
+        test_claim_id = claim_response.get('claim_id')
+        print(f"   Created test claim: {test_claim_id} (${test_amount})")
+        
+        # === TEST 1: PENDING → VOIDED (Refund family balance) ===
+        print(f"\n   🔄 Testing PENDING → VOIDED transition...")
+        
+        edit_data = {
+            "patient_serial_number": patient_data["serial_number"],
+            "status": "VOIDED",
+            "claim_items": [{
+                "item_id": price_items[0]["item_id"],
+                "item_name": price_items[0]["item_name"],
+                "item_cost": test_amount,
+                "quantity": 1
+            }]
+        }
+        
+        success, response = self.run_test(
+            "Edit Claim Status - PENDING to VOIDED",
+            "PUT",
+            f"admin/claims/{test_claim_id}",
+            200,
+            data=edit_data
+        )
+        
+        if success:
+            print(f"   ✅ Status changed to VOIDED")
+            # Verify family balance was refunded
+            success, updated_patient = self.run_test(
+                "Verify Family Balance After VOIDED",
+                "GET",
+                f"patients/{patient_data['serial_number']}",
+                200
+            )
+            
+            if success:
+                new_family_balance = updated_patient.get('remaining_balance', 0)
+                expected_balance = initial_family_balance  # Should be back to original
+                if abs(new_family_balance - expected_balance) < 0.01:
+                    self.log_test("PENDING→VOIDED Balance Adjustment", True, f"Family balance refunded: ${new_family_balance:.2f}")
+                else:
+                    self.log_test("PENDING→VOIDED Balance Adjustment", False, f"Expected: ${expected_balance:.2f}, Got: ${new_family_balance:.2f}")
+        
+        # === TEST 2: VOIDED → PENDING (Deduct from family balance) ===
+        print(f"\n   🔄 Testing VOIDED → PENDING transition...")
+        
+        edit_data["status"] = "PENDING"
+        success, response = self.run_test(
+            "Edit Claim Status - VOIDED to PENDING",
+            "PUT",
+            f"admin/claims/{test_claim_id}",
+            200,
+            data=edit_data
+        )
+        
+        if success:
+            print(f"   ✅ Status changed to PENDING")
+            # Verify family balance was deducted again
+            success, updated_patient = self.run_test(
+                "Verify Family Balance After PENDING",
+                "GET",
+                f"patients/{patient_data['serial_number']}",
+                200
+            )
+            
+            if success:
+                new_family_balance = updated_patient.get('remaining_balance', 0)
+                expected_balance = initial_family_balance - test_amount
+                if abs(new_family_balance - expected_balance) < 0.01:
+                    self.log_test("VOIDED→PENDING Balance Adjustment", True, f"Family balance deducted: ${new_family_balance:.2f}")
+                else:
+                    self.log_test("VOIDED→PENDING Balance Adjustment", False, f"Expected: ${expected_balance:.2f}, Got: ${new_family_balance:.2f}")
+        
+        # === TEST 3: PENDING → PAID (Deduct from hospital balance) ===
+        print(f"\n   🔄 Testing PENDING → PAID transition...")
+        
+        edit_data["status"] = "PAID"
+        success, response = self.run_test(
+            "Edit Claim Status - PENDING to PAID",
+            "PUT",
+            f"admin/claims/{test_claim_id}",
+            200,
+            data=edit_data
+        )
+        
+        if success:
+            print(f"   ✅ Status changed to PAID")
+            # Verify hospital balance was deducted
+            success, updated_hospital = self.run_test(
+                "Verify Hospital Balance After PAID",
+                "GET",
+                "hospital/balance",
+                200
+            )
+            
+            if success:
+                new_hospital_balance = updated_hospital.get('deposit_balance', 0)
+                expected_balance = initial_hospital_balance - test_amount
+                if abs(new_hospital_balance - expected_balance) < 0.01:
+                    self.log_test("PENDING→PAID Balance Adjustment", True, f"Hospital balance deducted: ${new_hospital_balance:.2f}")
+                else:
+                    self.log_test("PENDING→PAID Balance Adjustment", False, f"Expected: ${expected_balance:.2f}, Got: ${new_hospital_balance:.2f}")
+        
+        # === TEST 4: PAID → VOIDED (Refund both family and hospital) ===
+        print(f"\n   🔄 Testing PAID → VOIDED transition...")
+        
+        edit_data["status"] = "VOIDED"
+        success, response = self.run_test(
+            "Edit Claim Status - PAID to VOIDED",
+            "PUT",
+            f"admin/claims/{test_claim_id}",
+            200,
+            data=edit_data
+        )
+        
+        if success:
+            print(f"   ✅ Status changed to VOIDED")
+            # Verify both balances were refunded
+            success, updated_patient = self.run_test(
+                "Verify Family Balance After PAID→VOIDED",
+                "GET",
+                f"patients/{patient_data['serial_number']}",
+                200
+            )
+            
+            success2, updated_hospital = self.run_test(
+                "Verify Hospital Balance After PAID→VOIDED",
+                "GET",
+                "hospital/balance",
+                200
+            )
+            
+            if success and success2:
+                new_family_balance = updated_patient.get('remaining_balance', 0)
+                new_hospital_balance = updated_hospital.get('deposit_balance', 0)
+                
+                # Family should be back to original balance
+                if abs(new_family_balance - initial_family_balance) < 0.01:
+                    self.log_test("PAID→VOIDED Family Balance Refund", True, f"Family balance refunded: ${new_family_balance:.2f}")
+                else:
+                    self.log_test("PAID→VOIDED Family Balance Refund", False, f"Expected: ${initial_family_balance:.2f}, Got: ${new_family_balance:.2f}")
+                
+                # Hospital should be back to original balance
+                if abs(new_hospital_balance - initial_hospital_balance) < 0.01:
+                    self.log_test("PAID→VOIDED Hospital Balance Refund", True, f"Hospital balance refunded: ${new_hospital_balance:.2f}")
+                else:
+                    self.log_test("PAID→VOIDED Hospital Balance Refund", False, f"Expected: ${initial_hospital_balance:.2f}, Got: ${new_hospital_balance:.2f}")
+        
+        # === TEST 5: VOIDED → PAID (Direct transition) ===
+        print(f"\n   🔄 Testing VOIDED → PAID transition...")
+        
+        edit_data["status"] = "PAID"
+        success, response = self.run_test(
+            "Edit Claim Status - VOIDED to PAID",
+            "PUT",
+            f"admin/claims/{test_claim_id}",
+            200,
+            data=edit_data
+        )
+        
+        if success:
+            print(f"   ✅ Status changed to PAID")
+            # Verify both balances were deducted
+            success, updated_patient = self.run_test(
+                "Verify Family Balance After VOIDED→PAID",
+                "GET",
+                f"patients/{patient_data['serial_number']}",
+                200
+            )
+            
+            success2, updated_hospital = self.run_test(
+                "Verify Hospital Balance After VOIDED→PAID",
+                "GET",
+                "hospital/balance",
+                200
+            )
+            
+            if success and success2:
+                new_family_balance = updated_patient.get('remaining_balance', 0)
+                new_hospital_balance = updated_hospital.get('deposit_balance', 0)
+                
+                expected_family = initial_family_balance - test_amount
+                expected_hospital = initial_hospital_balance - test_amount
+                
+                if abs(new_family_balance - expected_family) < 0.01:
+                    self.log_test("VOIDED→PAID Family Balance Deduction", True, f"Family balance deducted: ${new_family_balance:.2f}")
+                else:
+                    self.log_test("VOIDED→PAID Family Balance Deduction", False, f"Expected: ${expected_family:.2f}, Got: ${new_family_balance:.2f}")
+                
+                if abs(new_hospital_balance - expected_hospital) < 0.01:
+                    self.log_test("VOIDED→PAID Hospital Balance Deduction", True, f"Hospital balance deducted: ${new_hospital_balance:.2f}")
+                else:
+                    self.log_test("VOIDED→PAID Hospital Balance Deduction", False, f"Expected: ${expected_hospital:.2f}, Got: ${new_hospital_balance:.2f}")
+        
+        # === TEST 6: Access Control - Non-superadmin cannot edit claims ===
+        print(f"\n   🔒 Testing Access Control...")
+        
+        if self.test_login("mercy_admin", "password123"):  # Hospital admin
+            success, response = self.run_test(
+                "Edit Claim Status - Non-Superadmin (Should Fail)",
+                "PUT",
+                f"admin/claims/{test_claim_id}",
+                403,
+                data=edit_data
+            )
+        
+        # Restore superadmin login
+        self.test_login("superadmin", "SuperAdmin@2024")
+        
+        # === TEST 7: Insufficient Balance Scenarios ===
+        print(f"\n   ⚠️ Testing Insufficient Balance Scenarios...")
+        
+        # Create a high-value claim to test insufficient balances
+        high_amount = 5000.0  # Very high amount
+        
+        # First, create a new claim with high amount (if family has enough balance)
+        success, current_patient = self.run_test(
+            "Get Current Patient Balance for High Amount Test",
+            "GET",
+            f"patients/{patient_data['serial_number']}",
+            200
+        )
+        
+        if success and current_patient.get('remaining_balance', 0) > high_amount:
+            high_claim_data = {
+                "patient_serial_number": patient_data["serial_number"],
+                "claim_items": [{
+                    "item_id": price_items[0]["item_id"],
+                    "item_name": price_items[0]["item_name"],
+                    "item_cost": high_amount,
+                    "quantity": 1
+                }]
+            }
+            
+            success, high_claim_response = self.run_test(
+                "Create High Value Claim for Insufficient Balance Test",
+                "POST",
+                "claims/submit",
+                200,
+                data=high_claim_data
+            )
+            
+            if success:
+                high_claim_id = high_claim_response.get('claim_id')
+                
+                # Try to change to PAID when hospital has insufficient balance
+                edit_high_data = {
+                    "patient_serial_number": patient_data["serial_number"],
+                    "status": "PAID",
+                    "claim_items": [{
+                        "item_id": price_items[0]["item_id"],
+                        "item_name": price_items[0]["item_name"],
+                        "item_cost": high_amount,
+                        "quantity": 1
+                    }]
+                }
+                
+                success, response = self.run_test(
+                    "Edit High Value Claim to PAID - Insufficient Hospital Balance (Should Fail)",
+                    "PUT",
+                    f"admin/claims/{high_claim_id}",
+                    400,
+                    data=edit_high_data
+                )
+        
+        # === TEST 8: Test with different claim amounts ===
+        print(f"\n   💰 Testing Different Claim Amounts...")
+        
+        # Test with multiple items
+        multi_item_data = {
+            "patient_serial_number": patient_data["serial_number"],
+            "status": "PENDING",
+            "claim_items": [
+                {
+                    "item_id": price_items[0]["item_id"],
+                    "item_name": price_items[0]["item_name"],
+                    "item_cost": 25.0,
+                    "quantity": 2
+                },
+                {
+                    "item_id": price_items[1]["item_id"] if len(price_items) > 1 else price_items[0]["item_id"],
+                    "item_name": price_items[1]["item_name"] if len(price_items) > 1 else "Second Item",
+                    "item_cost": 15.0,
+                    "quantity": 1
+                }
+            ]
+        }
+        
+        success, response = self.run_test(
+            "Edit Claim with Multiple Items",
+            "PUT",
+            f"admin/claims/{test_claim_id}",
+            200,
+            data=multi_item_data
+        )
+        
+        if success:
+            total_amount = (25.0 * 2) + (15.0 * 1)  # 65.0
+            print(f"   ✅ Claim updated with multiple items (total: ${total_amount})")
+        
+        # === TEST 9: Invalid Status Values ===
+        print(f"\n   ❌ Testing Invalid Status Values...")
+        
+        invalid_status_data = {
+            "patient_serial_number": patient_data["serial_number"],
+            "status": "INVALID_STATUS",
+            "claim_items": [{
+                "item_id": price_items[0]["item_id"],
+                "item_name": price_items[0]["item_name"],
+                "item_cost": 25.0,
+                "quantity": 1
+            }]
+        }
+        
+        success, response = self.run_test(
+            "Edit Claim with Invalid Status (Should Fail)",
+            "PUT",
+            f"admin/claims/{test_claim_id}",
+            400,
+            data=invalid_status_data
+        )
+        
+        # === TEST 10: Non-existent Claim ===
+        success, response = self.run_test(
+            "Edit Non-existent Claim (Should Fail)",
+            "PUT",
+            "admin/claims/NONEXISTENT-CLAIM-ID",
+            404,
+            data=edit_data
+        )
+        
+        print(f"   ✅ Claim Status Editing feature testing completed")
+        return True
+
     def run_comprehensive_test(self):
         """Run all tests including access control for Families, Members, and Price Lists"""
         print("🏥 Medical Insurance Billing System - Access Control Testing for Families, Members, and Price Lists")
