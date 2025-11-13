@@ -669,36 +669,94 @@ async def update_claim(claim_id: str, claim_update: ClaimUpdate, admin_user: dic
     if new_status not in ["PENDING", "PAID", "VOIDED"]:
         raise HTTPException(status_code=400, detail="Invalid status. Must be PENDING, PAID, or VOIDED")
     
-    # Refund original family
-    if original_claim["status"] == "PENDING":
+    # Get hospital for PAID status transitions
+    hospital = await db.hospitals.find_one({"hospital_name": original_claim["hospital_name"]})
+    if not hospital:
+        raise HTTPException(status_code=404, detail="Hospital not found")
+    
+    old_status = original_claim["status"]
+    old_amount = original_claim["total_claim_amount"]
+    
+    # Step 1: Reverse old status effects
+    if old_status == "PENDING":
+        # Refund family balance
         await db.families.update_one(
             {"family_id": original_claim["family_id"]},
-            {"$inc": {"remaining_balance": original_claim["total_claim_amount"]}}
+            {"$inc": {"remaining_balance": old_amount}}
         )
+    elif old_status == "PAID":
+        # Refund hospital deposit
+        await db.hospitals.update_one(
+            {"hospital_name": original_claim["hospital_name"]},
+            {"$inc": {"deposit_balance": old_amount}}
+        )
+    # VOIDED status has no balance effects to reverse
     
-    # Check if new family has sufficient balance
-    # If same family, add back the refunded amount for the check
+    # Step 2: Check if new family has sufficient balance for new status
     available_balance = new_family["remaining_balance"]
-    if original_claim["family_id"] == new_family["family_id"] and original_claim["status"] == "PENDING":
-        available_balance += original_claim["total_claim_amount"]
+    # If same family and we just refunded, include that
+    if original_claim["family_id"] == new_family["family_id"] and old_status == "PENDING":
+        available_balance += old_amount
     
-    if new_total > available_balance:
-        # Rollback the refund
-        if original_claim["status"] == "PENDING":
+    if new_status in ["PENDING", "PAID"] and new_total > available_balance:
+        # Rollback step 1
+        if old_status == "PENDING":
             await db.families.update_one(
                 {"family_id": original_claim["family_id"]},
-                {"$inc": {"remaining_balance": -original_claim["total_claim_amount"]}}
+                {"$inc": {"remaining_balance": -old_amount}}
+            )
+        elif old_status == "PAID":
+            await db.hospitals.update_one(
+                {"hospital_name": original_claim["hospital_name"]},
+                {"$inc": {"deposit_balance": -old_amount}}
             )
         raise HTTPException(
             status_code=400,
-            detail=f"Insufficient funds. Available balance: ${available_balance:.2f}, New claim amount: ${new_total:.2f}"
+            detail=f"Insufficient family balance. Available: ${available_balance:.2f}, Required: ${new_total:.2f}"
         )
     
-    # Charge new family
-    await db.families.update_one(
-        {"family_id": new_patient["family_id"]},
-        {"$inc": {"remaining_balance": -new_total}}
-    )
+    # Step 3: Check hospital balance for PAID status
+    if new_status == "PAID":
+        hospital_balance = hospital.get("deposit_balance", 0.0)
+        # Add back if we just refunded
+        if old_status == "PAID":
+            hospital_balance += old_amount
+        
+        if new_total > hospital_balance:
+            # Rollback step 1
+            if old_status == "PENDING":
+                await db.families.update_one(
+                    {"family_id": original_claim["family_id"]},
+                    {"$inc": {"remaining_balance": -old_amount}}
+                )
+            elif old_status == "PAID":
+                await db.hospitals.update_one(
+                    {"hospital_name": original_claim["hospital_name"]},
+                    {"$inc": {"deposit_balance": -old_amount}}
+                )
+            raise HTTPException(
+                status_code=400,
+                detail=f"Insufficient hospital balance. Available: ${hospital_balance:.2f}, Required: ${new_total:.2f}"
+            )
+    
+    # Step 4: Apply new status effects
+    if new_status == "PENDING":
+        # Charge family
+        await db.families.update_one(
+            {"family_id": new_patient["family_id"]},
+            {"$inc": {"remaining_balance": -new_total}}
+        )
+    elif new_status == "PAID":
+        # Charge family and hospital
+        await db.families.update_one(
+            {"family_id": new_patient["family_id"]},
+            {"$inc": {"remaining_balance": -new_total}}
+        )
+        await db.hospitals.update_one(
+            {"hospital_name": original_claim["hospital_name"]},
+            {"$inc": {"deposit_balance": -new_total}}
+        )
+    # VOIDED status: no charges
     
     # Update claim header
     await db.claims_header.update_one(
