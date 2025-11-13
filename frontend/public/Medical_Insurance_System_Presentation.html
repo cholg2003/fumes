@@ -1151,7 +1151,19 @@ Transaction:            Complete ✅
             <li><strong>Role-Based Access Control (RBAC):</strong> Each user only sees and can do what their role allows</li>
             <li><strong>Hospital Isolation:</strong> Regular users can only access their own hospital's data</li>
             <li><strong>Financial Controls:</strong> Only superadmin can mark claims as paid or void them</li>
+            <li><strong>Master Data Protection:</strong> Only superadmin can create/edit families, members, and price lists</li>
             <li><strong>Audit Trail:</strong> All actions are logged with timestamps and user information</li>
+        </ul>
+    </div>
+    
+    <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 20px; margin-top: 20px; border-radius: 4px;">
+        <h3 style="color: #856404; margin-top: 0;">⚠️ Important Access Control Update</h3>
+        <p style="color: #856404;"><strong>Hospital Admin Role Changes:</strong></p>
+        <ul style="color: #856404;">
+            <li>Hospital Admin can NO LONGER create or edit families, members, or price lists</li>
+            <li>All master data management is now centralized with Superadmin (Insurance Company)</li>
+            <li>Hospital Admin is now primarily a "Claims Operator" role</li>
+            <li>This ensures better data integrity and prevents unauthorized modifications</li>
         </ul>
     </div>
     
