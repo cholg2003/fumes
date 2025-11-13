@@ -1,9 +1,69 @@
 {
-  "timestamp": "2025-11-12T06:32:09.244390",
-  "total_tests": 95,
-  "passed_tests": 73,
-  "success_rate": 76.84210526315789,
+  "timestamp": "2025-11-13T17:04:10.505764",
+  "total_tests": 104,
+  "passed_tests": 75,
+  "success_rate": 72.11538461538461,
   "results": [
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Superadmin - Create Family",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Superadmin - Update Family",
+      "success": false,
+      "details": "Exception: cannot access local variable 'response' where it is not associated with a value"
+    },
+    {
+      "test": "Superadmin - Create Member",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Superadmin - Update Member",
+      "success": false,
+      "details": "Exception: cannot access local variable 'response' where it is not associated with a value"
+    },
+    {
+      "test": "Superadmin - Create Price List Item",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Superadmin - Update Price List Item",
+      "success": false,
+      "details": "Exception: cannot access local variable 'response' where it is not associated with a value"
+    },
+    {
+      "test": "Superadmin - Bulk Create Family with Members",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Superadmin - Bulk Create Price List Items",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Login - mercy_admin",
+      "success": false,
+      "details": "Status: 401 (Expected: 200) - Invalid username or password"
+    },
+    {
+      "test": "Login - general_clerk",
+      "success": false,
+      "details": "Status: 401 (Expected: 200) - Invalid username or password"
+    },
+    {
+      "test": "Hospital Admin Access Control Setup",
+      "success": false,
+      "details": "Could not login as hospital admin"
+    },
     {
       "test": "Login - superadmin",
       "success": true,
@@ -181,23 +241,8 @@
     },
     {
       "test": "Hospital Stats Structure - System Administration",
-      "success": true,
-      "details": "All required fields present"
-    },
-    {
-      "test": "Outstanding Calculation - System Administration",
-      "success": true,
-      "details": "Outstanding ($0) equals total_completed ($0)"
-    },
-    {
-      "test": "Hospital Stats Structure - Gaga Medical Complex",
-      "success": true,
-      "details": "All required fields present"
-    },
-    {
-      "test": "Outstanding Calculation - Gaga Medical Complex",
-      "success": true,
-      "details": "Outstanding ($15.0) equals total_completed ($15.0)"
+      "success": false,
+      "details": "Missing fields: ['total_completed', 'completed_count']"
     },
     {
       "test": "Login - mercy_admin",
@@ -227,7 +272,7 @@
     {
       "test": "Calculation Verification - System Administration Paid Amount",
       "success": true,
-      "details": "$505.0"
+      "details": "$865.0"
     },
     {
       "test": "Calculation Verification - System Administration Completed Count",
@@ -237,7 +282,7 @@
     {
       "test": "Calculation Verification - System Administration Paid Count",
       "success": true,
-      "details": "7"
+      "details": "13"
     },
     {
       "test": "Login - superadmin",
@@ -342,7 +387,7 @@
     {
       "test": "Hospital Balance Deduction Verification",
       "success": false,
-      "details": "Balance not deducted properly. Initial: $3545.00, Final: $3545.00"
+      "details": "Balance not deducted properly. Initial: $6685.00, Final: $6685.00"
     },
     {
       "test": "Login - superadmin",
@@ -442,7 +487,7 @@
     {
       "test": "Family Status Field Verification",
       "success": false,
-      "details": "Only 4/7 families have status field"
+      "details": "Only 7/10 families have status field"
     },
     {
       "test": "Verify Member Status Fields",
@@ -452,7 +497,7 @@
     {
       "test": "Member Status Field Verification",
       "success": false,
-      "details": "Only 14/24 members have status field"
+      "details": "Only 16/26 members have status field"
     },
     {
       "test": "Login - general_clerk",
