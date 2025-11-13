@@ -628,7 +628,11 @@ async def delete_claim(claim_id: str, admin_user: dict = Depends(get_admin_user)
     return {"success": True, "message": "Claim deleted successfully"}
 
 @api_router.put("/admin/claims/{claim_id}")
-async def update_claim(claim_id: str, claim_submission: ClaimSubmission, admin_user: dict = Depends(get_admin_user)):
+async def update_claim(claim_id: str, claim_update: ClaimUpdate, admin_user: dict = Depends(get_admin_user)):
+    # Only superadmin can edit claims
+    if admin_user["username"] != "superadmin":
+        raise HTTPException(status_code=403, detail="Only superadmin can edit claims")
+    
     # Get original claim
     original_claim = await db.claims_header.find_one({"claim_id": claim_id}, {"_id": 0})
     if not original_claim:
