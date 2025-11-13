@@ -95,7 +95,7 @@ const Dashboard = () => {
       
       // For non-superadmin, calculate total claims for their hospital
       if (!isSuperAdmin && hospitalName && response.data[hospitalName]) {
-        setTotalClaims(response.data[hospitalName].total_completed);
+        setTotalClaims(response.data[hospitalName].total_pending);
       }
     } catch (error) {
       console.error('Failed to load hospital stats:', error);
