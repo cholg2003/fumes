@@ -606,8 +606,8 @@ async def delete_claim(claim_id: str, admin_user: dict = Depends(get_admin_user)
     if not claim:
         raise HTTPException(status_code=404, detail="Claim not found")
     
-    # If claim is completed, refund the amount
-    if claim["status"] == "COMPLETED":
+    # If claim is pending, refund the amount
+    if claim["status"] == "PENDING":
         await db.families.update_one(
             {"family_id": claim["family_id"]},
             {"$inc": {"remaining_balance": claim["total_claim_amount"]}}
