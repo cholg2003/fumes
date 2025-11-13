@@ -732,9 +732,9 @@ async def mark_claim_as_paid(claim_id: str, current_user: dict = Depends(get_cur
     if not claim:
         raise HTTPException(status_code=404, detail="Claim not found")
     
-    # Check if claim is completed
-    if claim["status"] != "COMPLETED":
-        raise HTTPException(status_code=400, detail="Only completed claims can be marked as paid")
+    # Check if claim is pending
+    if claim["status"] != "PENDING":
+        raise HTTPException(status_code=400, detail="Only pending claims can be marked as paid")
     
     # Get hospital
     hospital = await db.hospitals.find_one({"hospital_name": current_user["hospital_name"]})
