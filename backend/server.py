@@ -827,6 +827,10 @@ async def update_family(family_id: str, family_update: FamilyUpdate, admin_user:
 
 @api_router.delete("/admin/families/{family_id}")
 async def delete_family(family_id: str, admin_user: dict = Depends(get_admin_user)):
+    # Only superadmin can delete families
+    if admin_user["username"] != "superadmin":
+        raise HTTPException(status_code=403, detail="Only superadmin can delete families")
+    
     # Check if family has members
     members = await db.members.find_one({"family_id": family_id})
     if members:
