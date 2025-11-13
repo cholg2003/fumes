@@ -633,7 +633,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
 
   // Bill delete
   const handleClaimDelete = async (claimId) => {
-    if (!window.confirm(`Delete claim "${claimId}"? This will refund the amount if the claim was completed.`)) return;
+    if (!window.confirm(`Delete claim "${claimId}"? This will refund the amount if the claim was pending.`)) return;
     try {
       await axios.delete(`${API}/admin/claims/${claimId}`, axiosConfig);
       toast.success('Claim deleted successfully');
