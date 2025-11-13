@@ -882,24 +882,39 @@ Transaction:            Complete ✅
     
     <h2>2. Edit Claim (Superadmin Only via Admin Panel)</h2>
     <div class="workflow-step">
-        <p><strong>When to use:</strong> Need to correct claim details before payment</p>
+        <p><strong>When to use:</strong> Need to correct claim details or change claim status</p>
         <p><strong>Who can edit:</strong> Superadmin only (Hospital Admin cannot edit claims via Admin Panel)</p>
         <p><strong>Process:</strong></p>
         <ol>
             <li>Go to Admin Panel → Claims tab</li>
             <li>Find claim and click edit button</li>
-            <li>Change patient, services, or quantities</li>
+            <li>Change patient, services, quantities, <strong>OR STATUS</strong></li>
             <li>Submit changes</li>
         </ol>
         
         <p><strong>System Actions:</strong></p>
         <ul>
-            <li>✅ Refund original family</li>
+            <li>✅ Refund original family (if needed)</li>
             <li>✅ Charge new family (if patient changed)</li>
             <li>✅ Recalculate total amount</li>
+            <li>✅ <strong>Adjust balances based on status change</strong></li>
             <li>✅ Validate sufficient balance</li>
             <li>✅ Update claim details</li>
         </ul>
+        
+        <div class="highlight-box" style="margin-top: 15px;">
+            <strong>NEW: Status Editing Feature</strong>
+            <p>Superadmin can now change claim status when editing:</p>
+            <ul>
+                <li><strong>PENDING → PAID:</strong> Deduct from hospital deposit</li>
+                <li><strong>PENDING → VOIDED:</strong> Refund family balance</li>
+                <li><strong>PAID → PENDING:</strong> Refund hospital deposit</li>
+                <li><strong>PAID → VOIDED:</strong> Refund both family and hospital</li>
+                <li><strong>VOIDED → PENDING:</strong> Charge family balance</li>
+                <li><strong>VOIDED → PAID:</strong> Charge both family and hospital</li>
+            </ul>
+            <p style="color: #28a745; font-weight: bold; margin-top: 10px;">All balance adjustments are automatic!</p>
+        </div>
     </div>
     
     <h2>3. Suspend Family/Member (Superadmin Only)</h2>
