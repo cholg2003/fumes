@@ -572,8 +572,9 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
     }
     setLoading(true);
     try {
-      await axios.put(`${API}/admin/claims/${claimForm.claim_id}`, {
+      const response = await axios.put(`${API}/admin/claims/${claimForm.claim_id}`, {
         patient_serial_number: claimForm.patient_serial_number,
+        status: claimForm.status,  // Include status
         claim_items: claimForm.claim_items.map(item => ({
           item_id: item.item_id,
           item_name: item.item_name,
@@ -581,7 +582,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
           quantity: item.quantity || 1
         }))
       }, axiosConfig);
-      toast.success('Claim updated successfully');
+      toast.success(response.data.message || 'Claim updated successfully');
       setClaimDialog(false);
       loadData();
     } catch (error) {
