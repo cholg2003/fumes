@@ -94,6 +94,12 @@ class ClaimSubmission(BaseModel):
     patient_serial_number: str
     claim_items: List[ClaimItem]
 
+class ClaimUpdate(BaseModel):
+    patient_serial_number: str
+    claim_items: List[ClaimItem]
+    status: Optional[str] = None  # New status: PENDING, PAID, or VOIDED
+
+
 class ClaimHeader(BaseModel):
     model_config = ConfigDict(extra="ignore")
     claim_id: str
