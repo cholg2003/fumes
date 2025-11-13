@@ -336,9 +336,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Superadmin-only access control for Families CRUD operations"
-    - "Superadmin-only access control for Members CRUD operations"
-    - "Superadmin-only access control for Price Lists CRUD operations"
+    - "Claim Status Editing with Balance Adjustments - PUT /api/admin/claims/{claim_id}"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
