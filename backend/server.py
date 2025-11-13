@@ -790,9 +790,11 @@ async def update_claim(claim_id: str, claim_update: ClaimUpdate, admin_user: dic
     
     return {
         "success": True,
-        "message": "Claim updated successfully",
+        "message": f"Claim updated successfully. Status: {new_status}",
         "claim_id": claim_id,
         "new_total": new_total,
+        "new_status": new_status,
+        "old_status": old_status,
         "new_balance": updated_family["remaining_balance"]
     }
 
