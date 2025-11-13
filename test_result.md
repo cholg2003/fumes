@@ -105,6 +105,42 @@
 user_problem_statement: "Medical Insurance Billing System - Hospital Payment and Deposit System feature testing"
 
 backend:
+  - task: "Superadmin-only access control for Families CRUD operations"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Access control restrictions working perfectly. Superadmin can perform all Family CRUD operations (CREATE ✅, UPDATE ✅, DELETE ✅, BULK CREATE ✅). Hospital Admin cannot perform any CRUD operations (all return 403 ✅). Error messages match requirements exactly: 'Only superadmin can create families', 'Only superadmin can update families', 'Only superadmin can delete families'. Hospital Admin can still VIEW families (GET ✅)."
+
+  - task: "Superadmin-only access control for Members CRUD operations"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Access control restrictions working perfectly. Superadmin can perform all Member CRUD operations (CREATE ✅, UPDATE ✅, DELETE ✅). Hospital Admin cannot perform any CRUD operations (all return 403 ✅). Error messages match requirements exactly: 'Only superadmin can create members', 'Only superadmin can update members', 'Only superadmin can delete members'. Hospital Admin can still VIEW members (GET ✅)."
+
+  - task: "Superadmin-only access control for Price Lists CRUD operations"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED: Access control restrictions working perfectly. Superadmin can perform all Price List CRUD operations (CREATE ✅, UPDATE ✅, DELETE ✅, BULK CREATE ✅). Hospital Admin cannot perform any CRUD operations (all return 403 ✅). Error messages match requirements exactly: 'Only superadmin can create price list items', 'Only superadmin can update price list items', 'Only superadmin can delete price list items'. Hospital Admin can still VIEW price lists (GET ✅)."
+
   - task: "Add searchable price list items by Item ID"
     implemented: true
     working: "NA"
