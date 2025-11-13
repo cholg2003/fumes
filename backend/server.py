@@ -1059,6 +1059,10 @@ async def create_pricelist_item(item: PriceListCreate, admin_user: dict = Depend
 
 @api_router.post("/admin/pricelists/bulk")
 async def bulk_create_pricelists(bulk_data: BulkPriceList, admin_user: dict = Depends(get_admin_user)):
+    # Only superadmin can bulk create price list items
+    if admin_user["username"] != "superadmin":
+        raise HTTPException(status_code=403, detail="Only superadmin can create price list items")
+    
     items_created = []
     items_skipped = []
     
