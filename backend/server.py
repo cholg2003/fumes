@@ -489,9 +489,9 @@ async def get_hospital_claims_stats(current_user: dict = Depends(get_current_use
         {
             "$group": {
                 "_id": "$hospital_name",
-                "total_completed": {
+                "total_pending": {
                     "$sum": {
-                        "$cond": [{"$eq": ["$status", "COMPLETED"]}, "$total_claim_amount", 0]
+                        "$cond": [{"$eq": ["$status", "PENDING"]}, "$total_claim_amount", 0]
                     }
                 },
                 "total_paid": {
@@ -499,9 +499,9 @@ async def get_hospital_claims_stats(current_user: dict = Depends(get_current_use
                         "$cond": [{"$eq": ["$status", "PAID"]}, "$total_claim_amount", 0]
                     }
                 },
-                "completed_count": {
+                "pending_count": {
                     "$sum": {
-                        "$cond": [{"$eq": ["$status", "COMPLETED"]}, 1, 0]
+                        "$cond": [{"$eq": ["$status", "PENDING"]}, 1, 0]
                     }
                 },
                 "paid_count": {
@@ -518,9 +518,9 @@ async def get_hospital_claims_stats(current_user: dict = Depends(get_current_use
     stats = {}
     for result in results:
         hospital = result["_id"]
-        total_completed = result["total_completed"]
+        total_pending = result["total_pending"]
         total_paid = result["total_paid"]
-        outstanding = total_completed  # Outstanding is what's still COMPLETED (not yet paid)
+        outstanding = total_pending  # Outstanding is what's still PENDING (not yet paid)
         
         stats[hospital] = {
             "total_completed": total_completed,
