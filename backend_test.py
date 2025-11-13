@@ -1520,7 +1520,7 @@ class MedicalBillingAPITester:
             
             if member_created:
                 # Update member
-                success, response = self.run_test(
+                update_success, update_response = self.run_test(
                     "Superadmin - Update Member",
                     "PUT",
                     f"admin/members/{test_member_data['serial_number']}",
