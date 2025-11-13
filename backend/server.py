@@ -910,6 +910,10 @@ async def get_all_members(admin_user: dict = Depends(get_admin_user)):
 
 @api_router.post("/admin/members")
 async def create_member(member: MemberCreate, admin_user: dict = Depends(get_admin_user)):
+    # Only superadmin can create members
+    if admin_user["username"] != "superadmin":
+        raise HTTPException(status_code=403, detail="Only superadmin can create members")
+    
     # Check if serial_number already exists
     existing = await db.members.find_one({"serial_number": member.serial_number})
     if existing:
