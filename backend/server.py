@@ -766,7 +766,7 @@ async def update_claim(claim_id: str, claim_update: ClaimUpdate, admin_user: dic
             "patient_name": f"{new_patient['first_name']} {new_patient['last_name']}",
             "family_id": new_patient["family_id"],
             "total_claim_amount": new_total,
-            "status": "PENDING"
+            "status": new_status
         }}
     )
     
@@ -774,7 +774,7 @@ async def update_claim(claim_id: str, claim_update: ClaimUpdate, admin_user: dic
     await db.claims_details.delete_many({"claim_id": claim_id})
     
     # Insert new claim details
-    for item in claim_submission.claim_items:
+    for item in claim_update.claim_items:
         claim_detail = {
             "claim_detail_id": str(uuid.uuid4()),
             "claim_id": claim_id,
