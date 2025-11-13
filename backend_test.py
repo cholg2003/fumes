@@ -1447,12 +1447,410 @@ class MedicalBillingAPITester:
         
         return True
 
+    def test_superadmin_only_access_control(self):
+        """Test that only Superadmin can perform CRUD operations on Families, Members, and Price Lists"""
+        print(f"\n🔒 Testing Superadmin-Only Access Control for Families, Members, and Price Lists...")
+        
+        # Test data for creating entities
+        test_family_data = {
+            "family_id": f"TEST-FAM-{datetime.now().strftime('%H%M%S')}",
+            "principle_member_name": "Test Family Principal",
+            "total_allotment": 5000.0,
+            "remaining_balance": 5000.0,
+            "status": "Active"
+        }
+        
+        test_member_data = {
+            "serial_number": f"{test_family_data['family_id']}-01",
+            "family_id": test_family_data['family_id'],
+            "first_name": "Test",
+            "middle_name": "Access",
+            "last_name": "Member",
+            "dob": "1990-01-01",
+            "sex": "Male",
+            "relationship": "Principle",
+            "status": "Active"
+        }
+        
+        test_pricelist_data = {
+            "hospital_name": "System Administration",
+            "item_id": f"TEST-ITEM-{datetime.now().strftime('%H%M%S')}",
+            "item_name": "Test Access Control Item",
+            "item_type": "Service",
+            "cost": 99.99
+        }
+        
+        # === SUPERADMIN ACCESS TESTS (Should all SUCCEED) ===
+        print(f"\n   ✅ Testing Superadmin Access (Should all SUCCEED)...")
+        
+        if not self.test_login("superadmin", "SuperAdmin@2024"):
+            self.log_test("Superadmin Access Control Setup", False, "Could not login as superadmin")
+            return False
+        
+        # Test Family CRUD - Superadmin
+        success, response = self.run_test(
+            "Superadmin - Create Family",
+            "POST",
+            "admin/families",
+            200,
+            data=test_family_data
+        )
+        family_created = success
+        
+        if family_created:
+            # Update family
+            success, response = self.run_test(
+                "Superadmin - Update Family",
+                "PUT",
+                f"admin/families/{test_family_data['family_id']}",
+                200,
+                data={"principle_member_name": "Updated Family Principal"}
+            )
+        
+        # Test Member CRUD - Superadmin
+        if family_created:
+            success, response = self.run_test(
+                "Superadmin - Create Member",
+                "POST",
+                "admin/members",
+                200,
+                data=test_member_data
+            )
+            member_created = success
+            
+            if member_created:
+                # Update member
+                success, response = self.run_test(
+                    "Superadmin - Update Member",
+                    "PUT",
+                    f"admin/members/{test_member_data['serial_number']}",
+                    200,
+                    data={"first_name": "Updated Test"}
+                )
+        
+        # Test Price List CRUD - Superadmin
+        success, response = self.run_test(
+            "Superadmin - Create Price List Item",
+            "POST",
+            "admin/pricelists",
+            200,
+            data=test_pricelist_data
+        )
+        pricelist_created = success
+        
+        if pricelist_created:
+            # Update price list item
+            success, response = self.run_test(
+                "Superadmin - Update Price List Item",
+                "PUT",
+                f"admin/pricelists/{test_pricelist_data['hospital_name']}/{test_pricelist_data['item_id']}",
+                200,
+                data={"cost": 149.99}
+            )
+        
+        # Test Bulk operations - Superadmin
+        bulk_family_data = {
+            "family_id": f"BULK-FAM-{datetime.now().strftime('%H%M%S')}",
+            "principle_member_name": "Bulk Test Family",
+            "total_allotment": 3000.0,
+            "remaining_balance": 3000.0,
+            "members": [
+                {
+                    "first_name": "Bulk",
+                    "last_name": "Member1",
+                    "dob": "1985-01-01",
+                    "sex": "Male",
+                    "relationship": "Principle"
+                }
+            ]
+        }
+        
+        success, response = self.run_test(
+            "Superadmin - Bulk Create Family with Members",
+            "POST",
+            "admin/families/bulk",
+            200,
+            data=bulk_family_data
+        )
+        
+        bulk_pricelist_data = {
+            "hospital_name": "System Administration",
+            "items": [
+                {
+                    "item_id": f"BULK-ITEM-{datetime.now().strftime('%H%M%S')}",
+                    "item_name": "Bulk Test Item",
+                    "item_type": "Service",
+                    "cost": 75.00
+                }
+            ]
+        }
+        
+        success, response = self.run_test(
+            "Superadmin - Bulk Create Price List Items",
+            "POST",
+            "admin/pricelists/bulk",
+            200,
+            data=bulk_pricelist_data
+        )
+        
+        # === HOSPITAL ADMIN ACCESS TESTS (Should all FAIL with 403) ===
+        print(f"\n   ❌ Testing Hospital Admin Access (Should all FAIL with 403)...")
+        
+        # Create a test hospital admin user if needed, or use existing one
+        hospital_admin_users = [
+            ("mercy_admin", "password123"),
+            ("general_clerk", "password123"),  # Try different admin users
+        ]
+        
+        hospital_admin_logged_in = False
+        for username, password in hospital_admin_users:
+            if self.test_login(username, password):
+                hospital_admin_logged_in = True
+                print(f"   Using hospital admin: {username}")
+                break
+        
+        if not hospital_admin_logged_in:
+            self.log_test("Hospital Admin Access Control Setup", False, "Could not login as hospital admin")
+            return False
+        
+        # Test Family CRUD - Hospital Admin (should all fail with 403)
+        test_family_data2 = {
+            "family_id": f"ADMIN-FAM-{datetime.now().strftime('%H%M%S')}",
+            "principle_member_name": "Admin Test Family",
+            "total_allotment": 2000.0,
+            "remaining_balance": 2000.0,
+            "status": "Active"
+        }
+        
+        success, response = self.run_test(
+            "Hospital Admin - Create Family (Should Fail)",
+            "POST",
+            "admin/families",
+            403,
+            data=test_family_data2
+        )
+        
+        # Try to update existing family
+        if family_created:
+            success, response = self.run_test(
+                "Hospital Admin - Update Family (Should Fail)",
+                "PUT",
+                f"admin/families/{test_family_data['family_id']}",
+                403,
+                data={"principle_member_name": "Admin Updated Name"}
+            )
+            
+            success, response = self.run_test(
+                "Hospital Admin - Delete Family (Should Fail)",
+                "DELETE",
+                f"admin/families/{test_family_data['family_id']}",
+                403
+            )
+        
+        # Test Member CRUD - Hospital Admin (should all fail with 403)
+        test_member_data2 = {
+            "serial_number": f"{test_family_data2['family_id']}-01",
+            "family_id": test_family_data2['family_id'],
+            "first_name": "Admin",
+            "last_name": "Member",
+            "dob": "1990-01-01",
+            "sex": "Female",
+            "relationship": "Principle",
+            "status": "Active"
+        }
+        
+        success, response = self.run_test(
+            "Hospital Admin - Create Member (Should Fail)",
+            "POST",
+            "admin/members",
+            403,
+            data=test_member_data2
+        )
+        
+        # Try to update existing member
+        if member_created:
+            success, response = self.run_test(
+                "Hospital Admin - Update Member (Should Fail)",
+                "PUT",
+                f"admin/members/{test_member_data['serial_number']}",
+                403,
+                data={"first_name": "Admin Updated"}
+            )
+            
+            success, response = self.run_test(
+                "Hospital Admin - Delete Member (Should Fail)",
+                "DELETE",
+                f"admin/members/{test_member_data['serial_number']}",
+                403
+            )
+        
+        # Test Price List CRUD - Hospital Admin (should all fail with 403)
+        test_pricelist_data2 = {
+            "hospital_name": "System Administration",
+            "item_id": f"ADMIN-ITEM-{datetime.now().strftime('%H%M%S')}",
+            "item_name": "Admin Test Item",
+            "item_type": "Service",
+            "cost": 199.99
+        }
+        
+        success, response = self.run_test(
+            "Hospital Admin - Create Price List Item (Should Fail)",
+            "POST",
+            "admin/pricelists",
+            403,
+            data=test_pricelist_data2
+        )
+        
+        # Try to update existing price list item
+        if pricelist_created:
+            success, response = self.run_test(
+                "Hospital Admin - Update Price List Item (Should Fail)",
+                "PUT",
+                f"admin/pricelists/{test_pricelist_data['hospital_name']}/{test_pricelist_data['item_id']}",
+                403,
+                data={"cost": 299.99}
+            )
+            
+            success, response = self.run_test(
+                "Hospital Admin - Delete Price List Item (Should Fail)",
+                "DELETE",
+                f"admin/pricelists/{test_pricelist_data['hospital_name']}/{test_pricelist_data['item_id']}",
+                403
+            )
+        
+        # Test Bulk operations - Hospital Admin (should fail with 403)
+        success, response = self.run_test(
+            "Hospital Admin - Bulk Create Family (Should Fail)",
+            "POST",
+            "admin/families/bulk",
+            403,
+            data=bulk_family_data
+        )
+        
+        success, response = self.run_test(
+            "Hospital Admin - Bulk Create Price List (Should Fail)",
+            "POST",
+            "admin/pricelists/bulk",
+            403,
+            data=bulk_pricelist_data
+        )
+        
+        # === TEST WHAT HOSPITAL ADMIN CAN STILL DO (Should SUCCEED) ===
+        print(f"\n   ✅ Testing Hospital Admin READ Access (Should SUCCEED)...")
+        
+        # Hospital Admin should still be able to VIEW (GET) these entities
+        success, response = self.run_test(
+            "Hospital Admin - View Families (Should Succeed)",
+            "GET",
+            "admin/families",
+            200
+        )
+        
+        success, response = self.run_test(
+            "Hospital Admin - View Members (Should Succeed)",
+            "GET",
+            "admin/members",
+            200
+        )
+        
+        success, response = self.run_test(
+            "Hospital Admin - View Price Lists (Should Succeed)",
+            "GET",
+            "admin/pricelists/all",
+            200
+        )
+        
+        # Hospital Admin should still be able to submit claims
+        success, patient_data = self.run_test(
+            "Hospital Admin - Get Patient for Claim Test",
+            "GET",
+            "patients/SEC-2413-01",
+            200
+        )
+        
+        success, price_items = self.run_test(
+            "Hospital Admin - Get Price List for Claim Test",
+            "GET",
+            "pricelists",
+            200
+        )
+        
+        if success and patient_data and price_items:
+            claim_data = {
+                "patient_serial_number": patient_data["serial_number"],
+                "claim_items": [{
+                    "item_id": price_items[0]["item_id"],
+                    "item_name": price_items[0]["item_name"],
+                    "item_cost": min(price_items[0]["cost"], 25.0),
+                    "quantity": 1
+                }]
+            }
+            
+            success, response = self.run_test(
+                "Hospital Admin - Submit Claim (Should Succeed)",
+                "POST",
+                "claims/submit",
+                200,
+                data=claim_data
+            )
+        
+        # Hospital Admin should be able to view financial dashboard
+        success, response = self.run_test(
+            "Hospital Admin - View Hospital Balance (Should Succeed)",
+            "GET",
+            "hospital/balance",
+            200
+        )
+        
+        success, response = self.run_test(
+            "Hospital Admin - View Claims (Should Succeed)",
+            "GET",
+            "claims",
+            200
+        )
+        
+        # === CLEANUP - Delete test entities ===
+        print(f"\n   🧹 Cleaning up test entities...")
+        
+        # Login back as superadmin for cleanup
+        if self.test_login("superadmin", "SuperAdmin@2024"):
+            # Delete test entities created during testing
+            if member_created:
+                success, response = self.run_test(
+                    "Cleanup - Delete Test Member",
+                    "DELETE",
+                    f"admin/members/{test_member_data['serial_number']}",
+                    200
+                )
+            
+            if family_created:
+                success, response = self.run_test(
+                    "Cleanup - Delete Test Family",
+                    "DELETE",
+                    f"admin/families/{test_family_data['family_id']}",
+                    200
+                )
+            
+            if pricelist_created:
+                success, response = self.run_test(
+                    "Cleanup - Delete Test Price List Item",
+                    "DELETE",
+                    f"admin/pricelists/{test_pricelist_data['hospital_name']}/{test_pricelist_data['item_id']}",
+                    200
+                )
+        
+        print(f"   ✅ Superadmin-only access control testing completed")
+        return True
+
     def run_comprehensive_test(self):
-        """Run all tests including access control for void and mark as paid endpoints"""
-        print("🏥 Medical Insurance Billing System - Access Control Testing for Void and Mark as Paid")
+        """Run all tests including access control for Families, Members, and Price Lists"""
+        print("🏥 Medical Insurance Billing System - Access Control Testing for Families, Members, and Price Lists")
         print("=" * 80)
         
-        # Test ACCESS CONTROL for void and mark as paid endpoints (MAIN FOCUS)
+        # Test MAIN FOCUS: Superadmin-only access control for Families, Members, and Price Lists
+        self.test_superadmin_only_access_control()
+        
+        # Test ACCESS CONTROL for void and mark as paid endpoints
         self.test_access_control_void_and_pay_endpoints()
         
         # Test NEW hospital statistics endpoint 
