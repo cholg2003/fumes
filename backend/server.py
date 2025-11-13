@@ -457,7 +457,7 @@ async def get_monthly_claims_stats(current_user: dict = Depends(get_current_user
         {
             "$match": {
                 "timestamp": {"$gte": start_of_month.isoformat()},
-                "status": "COMPLETED"
+                "status": "PENDING"
             }
         },
         {
