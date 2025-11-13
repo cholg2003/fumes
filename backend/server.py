@@ -1096,6 +1096,10 @@ async def bulk_create_pricelists(bulk_data: BulkPriceList, admin_user: dict = De
 
 @api_router.put("/admin/pricelists/{hospital_name}/{item_id}")
 async def update_pricelist_item(hospital_name: str, item_id: str, item_update: PriceListUpdate, admin_user: dict = Depends(get_admin_user)):
+    # Only superadmin can update price list items
+    if admin_user["username"] != "superadmin":
+        raise HTTPException(status_code=403, detail="Only superadmin can update price list items")
+    
     # Check if item exists
     existing = await db.pricelists.find_one({"hospital_name": hospital_name, "item_id": item_id})
     if not existing:
