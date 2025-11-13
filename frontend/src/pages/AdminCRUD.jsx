@@ -1645,6 +1645,42 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                 </Select>
               </div>
 
+              {/* Claim Status */}
+              <div>
+                <Label>Claim Status</Label>
+                <Select 
+                  value={claimForm.status || 'PENDING'} 
+                  onValueChange={(value) => setClaimForm({...claimForm, status: value})}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="PENDING">
+                      <span className="inline-flex items-center gap-2">
+                        <span className="w-3 h-3 bg-yellow-400 rounded-full"></span>
+                        PENDING
+                      </span>
+                    </SelectItem>
+                    <SelectItem value="PAID">
+                      <span className="inline-flex items-center gap-2">
+                        <span className="w-3 h-3 bg-green-500 rounded-full"></span>
+                        PAID
+                      </span>
+                    </SelectItem>
+                    <SelectItem value="VOIDED">
+                      <span className="inline-flex items-center gap-2">
+                        <span className="w-3 h-3 bg-red-500 rounded-full"></span>
+                        VOIDED
+                      </span>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-sm text-gray-600 mt-1">
+                  Changing status will automatically adjust family and hospital balances
+                </p>
+              </div>
+
               {/* Items Section */}
               <div className="border rounded-lg p-4 space-y-4">
                 <h3 className="font-semibold">Claim Items</h3>
