@@ -640,7 +640,7 @@ async def update_claim(claim_id: str, claim_update: ClaimUpdate, admin_user: dic
     
     # Get new patient details
     new_patient = await db.members.find_one(
-        {"serial_number": claim_submission.patient_serial_number},
+        {"serial_number": claim_update.patient_serial_number},
         {"_id": 0}
     )
     if not new_patient:
@@ -660,7 +660,14 @@ async def update_claim(claim_id: str, claim_update: ClaimUpdate, admin_user: dic
         raise HTTPException(status_code=403, detail="Cannot update claim for suspended family")
     
     # Calculate new total
-    new_total = sum(item.item_cost * item.quantity for item in claim_submission.claim_items)
+    new_total = sum(item.item_cost * item.quantity for item in claim_update.claim_items)
+    
+    # Determine new status (default to original if not provided)
+    new_status = claim_update.status if claim_update.status else original_claim["status"]
+    
+    # Validate status
+    if new_status not in ["PENDING", "PAID", "VOIDED"]:
+        raise HTTPException(status_code=400, detail="Invalid status. Must be PENDING, PAID, or VOIDED")
     
     # Refund original family
     if original_claim["status"] == "PENDING":
