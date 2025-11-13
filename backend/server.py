@@ -653,7 +653,7 @@ async def update_claim(claim_id: str, claim_submission: ClaimSubmission, admin_u
     new_total = sum(item.item_cost * item.quantity for item in claim_submission.claim_items)
     
     # Refund original family
-    if original_claim["status"] == "COMPLETED":
+    if original_claim["status"] == "PENDING":
         await db.families.update_one(
             {"family_id": original_claim["family_id"]},
             {"$inc": {"remaining_balance": original_claim["total_claim_amount"]}}
