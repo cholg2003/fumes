@@ -336,8 +336,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Access control for void claims endpoint - POST /api/claims/{claim_id}/void"
-    - "Access control for mark as paid endpoint - POST /api/claims/{claim_id}/pay"
+    - "Superadmin-only access control for Families CRUD operations"
+    - "Superadmin-only access control for Members CRUD operations"
+    - "Superadmin-only access control for Price Lists CRUD operations"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
