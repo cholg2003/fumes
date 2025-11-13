@@ -344,16 +344,17 @@
     
     <div class="role-card">
         <h3>2. 🏥 Hospital Admin</h3>
-        <p><strong>Manages their specific hospital</strong></p>
+        <p><strong>Claims operations for their hospital</strong></p>
         <ul>
-            <li>Create and manage families (bulk CSV upload available)</li>
-            <li>Add and edit family members</li>
-            <li>Create and maintain price lists</li>
+            <li>Search and view patients</li>
             <li>Submit medical claims</li>
-            <li>View their hospital's financial status</li>
             <li>Edit existing claims</li>
-            <li>Cannot mark claims as paid (only superadmin)</li>
+            <li>View their hospital's financial status</li>
+            <li>Print claim receipts</li>
+            <li><strong>Cannot create/edit families, members, or price lists</strong></li>
+            <li>Cannot mark claims as paid or void them</li>
         </ul>
+        <p style="color: #dc3545; font-size: 14px; margin-top: 10px;"><strong>Note:</strong> All master data management (families, members, price lists) is restricted to Superadmin only.</p>
     </div>
     
     <div class="role-card">
@@ -401,7 +402,7 @@
     
     <div class="workflow-step">
         <h3><span class="step-number">2</span>Family Registration</h3>
-        <p><strong>Who:</strong> Hospital Admin</p>
+        <p><strong>Who:</strong> Superadmin Only</p>
         <ul>
             <li>Create family with unique ID (e.g., SEC-2413)</li>
             <li>Set principle member name</li>
@@ -414,12 +415,13 @@
             <pre>Family ID, Principle Member, Total Allotment, Remaining Balance
 SEC-2413, John Smith, 5000.00, 5000.00
 SEC-2414, Mary Johnson, 7500.00, 7500.00</pre>
+            <p style="color: #dc3545; margin-top: 10px;"><strong>Access Control:</strong> Only Superadmin can create/edit families. Hospital Admin has read-only access.</p>
         </div>
     </div>
     
     <div class="workflow-step">
         <h3><span class="step-number">3</span>Add Family Members</h3>
-        <p><strong>Who:</strong> Hospital Admin</p>
+        <p><strong>Who:</strong> Superadmin Only</p>
         <ul>
             <li>Assign serial numbers (e.g., SEC-2413-01, SEC-2413-02)</li>
             <li>Record: First name, Middle name, Last name</li>
@@ -431,15 +433,17 @@ SEC-2414, Mary Johnson, 7500.00, 7500.00</pre>
         SEC-2413-01: John Smith (Principle)<br/>
         SEC-2413-02: Jane Smith (Spouse)<br/>
         SEC-2413-03: Tom Smith (Child)</p>
+        <p style="color: #dc3545; font-size: 14px; margin-top: 10px;"><strong>Access Control:</strong> Only Superadmin can add/edit members. Hospital Admin can only view.</p>
     </div>
     
     <div class="workflow-step">
         <h3><span class="step-number">4</span>Create Price List</h3>
-        <p><strong>Who:</strong> Hospital Admin</p>
+        <p><strong>Who:</strong> Superadmin Only</p>
         <ul>
             <li>Define all medical services and procedures</li>
             <li>Set item ID, name, type, and cost</li>
-            <li>Each hospital maintains their own price list</li>
+            <li>Each hospital has their own price list</li>
+            <li>Hospital Admin can view but not modify price lists</li>
         </ul>
         <p><strong>Example Price List:</strong></p>
         <table>
@@ -464,6 +468,7 @@ SEC-2414, Mary Johnson, 7500.00, 7500.00</pre>
                 <td>$100.00</td>
             </tr>
         </table>
+        <p style="color: #dc3545; font-size: 14px; margin-top: 10px;"><strong>Access Control:</strong> Only Superadmin can create/edit price lists. This ensures price consistency and prevents unauthorized modifications.</p>
     </div>
     
     <div class="footer">Page 3</div>
@@ -875,9 +880,10 @@ Transaction:            Complete ✅
         </div>
     </div>
     
-    <h2>2. Edit Claim (Hospital Admin via Admin Panel)</h2>
+    <h2>2. Edit Claim (Superadmin Only via Admin Panel)</h2>
     <div class="workflow-step">
         <p><strong>When to use:</strong> Need to correct claim details before payment</p>
+        <p><strong>Who can edit:</strong> Superadmin only (Hospital Admin cannot edit claims via Admin Panel)</p>
         <p><strong>Process:</strong></p>
         <ol>
             <li>Go to Admin Panel → Claims tab</li>
@@ -909,9 +915,10 @@ Transaction:            Complete ✅
         </ul>
     </div>
     
-    <h2>4. Bulk Family Upload (Hospital Admin)</h2>
+    <h2>4. Bulk Family Upload (Superadmin Only)</h2>
     <div class="workflow-step">
         <p><strong>Feature:</strong> Upload hundreds of families at once via CSV file</p>
+        <p><strong>Who can use:</strong> Superadmin only</p>
         <p><strong>Process:</strong></p>
         <ol>
             <li>Go to Admin Panel</li>
@@ -929,6 +936,7 @@ Transaction:            Complete ✅
             <li>Automatic validation of all data</li>
             <li>Detailed error reporting</li>
         </ul>
+        <p style="color: #dc3545; font-size: 14px; margin-top: 10px;"><strong>Access Control:</strong> Only Superadmin can bulk upload families to maintain data integrity and control.</p>
     </div>
     
     <div class="footer">Page 8</div>
@@ -984,14 +992,21 @@ Transaction:            Complete ✅
         <tr>
             <td>Create/Edit families</td>
             <td class="checkmark">✅</td>
-            <td class="checkmark">✅</td>
             <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+        </tr>
+        <tr>
+            <td>View families</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
             <td class="crossmark">❌</td>
         </tr>
         <tr>
             <td>Bulk upload families (CSV)</td>
             <td class="checkmark">✅</td>
-            <td class="checkmark">✅</td>
+            <td class="crossmark">❌</td>
             <td class="crossmark">❌</td>
             <td class="crossmark">❌</td>
         </tr>
@@ -1012,8 +1027,15 @@ Transaction:            Complete ✅
         <tr>
             <td>Add/Edit members</td>
             <td class="checkmark">✅</td>
-            <td class="checkmark">✅</td>
             <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+        </tr>
+        <tr>
+            <td>View members</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
             <td class="crossmark">❌</td>
         </tr>
         <tr>
@@ -1033,9 +1055,16 @@ Transaction:            Complete ✅
         <tr>
             <td>Create/Edit price items</td>
             <td class="checkmark">✅</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+        </tr>
+        <tr>
+            <td>View price lists</td>
             <td class="checkmark">✅</td>
-            <td class="crossmark">❌</td>
-            <td class="crossmark">❌</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
         </tr>
         <tr>
             <td><strong>Claim Operations</strong></td>
@@ -1066,9 +1095,9 @@ Transaction:            Complete ✅
             <td class="crossmark">❌</td>
         </tr>
         <tr>
-            <td>Edit claims</td>
+            <td>Edit claims (Admin Panel)</td>
             <td class="checkmark">✅</td>
-            <td class="checkmark">✅</td>
+            <td class="crossmark">❌</td>
             <td class="crossmark">❌</td>
             <td class="crossmark">❌</td>
         </tr>
@@ -1122,7 +1151,19 @@ Transaction:            Complete ✅
             <li><strong>Role-Based Access Control (RBAC):</strong> Each user only sees and can do what their role allows</li>
             <li><strong>Hospital Isolation:</strong> Regular users can only access their own hospital's data</li>
             <li><strong>Financial Controls:</strong> Only superadmin can mark claims as paid or void them</li>
+            <li><strong>Master Data Protection:</strong> Only superadmin can create/edit families, members, and price lists</li>
             <li><strong>Audit Trail:</strong> All actions are logged with timestamps and user information</li>
+        </ul>
+    </div>
+    
+    <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 20px; margin-top: 20px; border-radius: 4px;">
+        <h3 style="color: #856404; margin-top: 0;">⚠️ Important Access Control Update</h3>
+        <p style="color: #856404;"><strong>Hospital Admin Role Changes:</strong></p>
+        <ul style="color: #856404;">
+            <li>Hospital Admin can NO LONGER create or edit families, members, or price lists</li>
+            <li>All master data management is now centralized with Superadmin (Insurance Company)</li>
+            <li>Hospital Admin is now primarily a "Claims Operator" role</li>
+            <li>This ensures better data integrity and prevents unauthorized modifications</li>
         </ul>
     </div>
     
