@@ -1596,10 +1596,10 @@ class MedicalBillingAPITester:
         # === HOSPITAL ADMIN ACCESS TESTS (Should all FAIL with 403) ===
         print(f"\n   ❌ Testing Hospital Admin Access (Should all FAIL with 403)...")
         
-        # Create a test hospital admin user if needed, or use existing one
+        # Use existing hospital admin users
         hospital_admin_users = [
-            ("mercy_admin", "password123"),
-            ("general_clerk", "password123"),  # Try different admin users
+            ("Gaga", "password123"),  # Hospital Admin for Gaga Medical Complex
+            ("test_admin", "password123"),  # Hospital Admin for Gaga Medical Complex
         ]
         
         hospital_admin_logged_in = False
