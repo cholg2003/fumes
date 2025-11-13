@@ -2275,6 +2275,9 @@ class MedicalBillingAPITester:
         # Test suspension system 
         self.test_suspension_system()
         
+        # Test NEW claim status editing feature
+        self.test_claim_status_editing_feature()
+        
         # Test different user credentials for basic functionality
         test_users = [
             ("general_clerk", "password123"),
