@@ -267,6 +267,7 @@
     <div style="margin-top: 60px; font-size: 20px;">
         <p>A comprehensive solution for managing medical insurance claims</p>
         <p>between Insurance Companies, Hospitals, and Patients</p>
+        <p style="margin-top: 20px; font-size: 16px; opacity: 0.9;">12-Page Complete Documentation</p>
     </div>
     <div class="date">November 2025</div>
 </div>
@@ -882,24 +883,39 @@ Transaction:            Complete ✅
     
     <h2>2. Edit Claim (Superadmin Only via Admin Panel)</h2>
     <div class="workflow-step">
-        <p><strong>When to use:</strong> Need to correct claim details before payment</p>
+        <p><strong>When to use:</strong> Need to correct claim details or change claim status</p>
         <p><strong>Who can edit:</strong> Superadmin only (Hospital Admin cannot edit claims via Admin Panel)</p>
         <p><strong>Process:</strong></p>
         <ol>
             <li>Go to Admin Panel → Claims tab</li>
             <li>Find claim and click edit button</li>
-            <li>Change patient, services, or quantities</li>
+            <li>Change patient, services, quantities, <strong>OR STATUS</strong></li>
             <li>Submit changes</li>
         </ol>
         
         <p><strong>System Actions:</strong></p>
         <ul>
-            <li>✅ Refund original family</li>
+            <li>✅ Refund original family (if needed)</li>
             <li>✅ Charge new family (if patient changed)</li>
             <li>✅ Recalculate total amount</li>
+            <li>✅ <strong>Adjust balances based on status change</strong></li>
             <li>✅ Validate sufficient balance</li>
             <li>✅ Update claim details</li>
         </ul>
+        
+        <div class="highlight-box" style="margin-top: 15px;">
+            <strong>NEW: Status Editing Feature</strong>
+            <p>Superadmin can now change claim status when editing:</p>
+            <ul>
+                <li><strong>PENDING → PAID:</strong> Deduct from hospital deposit</li>
+                <li><strong>PENDING → VOIDED:</strong> Refund family balance</li>
+                <li><strong>PAID → PENDING:</strong> Refund hospital deposit</li>
+                <li><strong>PAID → VOIDED:</strong> Refund both family and hospital</li>
+                <li><strong>VOIDED → PENDING:</strong> Charge family balance</li>
+                <li><strong>VOIDED → PAID:</strong> Charge both family and hospital</li>
+            </ul>
+            <p style="color: #28a745; font-weight: bold; margin-top: 10px;">All balance adjustments are automatic!</p>
+        </div>
     </div>
     
     <h2>3. Suspend Family/Member (Superadmin Only)</h2>
@@ -1170,7 +1186,147 @@ Transaction:            Complete ✅
     <div class="footer">Page 9</div>
 </div>
 
-<!-- PAGE 10: CLAIM STATUS REFERENCE -->
+<!-- PAGE 10: STATUS EDITING FEATURE -->
+<div class="page">
+    <h1>🔄 Claim Status Editing Feature</h1>
+    
+    <div class="highlight-box">
+        <h3>New Feature: Edit Claim Status with Automatic Balance Adjustments</h3>
+        <p>Superadmin can now change claim status when editing claims. The system automatically handles all family and hospital balance adjustments based on status transitions.</p>
+    </div>
+    
+    <h2>Status Transition Matrix</h2>
+    
+    <table style="font-size: 13px;">
+        <tr>
+            <th>From Status</th>
+            <th>To Status</th>
+            <th>Family Balance</th>
+            <th>Hospital Balance</th>
+            <th>Use Case</th>
+        </tr>
+        <tr>
+            <td><span class="status-badge status-pending">PENDING</span></td>
+            <td><span class="status-badge status-voided">VOIDED</span></td>
+            <td>✅ Refunded (+)</td>
+            <td>➖ No change</td>
+            <td>Cancel claim</td>
+        </tr>
+        <tr>
+            <td><span class="status-badge status-pending">PENDING</span></td>
+            <td><span class="status-badge status-paid">PAID</span></td>
+            <td>➖ No change</td>
+            <td>💰 Deducted (-)</td>
+            <td>Mark as paid</td>
+        </tr>
+        <tr>
+            <td><span class="status-badge status-paid">PAID</span></td>
+            <td><span class="status-badge status-pending">PENDING</span></td>
+            <td>➖ No change</td>
+            <td>✅ Refunded (+)</td>
+            <td>Undo payment</td>
+        </tr>
+        <tr>
+            <td><span class="status-badge status-paid">PAID</span></td>
+            <td><span class="status-badge status-voided">VOIDED</span></td>
+            <td>✅ Refunded (+)</td>
+            <td>✅ Refunded (+)</td>
+            <td>Cancel paid claim</td>
+        </tr>
+        <tr>
+            <td><span class="status-badge status-voided">VOIDED</span></td>
+            <td><span class="status-badge status-pending">PENDING</span></td>
+            <td>💰 Deducted (-)</td>
+            <td>➖ No change</td>
+            <td>Reactivate claim</td>
+        </tr>
+        <tr>
+            <td><span class="status-badge status-voided">VOIDED</span></td>
+            <td><span class="status-badge status-paid">PAID</span></td>
+            <td>💰 Deducted (-)</td>
+            <td>💰 Deducted (-)</td>
+            <td>Reactivate & pay</td>
+        </tr>
+    </table>
+    
+    <h2>How It Works</h2>
+    
+    <div class="workflow-step">
+        <h3><span class="step-number">1</span>Open Edit Dialog</h3>
+        <p>Superadmin goes to Admin Panel → Claims tab → Click edit icon</p>
+    </div>
+    
+    <div class="workflow-step">
+        <h3><span class="step-number">2</span>Change Status</h3>
+        <p>Select new status from dropdown:</p>
+        <ul>
+            <li>🟡 PENDING - Service provided, awaiting payment</li>
+            <li>🟢 PAID - Insurance has paid hospital</li>
+            <li>🔴 VOIDED - Claim cancelled/rejected</li>
+        </ul>
+    </div>
+    
+    <div class="workflow-step">
+        <h3><span class="step-number">3</span>Automatic Processing</h3>
+        <p>System automatically:</p>
+        <ol>
+            <li>Reverses old status effects (refunds if needed)</li>
+            <li>Validates family and hospital balances</li>
+            <li>Applies new status effects (charges if needed)</li>
+            <li>Updates all balances</li>
+            <li>Records status change</li>
+        </ol>
+    </div>
+    
+    <h2>Example Scenario</h2>
+    
+    <div class="money-flow">
+        <div class="step">
+            <strong>Initial State</strong>
+            <pre>Family Balance:     $5,000
+Hospital Deposit:   $1,000
+Claim Amount:       $200</pre>
+        </div>
+        
+        <div class="arrow">⬇️ Create PENDING Claim</div>
+        
+        <div class="step">
+            <strong>Status: PENDING</strong>
+            <pre>Family Balance:     $4,800 (-$200)
+Hospital Deposit:   $1,000 (no change)</pre>
+        </div>
+        
+        <div class="arrow">⬇️ Edit: Change to PAID</div>
+        
+        <div class="step">
+            <strong>Status: PAID</strong>
+            <pre>Family Balance:     $4,800 (no change)
+Hospital Deposit:   $800 (-$200)</pre>
+        </div>
+        
+        <div class="arrow">⬇️ Edit: Change to VOIDED</div>
+        
+        <div class="step" style="background: #d4edda;">
+            <strong>Status: VOIDED</strong>
+            <pre>Family Balance:     $5,000 (+$200 refund)
+Hospital Deposit:   $1,000 (+$200 refund)</pre>
+        </div>
+    </div>
+    
+    <h2>Validation & Safety</h2>
+    
+    <ul>
+        <li>✅ <strong>Access Control:</strong> Only superadmin can edit claim status</li>
+        <li>✅ <strong>Balance Checks:</strong> Validates sufficient funds before changing status</li>
+        <li>✅ <strong>Atomic Operations:</strong> All changes succeed or fail together</li>
+        <li>✅ <strong>Audit Trail:</strong> Returns old and new status in response</li>
+        <li>✅ <strong>Error Handling:</strong> Clear error messages for insufficient balance</li>
+    </ul>
+    
+    <div class="footer">Page 10</div>
+</div>
+
+<!-- PAGE 11: CLAIM STATUS REFERENCE -->
 <div class="page">
     <h1>📊 Claim Status Reference Guide</h1>
     
@@ -1266,10 +1422,10 @@ NEW CLAIM SUBMITTED
         </ul>
     </div>
     
-    <div class="footer">Page 10</div>
+    <div class="footer">Page 11</div>
 </div>
 
-<!-- PAGE 11: BENEFITS & CONCLUSION -->
+<!-- PAGE 12: BENEFITS & CONCLUSION -->
 <div class="page">
     <h1>✨ System Benefits & Advantages</h1>
     
@@ -1366,7 +1522,7 @@ NEW CLAIM SUBMITTED
         <p style="font-size: 18px; margin-top: 15px;">Streamlining Healthcare Financial Operations</p>
     </div>
     
-    <div class="footer">Page 11</div>
+    <div class="footer">Page 12</div>
 </div>
 
 </body>
