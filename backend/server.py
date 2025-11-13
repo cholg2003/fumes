@@ -691,7 +691,7 @@ async def update_claim(claim_id: str, claim_submission: ClaimSubmission, admin_u
             "patient_name": f"{new_patient['first_name']} {new_patient['last_name']}",
             "family_id": new_patient["family_id"],
             "total_claim_amount": new_total,
-            "status": "COMPLETED"
+            "status": "PENDING"
         }}
     )
     
