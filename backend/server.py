@@ -1118,6 +1118,10 @@ async def update_pricelist_item(hospital_name: str, item_id: str, item_update: P
 
 @api_router.delete("/admin/pricelists/{hospital_name}/{item_id}")
 async def delete_pricelist_item(hospital_name: str, item_id: str, admin_user: dict = Depends(get_admin_user)):
+    # Only superadmin can delete price list items
+    if admin_user["username"] != "superadmin":
+        raise HTTPException(status_code=403, detail="Only superadmin can delete price list items")
+    
     result = await db.pricelists.delete_one({
         "hospital_name": hospital_name,
         "item_id": item_id
