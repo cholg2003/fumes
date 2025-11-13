@@ -949,6 +949,10 @@ async def update_member(serial_number: str, member_update: MemberUpdate, admin_u
 
 @api_router.delete("/admin/members/{serial_number}")
 async def delete_member(serial_number: str, admin_user: dict = Depends(get_admin_user)):
+    # Only superadmin can delete members
+    if admin_user["username"] != "superadmin":
+        raise HTTPException(status_code=403, detail="Only superadmin can delete members")
+    
     # Check if member has claims
     claims = await db.claims_header.find_one({"patient_serial_number": serial_number})
     if claims:
