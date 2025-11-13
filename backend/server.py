@@ -808,6 +808,10 @@ async def create_family(family: FamilyCreate, admin_user: dict = Depends(get_adm
 
 @api_router.put("/admin/families/{family_id}")
 async def update_family(family_id: str, family_update: FamilyUpdate, admin_user: dict = Depends(get_admin_user)):
+    # Only superadmin can update families
+    if admin_user["username"] != "superadmin":
+        raise HTTPException(status_code=403, detail="Only superadmin can update families")
+    
     # Check if family exists
     existing = await db.families.find_one({"family_id": family_id})
     if not existing:
