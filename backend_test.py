@@ -1499,7 +1499,7 @@ class MedicalBillingAPITester:
         
         if family_created:
             # Update family
-            success, response = self.run_test(
+            update_success, update_response = self.run_test(
                 "Superadmin - Update Family",
                 "PUT",
                 f"admin/families/{test_family_data['family_id']}",
