@@ -1540,7 +1540,7 @@ class MedicalBillingAPITester:
         
         if pricelist_created:
             # Update price list item
-            success, response = self.run_test(
+            update_success, update_response = self.run_test(
                 "Superadmin - Update Price List Item",
                 "PUT",
                 f"admin/pricelists/{test_pricelist_data['hospital_name']}/{test_pricelist_data['item_id']}",
