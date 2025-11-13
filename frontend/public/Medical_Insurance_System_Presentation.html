@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Insurance Claims Management System - Presentation</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+        
+        .page {
+            background: white;
+            max-width: 210mm;
+            margin: 20px auto;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            page-break-after: always;
+        }
+        
+        .cover-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 297mm;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+        
+        .cover-page h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .cover-page h2 {
+            font-size: 28px;
+            font-weight: 300;
+            margin-bottom: 40px;
+        }
+        
+        .cover-page .icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+        }
+        
+        .cover-page .date {
+            position: absolute;
+            bottom: 60px;
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        h1 {
+            color: #667eea;
+            font-size: 32px;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            color: #764ba2;
+            font-size: 24px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        h3 {
+            color: #555;
+            font-size: 20px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .highlight-box {
+            background: #f8f9ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .role-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .role-card h3 {
+            color: #667eea;
+            margin-top: 0;
+        }
+        
+        .workflow-step {
+            background: #f0f4ff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .workflow-step .step-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            margin: 5px;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-paid {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-voided {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        tr:hover {
+            background: #f8f9ff;
+        }
+        
+        .checkmark {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .crossmark {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .money-flow {
+            background: #fff;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        
+        .money-flow .step {
+            margin: 15px 0;
+            padding: 10px;
+            background: #f8f9ff;
+            border-radius: 4px;
+        }
+        
+        .arrow {
+            color: #667eea;
+            font-size: 20px;
+            margin: 10px 0;
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .footer {
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .dashboard-preview {
+            background: #f8f9ff;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            .page {
+                box-shadow: none;
+                margin: 0;
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<div class="page cover-page">
+    <div class="icon">🏥</div>
+    <h1>Medical Insurance Claims<br/>Management System</h1>
+    <h2>Complete System Overview & Workflow</h2>
+    <div style="margin-top: 60px; font-size: 20px;">
+        <p>A comprehensive solution for managing medical insurance claims</p>
+        <p>between Insurance Companies, Hospitals, and Patients</p>
+    </div>
+    <div class="date">November 2025</div>
+</div>
+
+<!-- PAGE 1: OVERVIEW -->
+<div class="page">
+    <h1>🎯 System Overview</h1>
+    
+    <div class="highlight-box">
+        <h3>What is this system?</h3>
+        <p>A <strong>Medical Insurance Claims Management System</strong> that digitally tracks and manages the entire lifecycle of medical claims from service provision to payment settlement.</p>
+    </div>
+    
+    <h2>Key Stakeholders</h2>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div class="role-card">
+            <h3>🏢 Insurance Companies</h3>
+            <ul>
+                <li>Provide coverage to families</li>
+                <li>Make deposits to hospitals</li>
+                <li>Settle outstanding claims</li>
+            </ul>
+        </div>
+        
+        <div class="role-card">
+            <h3>🏥 Hospitals</h3>
+            <ul>
+                <li>Provide medical services</li>
+                <li>Submit claims for services</li>
+                <li>Receive payments from insurance</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="role-card">
+        <h3>👨‍👩‍👧‍👦 Families/Patients</h3>
+        <ul>
+            <li>Have insurance coverage with allotted amount</li>
+            <li>Receive medical services from hospitals</li>
+            <li>Their balance is tracked for each claim</li>
+        </ul>
+    </div>
+    
+    <h2>Core Features</h2>
+    <ul>
+        <li><strong>Patient & Family Management:</strong> Track families and their members with allotted balances</li>
+        <li><strong>Claims Processing:</strong> Submit, track, and settle medical claims</li>
+        <li><strong>Financial Tracking:</strong> Monitor deposits, payments, and outstanding balances</li>
+        <li><strong>Multi-Hospital Support:</strong> Manage multiple hospitals in one system</li>
+        <li><strong>Role-Based Access:</strong> Different permissions for different user types</li>
+        <li><strong>Real-Time Dashboard:</strong> Visual overview of financial status and claims</li>
+    </ul>
+    
+    <div class="footer">Page 1</div>
+</div>
+
+<!-- PAGE 2: USER ROLES -->
+<div class="page">
+    <h1>👥 User Roles & Permissions</h1>
+    
+    <div class="role-card">
+        <h3>1. 👑 Superadmin (Insurance Company)</h3>
+        <p><strong>Highest level access - Full system control</strong></p>
+        <ul>
+            <li>Create and manage all hospitals</li>
+            <li>Add deposits to hospital accounts (insurance payments)</li>
+            <li>Mark pending claims as paid</li>
+            <li>Void/cancel claims when needed</li>
+            <li>View all claims across all hospitals</li>
+            <li>Suspend/unsuspend families or members</li>
+            <li>Access to complete admin panel</li>
+        </ul>
+    </div>
+    
+    <div class="role-card">
+        <h3>2. 🏥 Hospital Admin</h3>
+        <p><strong>Manages their specific hospital</strong></p>
+        <ul>
+            <li>Create and manage families (bulk CSV upload available)</li>
+            <li>Add and edit family members</li>
+            <li>Create and maintain price lists</li>
+            <li>Submit medical claims</li>
+            <li>View their hospital's financial status</li>
+            <li>Edit existing claims</li>
+            <li>Cannot mark claims as paid (only superadmin)</li>
+        </ul>
+    </div>
+    
+    <div class="role-card">
+        <h3>3. 💰 Finance Staff</h3>
+        <p><strong>Financial operations and reporting</strong></p>
+        <ul>
+            <li>View claims and financial reports</li>
+            <li>Submit claims for patients</li>
+            <li>Print claim receipts</li>
+            <li>Search for patients</li>
+            <li>Cannot edit master data (families, members, price lists)</li>
+        </ul>
+    </div>
+    
+    <div class="role-card">
+        <h3>4. 📋 Reception Staff</h3>
+        <p><strong>Front-desk operations - Limited access</strong></p>
+        <ul>
+            <li>Search for patients</li>
+            <li>Submit claims for walk-in patients</li>
+            <li>View patient balances</li>
+            <li>Cannot view financial reports</li>
+            <li>Cannot edit any master data</li>
+        </ul>
+    </div>
+    
+    <div class="footer">Page 2</div>
+</div>
+
+<!-- PAGE 3: WORKFLOW PHASE 1 -->
+<div class="page">
+    <h1>🔄 Complete Workflow - Phase 1</h1>
+    <h2>Initial Setup & Registration</h2>
+    
+    <div class="workflow-step">
+        <h3><span class="step-number">1</span>Hospital Registration</h3>
+        <p><strong>Who:</strong> Superadmin</p>
+        <ul>
+            <li>Enter hospital name, address, phone, email</li>
+            <li>Initial deposit balance set to $0.00</li>
+            <li>Hospital becomes available in the system</li>
+        </ul>
+        <p><strong>Example:</strong> "City General Hospital" added to system</p>
+    </div>
+    
+    <div class="workflow-step">
+        <h3><span class="step-number">2</span>Family Registration</h3>
+        <p><strong>Who:</strong> Hospital Admin</p>
+        <ul>
+            <li>Create family with unique ID (e.g., SEC-2413)</li>
+            <li>Set principle member name</li>
+            <li>Set total allotment amount (e.g., $5,000)</li>
+            <li>Remaining balance starts equal to total allotment</li>
+        </ul>
+        <p><strong>Bulk Upload Option:</strong> Upload multiple families via CSV file</p>
+        <div class="highlight-box">
+            <strong>CSV Format:</strong>
+            <pre>Family ID, Principle Member, Total Allotment, Remaining Balance
+SEC-2413, John Smith, 5000.00, 5000.00
+SEC-2414, Mary Johnson, 7500.00, 7500.00</pre>
+        </div>
+    </div>
+    
+    <div class="workflow-step">
+        <h3><span class="step-number">3</span>Add Family Members</h3>
+        <p><strong>Who:</strong> Hospital Admin</p>
+        <ul>
+            <li>Assign serial numbers (e.g., SEC-2413-01, SEC-2413-02)</li>
+            <li>Record: First name, Middle name, Last name</li>
+            <li>Date of birth, Gender</li>
+            <li>Relationship: Principle, Spouse, Father, Mother, Child, Dependent</li>
+            <li>Status: Active (can receive services) or Suspended</li>
+        </ul>
+        <p><strong>Example:</strong><br/>
+        SEC-2413-01: John Smith (Principle)<br/>
+        SEC-2413-02: Jane Smith (Spouse)<br/>
+        SEC-2413-03: Tom Smith (Child)</p>
+    </div>
+    
+    <div class="workflow-step">
+        <h3><span class="step-number">4</span>Create Price List</h3>
+        <p><strong>Who:</strong> Hospital Admin</p>
+        <ul>
+            <li>Define all medical services and procedures</li>
+            <li>Set item ID, name, type, and cost</li>
+            <li>Each hospital maintains their own price list</li>
+        </ul>
+        <p><strong>Example Price List:</strong></p>
+        <table>
+            <tr>
+                <th>Item ID</th>
+                <th>Service Name</th>
+                <th>Cost</th>
+            </tr>
+            <tr>
+                <td>CONS-001</td>
+                <td>General Consultation</td>
+                <td>$50.00</td>
+            </tr>
+            <tr>
+                <td>XRAY-001</td>
+                <td>Chest X-Ray</td>
+                <td>$75.00</td>
+            </tr>
+            <tr>
+                <td>LAB-001</td>
+                <td>Blood Test</td>
+                <td>$100.00</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="footer">Page 3</div>
+</div>
+
+<!-- PAGE 4: WORKFLOW PHASE 2 -->
+<div class="page">
+    <h1>🔄 Complete Workflow - Phase 2</h1>
+    <h2>Patient Visit & Claim Creation</h2>
+    
+    <div class="highlight-box">
+        <h3>Scenario: Patient Visit</h3>
+        <p>Patient <strong>SEC-2413-01 (John Smith)</strong> visits City General Hospital for treatment.</p>
+    </div>
+    
+    <div class="workflow-step">
+        <h3><span class="step-number">1</span>Patient Search</h3>
+        <p><strong>Who:</strong> Reception/Finance/Admin</p>
+        <ul>
+            <li>Enter patient serial number or name in search bar</li>
+            <li>System displays patient details</li>
+            <li>Shows family balance and all family members</li>
+        </ul>
+        <div class="dashboard-preview">
+Search Results:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Patient: John Smith (SEC-2413-01)
+Family ID: SEC-2413
+Relationship: Principle Member
+Family Balance: $5,000.00
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        </div>
+    </div>
+    
+    <div class="workflow-step">
+        <h3><span class="step-number">2</span>Create Claim (Add Services)</h3>
+        <p><strong>Who:</strong> Reception/Finance/Admin</p>
+        <ul>
+            <li>Select patient from search results</li>
+            <li>Choose services from price list</li>
+            <li>Set quantity for each service</li>
+            <li>System calculates total automatically</li>
+        </ul>
+        
+        <table>
+            <tr>
+                <th>Service</th>
+                <th>Cost</th>
+                <th>Quantity</th>
+                <th>Total</th>
+            </tr>
+            <tr>
+                <td>General Consultation</td>
+                <td>$50.00</td>
+                <td>1</td>
+                <td>$50.00</td>
+            </tr>
+            <tr>
+                <td>Chest X-Ray</td>
+                <td>$75.00</td>
+                <td>1</td>
+                <td>$75.00</td>
+            </tr>
+            <tr>
+                <td>Blood Test</td>
+                <td>$100.00</td>
+                <td>2</td>
+                <td>$200.00</td>
+            </tr>
+            <tr style="background: #f8f9ff; font-weight: bold;">
+                <td colspan="3" style="text-align: right;">Total Claim Amount:</td>
+                <td>$325.00</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="workflow-step">
+        <h3><span class="step-number">3</span>Submit Claim (Automatic Processing)</h3>
+        <p><strong>System Validation:</strong></p>
+        <ul>
+            <li>✅ Check if patient is Active (not suspended)</li>
+            <li>✅ Check if family is Active (not suspended)</li>
+            <li>✅ Verify family balance: $5,000 ≥ $325</li>
+        </ul>
+        
+        <p><strong>System Actions:</strong></p>
+        <ol>
+            <li>Generate unique Claim ID (e.g., CLAIM-ABC123)</li>
+            <li>Deduct from family balance: $5,000 - $325 = <strong>$4,675</strong></li>
+            <li>Set claim status: <span class="status-badge status-pending">PENDING</span></li>
+            <li>Record timestamp and hospital name</li>
+            <li>Store all claim items with quantities</li>
+        </ol>
+        
+        <div class="highlight-box">
+            <strong>Result:</strong>
+            <ul>
+                <li>Claim ID: CLAIM-ABC123</li>
+                <li>Status: PENDING (awaiting insurance payment)</li>
+                <li>Family balance updated: $4,675</li>
+                <li>Hospital provided service worth $325</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="footer">Page 4</div>
+</div>
+
+<!-- PAGE 5: WORKFLOW PHASE 3 -->
+<div class="page">
+    <h1>🔄 Complete Workflow - Phase 3</h1>
+    <h2>Financial Tracking & Dashboard Views</h2>
+    
+    <h3>Hospital Dashboard (Admin/Finance View)</h3>
+    <div class="dashboard-preview">
+┌─────────────────────────────────────────────────┐
+│         FINANCIAL STATUS                        │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  Total Claims:        $325.00                  │
+│  (Value of pending claims)                     │
+│                                                 │
+│  Deposit Balance:     $0.00                    │
+│  (Insurance payments received)                 │
+│                                                 │
+│  Net Balance:         +$325.00  🟢             │
+│  Insurance owes hospital                       │
+│                                                 │
+└─────────────────────────────────────────────────┘
+    </div>
+    
+    <p><strong>Color Coding:</strong></p>
+    <ul>
+        <li>🟢 <strong>Green (Positive):</strong> Claims > Deposits → Insurance owes hospital</li>
+        <li>🔴 <strong>Red (Negative):</strong> Deposits > Claims → Hospital owes insurance</li>
+    </ul>
+    
+    <h3>Superadmin Dashboard (Insurance View)</h3>
+    <div class="dashboard-preview">
+┌─────────────────────────────────────────────────┐
+│      OUTSTANDING CLAIMS BY HOSPITAL             │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  City General Hospital:                        │
+│    Pending Claims: 5 ($1,250.00)              │
+│    Paid Claims: 10 ($3,000.00)                │
+│    Outstanding: -$1,250.00  🔴                │
+│    Insurance owes hospital                     │
+│                                                 │
+│  Regional Medical Center:                      │
+│    Pending Claims: 3 ($825.00)                │
+│    Paid Claims: 8 ($2,400.00)                 │
+│    Outstanding: -$825.00  🔴                  │
+│    Insurance owes hospital                     │
+│                                                 │
+└─────────────────────────────────────────────────┘
+    </div>
+    
+    <h3>Recent Claims Table</h3>
+    <table>
+        <tr>
+            <th>Claim ID</th>
+            <th>Patient</th>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        <tr>
+            <td>CLAIM-ABC123</td>
+            <td>John Smith</td>
+            <td>11/13/2025</td>
+            <td>$325.00</td>
+            <td><span class="status-badge status-pending">PENDING</span></td>
+            <td>🖨️ ✅ 🚫</td>
+        </tr>
+        <tr>
+            <td>CLAIM-XYZ789</td>
+            <td>Mary Johnson</td>
+            <td>11/12/2025</td>
+            <td>$150.00</td>
+            <td><span class="status-badge status-paid">PAID</span></td>
+            <td>🖨️</td>
+        </tr>
+        <tr>
+            <td>CLAIM-DEF456</td>
+            <td>Tom Williams</td>
+            <td>11/10/2025</td>
+            <td>$200.00</td>
+            <td><span class="status-badge status-voided">VOIDED</span></td>
+            <td>🖨️</td>
+        </tr>
+    </table>
+    
+    <p><strong>Action Buttons (Superadmin Only for Pending Claims):</strong></p>
+    <ul>
+        <li>🖨️ <strong>Print:</strong> Generate printable claim receipt</li>
+        <li>✅ <strong>Mark as Paid:</strong> Settle the claim (deduct from hospital balance)</li>
+        <li>🚫 <strong>Void:</strong> Cancel the claim (refund family balance)</li>
+    </ul>
+    
+    <div class="footer">Page 5</div>
+</div>
+
+<!-- PAGE 6: WORKFLOW PHASE 4 -->
+<div class="page">
+    <h1>🔄 Complete Workflow - Phase 4</h1>
+    <h2>Insurance Payment Process</h2>
+    
+    <div class="workflow-step">
+        <h3><span class="step-number">1</span>Insurance Adds Deposit</h3>
+        <p><strong>Who:</strong> Superadmin Only</p>
+        <p><strong>Process:</strong></p>
+        <ol>
+            <li>Navigate to Admin Panel → Hospitals tab</li>
+            <li>Find hospital: "City General Hospital"</li>
+            <li>Current deposit balance: $0.00</li>
+            <li>Click green (+) deposit button</li>
+            <li>Enter amount: $5,000</li>
+            <li>Confirm deposit</li>
+        </ol>
+        
+        <div class="highlight-box">
+            <strong>Result:</strong>
+            <ul>
+                <li>Hospital deposit balance: $0.00 → $5,000.00 ✅</li>
+                <li>Funds available to settle pending claims</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="workflow-step">
+        <h3><span class="step-number">2</span>Mark Claim as Paid</h3>
+        <p><strong>Who:</strong> Superadmin Only</p>
+        <p><strong>Process:</strong></p>
+        <ol>
+            <li>View claims list (Dashboard or Admin Panel)</li>
+            <li>Find pending claim: CLAIM-ABC123 ($325)</li>
+            <li>Click green ✅ checkmark (Mark as Paid)</li>
+            <li>Confirmation dialog appears:<br/>
+                <em>"Mark this claim as paid? This will deduct $325.00 from hospital balance."</em></li>
+            <li>Click "Confirm"</li>
+        </ol>
+        
+        <p><strong>System Processing:</strong></p>
+        <ul>
+            <li>✅ Deduct from hospital balance: $5,000 - $325 = $4,675</li>
+            <li>✅ Change claim status: PENDING → PAID</li>
+            <li>✅ Update outstanding balance: -$325 → $0</li>
+            <li>✅ Record payment timestamp</li>
+        </ul>
+        
+        <div class="highlight-box">
+            <strong>Result:</strong>
+            <ul>
+                <li>Claim badge changes: <span class="status-badge status-pending">PENDING</span> → <span class="status-badge status-paid">PAID</span></li>
+                <li>Hospital balance: $4,675</li>
+                <li>Outstanding balance: $0</li>
+                <li>Transaction complete ✅</li>
+                <li>Action buttons removed (only print remains)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="workflow-step">
+        <h3><span class="step-number">3</span>Final State</h3>
+        <table>
+            <tr>
+                <th>Account</th>
+                <th>Before</th>
+                <th>After</th>
+                <th>Change</th>
+            </tr>
+            <tr>
+                <td>Family Balance</td>
+                <td>$5,000</td>
+                <td>$4,675</td>
+                <td>-$325 (service used)</td>
+            </tr>
+            <tr>
+                <td>Hospital Deposit</td>
+                <td>$0</td>
+                <td>$4,675</td>
+                <td>+$5,000, -$325</td>
+            </tr>
+            <tr>
+                <td>Outstanding</td>
+                <td>-$325</td>
+                <td>$0</td>
+                <td>Settled ✅</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="footer">Page 6</div>
+</div>
+
+<!-- PAGE 7: MONEY FLOW EXAMPLE -->
+<div class="page">
+    <h1>💰 Complete Money Flow Example</h1>
+    
+    <div class="money-flow">
+        <div class="step">
+            <strong>1. INITIAL STATE</strong>
+            <pre>
+Family Allotment:       $5,000.00
+Hospital Balance:       $0.00
+Insurance Owes:         $0.00
+            </pre>
+        </div>
+        
+        <div class="arrow">⬇️</div>
+        
+        <div class="step">
+            <strong>2. PATIENT VISITS HOSPITAL</strong>
+            <pre>
+Treatment Cost:         $325.00
+Services:
+  - Consultation        $50.00 × 1
+  - X-Ray               $75.00 × 1
+  - Blood Test          $100.00 × 2
+
+AUTOMATIC DEDUCTION:
+Family Balance:         $5,000 → $4,675 (-$325)
+Claim Status:           PENDING (yellow badge)
+Hospital Provided:      $325 worth of service
+Insurance Owes:         +$325
+            </pre>
+        </div>
+        
+        <div class="arrow">⬇️</div>
+        
+        <div class="step">
+            <strong>3. INSURANCE ADDS DEPOSIT</strong>
+            <pre>
+Superadmin Action:      Add $5,000 deposit
+Hospital Balance:       $0 → $5,000 (+$5,000)
+Insurance Owes:         Still $325 (claim not marked paid yet)
+            </pre>
+        </div>
+        
+        <div class="arrow">⬇️</div>
+        
+        <div class="step">
+            <strong>4. SUPERADMIN MARKS CLAIM AS PAID</strong>
+            <pre>
+Click: Mark as Paid button
+Confirm: Deduct $325 from hospital
+
+AUTOMATIC PROCESSING:
+Hospital Balance:       $5,000 → $4,675 (-$325)
+Claim Status:           PENDING → PAID (green badge)
+Insurance Owes:         $325 → $0 (settled)
+            </pre>
+        </div>
+        
+        <div class="arrow">⬇️</div>
+        
+        <div class="step" style="background: #d4edda;">
+            <strong>✅ FINAL STATE - TRANSACTION COMPLETE</strong>
+            <pre>
+Family Balance:         $4,675 (used $325 of allotment)
+Hospital Balance:       $4,675 (received payment)
+Insurance Owes:         $0 (fully settled)
+Claim Status:           PAID
+Transaction:            Complete ✅
+            </pre>
+        </div>
+    </div>
+    
+    <h2>Key Financial Principles</h2>
+    <ul>
+        <li><strong>Family Balance:</strong> Deducted immediately when service is provided</li>
+        <li><strong>Hospital Balance:</strong> Only increases when insurance adds deposits</li>
+        <li><strong>Outstanding Amount:</strong> Always shown in red with negative sign (-$)</li>
+        <li><strong>Color Coding:</strong> Green when insurance owes hospital, Red when balanced or hospital owes</li>
+    </ul>
+    
+    <div class="footer">Page 7</div>
+</div>
+
+<!-- PAGE 8: SPECIAL ACTIONS -->
+<div class="page">
+    <h1>⚙️ Special Actions & Features</h1>
+    
+    <h2>1. Void Claim (Superadmin Only)</h2>
+    <div class="workflow-step">
+        <p><strong>When to use:</strong> Claim needs to be cancelled (wrong patient, incorrect services, etc.)</p>
+        <p><strong>Process:</strong></p>
+        <ol>
+            <li>Find claim in claims list</li>
+            <li>Click red 🚫 void button</li>
+            <li>Confirm: "Are you sure you want to void this claim?"</li>
+        </ol>
+        
+        <p><strong>System Actions:</strong></p>
+        <ul>
+            <li>✅ Refund family: Add claim amount back to family balance</li>
+            <li>✅ Change status: PENDING → VOIDED</li>
+            <li>✅ Hospital gets nothing for this claim</li>
+            <li>✅ Update outstanding balance</li>
+        </ul>
+        
+        <div class="highlight-box">
+            <strong>Example:</strong><br/>
+            Void CLAIM-ABC123 ($325)<br/>
+            Family balance: $4,675 → $5,000 (refunded)<br/>
+            Claim status: <span class="status-badge status-voided">VOIDED</span>
+        </div>
+    </div>
+    
+    <h2>2. Edit Claim (Hospital Admin via Admin Panel)</h2>
+    <div class="workflow-step">
+        <p><strong>When to use:</strong> Need to correct claim details before payment</p>
+        <p><strong>Process:</strong></p>
+        <ol>
+            <li>Go to Admin Panel → Claims tab</li>
+            <li>Find claim and click edit button</li>
+            <li>Change patient, services, or quantities</li>
+            <li>Submit changes</li>
+        </ol>
+        
+        <p><strong>System Actions:</strong></p>
+        <ul>
+            <li>✅ Refund original family</li>
+            <li>✅ Charge new family (if patient changed)</li>
+            <li>✅ Recalculate total amount</li>
+            <li>✅ Validate sufficient balance</li>
+            <li>✅ Update claim details</li>
+        </ul>
+    </div>
+    
+    <h2>3. Suspend Family/Member (Superadmin Only)</h2>
+    <div class="workflow-step">
+        <p><strong>When to use:</strong> Family stops paying insurance premiums or policy expires</p>
+        <p><strong>Effects of Suspension:</strong></p>
+        <ul>
+            <li>❌ Hidden from patient search (except for superadmin)</li>
+            <li>❌ Cannot create new claims</li>
+            <li>✅ Existing claims remain intact</li>
+            <li>✅ Data preserved for future reactivation</li>
+            <li>✅ Can be unsuspended at any time</li>
+        </ul>
+    </div>
+    
+    <h2>4. Bulk Family Upload (Hospital Admin)</h2>
+    <div class="workflow-step">
+        <p><strong>Feature:</strong> Upload hundreds of families at once via CSV file</p>
+        <p><strong>Process:</strong></p>
+        <ol>
+            <li>Go to Admin Panel</li>
+            <li>Click "Add Family (Bulk)" button</li>
+            <li>Download CSV template</li>
+            <li>Fill in family data</li>
+            <li>Upload file</li>
+            <li>System validates and imports all families</li>
+        </ol>
+        
+        <p><strong>Benefits:</strong></p>
+        <ul>
+            <li>Save hours of manual data entry</li>
+            <li>Import from existing Excel/database</li>
+            <li>Automatic validation of all data</li>
+            <li>Detailed error reporting</li>
+        </ul>
+    </div>
+    
+    <div class="footer">Page 8</div>
+</div>
+
+<!-- PAGE 9: SECURITY MATRIX -->
+<div class="page">
+    <h1>🔐 Security & Access Control Matrix</h1>
+    
+    <table style="font-size: 11px;">
+        <tr>
+            <th>Feature / Action</th>
+            <th>Superadmin</th>
+            <th>Hospital Admin</th>
+            <th>Finance</th>
+            <th>Reception</th>
+        </tr>
+        <tr>
+            <td><strong>Hospital Management</strong></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>View all hospitals</td>
+            <td class="checkmark">✅</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+        </tr>
+        <tr>
+            <td>Create/Edit hospitals</td>
+            <td class="checkmark">✅</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+        </tr>
+        <tr>
+            <td>Add deposits to hospitals</td>
+            <td class="checkmark">✅</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+        </tr>
+        <tr>
+            <td><strong>Family Management</strong></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Create/Edit families</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+        </tr>
+        <tr>
+            <td>Bulk upload families (CSV)</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+        </tr>
+        <tr>
+            <td>Suspend/Unsuspend families</td>
+            <td class="checkmark">✅</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+        </tr>
+        <tr>
+            <td><strong>Member Management</strong></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Add/Edit members</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+        </tr>
+        <tr>
+            <td>Suspend/Unsuspend members</td>
+            <td class="checkmark">✅</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+        </tr>
+        <tr>
+            <td><strong>Price List Management</strong></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Create/Edit price items</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+        </tr>
+        <tr>
+            <td><strong>Claim Operations</strong></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Search patients</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
+        </tr>
+        <tr>
+            <td>Submit claims</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
+        </tr>
+        <tr>
+            <td>View claims</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
+            <td class="crossmark">❌</td>
+        </tr>
+        <tr>
+            <td>Edit claims</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+        </tr>
+        <tr>
+            <td>Mark claim as PAID</td>
+            <td class="checkmark">✅</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+        </tr>
+        <tr>
+            <td>Void claim</td>
+            <td class="checkmark">✅</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+        </tr>
+        <tr>
+            <td>Print claim receipt</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
+        </tr>
+        <tr>
+            <td><strong>Financial Reports</strong></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>View financial dashboard</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
+            <td class="checkmark">✅</td>
+            <td class="crossmark">❌</td>
+        </tr>
+        <tr>
+            <td>View all hospital statistics</td>
+            <td class="checkmark">✅</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+            <td class="crossmark">❌</td>
+        </tr>
+    </table>
+    
+    <div class="highlight-box" style="margin-top: 30px;">
+        <h3>Security Highlights</h3>
+        <ul>
+            <li><strong>Role-Based Access Control (RBAC):</strong> Each user only sees and can do what their role allows</li>
+            <li><strong>Hospital Isolation:</strong> Regular users can only access their own hospital's data</li>
+            <li><strong>Financial Controls:</strong> Only superadmin can mark claims as paid or void them</li>
+            <li><strong>Audit Trail:</strong> All actions are logged with timestamps and user information</li>
+        </ul>
+    </div>
+    
+    <div class="footer">Page 9</div>
+</div>
+
+<!-- PAGE 10: CLAIM STATUS REFERENCE -->
+<div class="page">
+    <h1>📊 Claim Status Reference Guide</h1>
+    
+    <h2>Status Badges & Meanings</h2>
+    
+    <div class="role-card">
+        <h3><span class="status-badge status-pending">PENDING</span></h3>
+        <p><strong>Color:</strong> Yellow badge with amber/orange text</p>
+        <p><strong>Meaning:</strong> Service has been provided to patient, waiting for insurance payment to hospital</p>
+        <p><strong>Financial Impact:</strong></p>
+        <ul>
+            <li>✅ Family balance already deducted</li>
+            <li>⏳ Hospital waiting for payment</li>
+            <li>📊 Appears in "Outstanding Claims"</li>
+            <li>❌ Insurance owes hospital this amount</li>
+        </ul>
+        <p><strong>Available Actions:</strong></p>
+        <ul>
+            <li>🖨️ Print receipt</li>
+            <li>✅ Mark as Paid (superadmin only)</li>
+            <li>🚫 Void (superadmin only)</li>
+        </ul>
+    </div>
+    
+    <div class="role-card">
+        <h3><span class="status-badge status-paid">PAID</span></h3>
+        <p><strong>Color:</strong> Green badge with dark green text</p>
+        <p><strong>Meaning:</strong> Insurance has paid the hospital for this claim - transaction complete</p>
+        <p><strong>Financial Impact:</strong></p>
+        <ul>
+            <li>✅ Family balance deducted (done at claim creation)</li>
+            <li>✅ Hospital deposit balance deducted (claim amount)</li>
+            <li>✅ Outstanding balance cleared</li>
+            <li>✅ Transaction fully settled</li>
+        </ul>
+        <p><strong>Available Actions:</strong></p>
+        <ul>
+            <li>🖨️ Print receipt</li>
+            <li>❌ Cannot be modified or voided</li>
+        </ul>
+    </div>
+    
+    <div class="role-card">
+        <h3><span class="status-badge status-voided">VOIDED</span></h3>
+        <p><strong>Color:</strong> Red badge with dark red text</p>
+        <p><strong>Meaning:</strong> Claim has been cancelled/rejected - no payment will be made</p>
+        <p><strong>Financial Impact:</strong></p>
+        <ul>
+            <li>✅ Family balance refunded (amount added back)</li>
+            <li>❌ Hospital receives nothing</li>
+            <li>❌ Not counted in outstanding claims</li>
+            <li>📝 Kept for historical records</li>
+        </ul>
+        <p><strong>Available Actions:</strong></p>
+        <ul>
+            <li>🖨️ Print receipt (for records)</li>
+            <li>❌ Cannot be reactivated</li>
+        </ul>
+        <p><strong>Common Reasons for Voiding:</strong></p>
+        <ul>
+            <li>Wrong patient selected</li>
+            <li>Incorrect services/amounts</li>
+            <li>Duplicate claim</li>
+            <li>Service not actually provided</li>
+            <li>Insurance denial</li>
+        </ul>
+    </div>
+    
+    <h2>Status Transition Flow</h2>
+    <div class="money-flow">
+<pre>
+NEW CLAIM SUBMITTED
+        ↓
+    [PENDING] ⏳
+        ↓
+        ├── Superadmin marks as paid → [PAID] ✅
+        │                                  ↓
+        │                           (End State - Complete)
+        │
+        └── Superadmin voids → [VOIDED] ❌
+                                   ↓
+                            (End State - Cancelled)
+</pre>
+    </div>
+    
+    <div class="highlight-box">
+        <h3>Important Notes</h3>
+        <ul>
+            <li>All claims start as <span class="status-badge status-pending">PENDING</span></li>
+            <li>Only <span class="status-badge status-pending">PENDING</span> claims can be marked as paid or voided</li>
+            <li><span class="status-badge status-paid">PAID</span> and <span class="status-badge status-voided">VOIDED</span> are permanent end states</li>
+            <li>Only superadmin can change claim status</li>
+        </ul>
+    </div>
+    
+    <div class="footer">Page 10</div>
+</div>
+
+<!-- PAGE 11: BENEFITS & CONCLUSION -->
+<div class="page">
+    <h1>✨ System Benefits & Advantages</h1>
+    
+    <h2>For Insurance Companies</h2>
+    <ul>
+        <li>📊 <strong>Complete Visibility:</strong> See all claims across all hospitals in real-time</li>
+        <li>💰 <strong>Financial Control:</strong> Track deposits and outstanding payments accurately</li>
+        <li>🎯 <strong>Fraud Prevention:</strong> Verify all claims before payment</li>
+        <li>📈 <strong>Analytics:</strong> Monitor claim patterns and hospital performance</li>
+        <li>⚡ <strong>Fast Settlement:</strong> Mark claims as paid with one click</li>
+        <li>🔒 <strong>Audit Trail:</strong> Complete history of all transactions</li>
+    </ul>
+    
+    <h2>For Hospitals</h2>
+    <ul>
+        <li>💼 <strong>Efficient Operations:</strong> Streamlined claim submission process</li>
+        <li>📱 <strong>Real-Time Balance:</strong> Know exactly what insurance owes</li>
+        <li>👨‍👩‍👧‍👦 <strong>Patient Management:</strong> Quick patient search and service history</li>
+        <li>📋 <strong>Price List Control:</strong> Maintain your own service prices</li>
+        <li>📊 <strong>Financial Dashboard:</strong> Clear view of pending vs. paid claims</li>
+        <li>⚙️ <strong>Bulk Operations:</strong> CSV upload for hundreds of families at once</li>
+    </ul>
+    
+    <h2>For Patients/Families</h2>
+    <ul>
+        <li>💳 <strong>Balance Tracking:</strong> Always know remaining coverage</li>
+        <li>🏥 <strong>Multi-Hospital Coverage:</strong> Use insurance at any enrolled hospital</li>
+        <li>👨‍👩‍👧 <strong>Family Coverage:</strong> All members covered under one account</li>
+        <li>📄 <strong>Claim History:</strong> Complete record of all medical services</li>
+        <li>⚡ <strong>Instant Processing:</strong> No waiting for claim approval</li>
+    </ul>
+    
+    <h2>Key System Features</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div class="role-card">
+            <h3>🚀 Performance</h3>
+            <ul>
+                <li>Real-time updates</li>
+                <li>Fast search results</li>
+                <li>Instant calculations</li>
+                <li>No delays or lag</li>
+            </ul>
+        </div>
+        
+        <div class="role-card">
+            <h3>🔐 Security</h3>
+            <ul>
+                <li>Role-based access</li>
+                <li>Encrypted passwords</li>
+                <li>JWT authentication</li>
+                <li>Audit logging</li>
+            </ul>
+        </div>
+        
+        <div class="role-card">
+            <h3>💻 User Experience</h3>
+            <ul>
+                <li>Clean, modern interface</li>
+                <li>Color-coded statuses</li>
+                <li>Intuitive workflows</li>
+                <li>Responsive design</li>
+            </ul>
+        </div>
+        
+        <div class="role-card">
+            <h3>📊 Reporting</h3>
+            <ul>
+                <li>Financial dashboards</li>
+                <li>Outstanding claims</li>
+                <li>Payment tracking</li>
+                <li>Printable receipts</li>
+            </ul>
+        </div>
+    </div>
+    
+    <h2 style="margin-top: 40px;">Conclusion</h2>
+    <div class="highlight-box">
+        <p style="font-size: 18px; line-height: 1.8;">
+            This <strong>Medical Insurance Claims Management System</strong> provides a complete, 
+            end-to-end solution for managing the complex relationships between insurance companies, 
+            hospitals, and patients. With role-based access control, real-time financial tracking, 
+            and automated workflows, the system ensures <strong>transparency</strong>, 
+            <strong>accuracy</strong>, and <strong>efficiency</strong> in medical claims processing.
+        </p>
+        
+        <p style="font-size: 18px; line-height: 1.8; margin-top: 20px;">
+            From patient registration to final payment settlement, every step is tracked, validated, 
+            and secured, making it the ideal platform for modern healthcare insurance management.
+        </p>
+    </div>
+    
+    <div style="text-align: center; margin-top: 60px; padding: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; color: white;">
+        <h2 style="color: white; border: none; margin: 0;">🏥 Medical Insurance Claims Management System</h2>
+        <p style="font-size: 18px; margin-top: 15px;">Streamlining Healthcare Financial Operations</p>
+    </div>
+    
+    <div class="footer">Page 11</div>
+</div>
+
+</body>
+</html>
