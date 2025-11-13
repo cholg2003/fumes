@@ -1535,10 +1535,10 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                         <td className="p-3 text-sm text-right font-medium">${claim.total_claim_amount.toFixed(2)}</td>
                         <td className="p-3 text-center">
                           <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            claim.status === 'COMPLETED' 
-                              ? 'bg-green-100 text-green-800' 
+                            claim.status === 'PENDING' 
+                              ? 'bg-yellow-100 text-yellow-800' 
                               : claim.status === 'PAID'
-                              ? 'bg-blue-100 text-blue-800'
+                              ? 'bg-green-100 text-green-800'
                               : 'bg-red-100 text-red-800'
                           }`}>
                             {claim.status}
