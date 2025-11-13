@@ -793,6 +793,10 @@ async def get_all_families(admin_user: dict = Depends(get_admin_user)):
 
 @api_router.post("/admin/families")
 async def create_family(family: FamilyCreate, admin_user: dict = Depends(get_admin_user)):
+    # Only superadmin can create families
+    if admin_user["username"] != "superadmin":
+        raise HTTPException(status_code=403, detail="Only superadmin can create families")
+    
     # Check if family_id already exists
     existing = await db.families.find_one({"family_id": family.family_id})
     if existing:
