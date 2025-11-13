@@ -438,11 +438,12 @@ SEC-2414, Mary Johnson, 7500.00, 7500.00</pre>
     
     <div class="workflow-step">
         <h3><span class="step-number">4</span>Create Price List</h3>
-        <p><strong>Who:</strong> Hospital Admin</p>
+        <p><strong>Who:</strong> Superadmin Only</p>
         <ul>
             <li>Define all medical services and procedures</li>
             <li>Set item ID, name, type, and cost</li>
-            <li>Each hospital maintains their own price list</li>
+            <li>Each hospital has their own price list</li>
+            <li>Hospital Admin can view but not modify price lists</li>
         </ul>
         <p><strong>Example Price List:</strong></p>
         <table>
@@ -467,6 +468,7 @@ SEC-2414, Mary Johnson, 7500.00, 7500.00</pre>
                 <td>$100.00</td>
             </tr>
         </table>
+        <p style="color: #dc3545; font-size: 14px; margin-top: 10px;"><strong>Access Control:</strong> Only Superadmin can create/edit price lists. This ensures price consistency and prevents unauthorized modifications.</p>
     </div>
     
     <div class="footer">Page 3</div>
