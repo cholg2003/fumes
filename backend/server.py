@@ -849,6 +849,10 @@ async def delete_family(family_id: str, admin_user: dict = Depends(get_admin_use
 
 @api_router.post("/admin/families/bulk")
 async def create_family_with_members(family_data: FamilyWithMembers, admin_user: dict = Depends(get_admin_user)):
+    # Only superadmin can bulk create families
+    if admin_user["username"] != "superadmin":
+        raise HTTPException(status_code=403, detail="Only superadmin can create families")
+    
     # Check if family_id already exists
     existing = await db.families.find_one({"family_id": family_data.family_id})
     if existing:
