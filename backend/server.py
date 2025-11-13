@@ -662,12 +662,12 @@ async def update_claim(claim_id: str, claim_submission: ClaimSubmission, admin_u
     # Check if new family has sufficient balance
     # If same family, add back the refunded amount for the check
     available_balance = new_family["remaining_balance"]
-    if original_claim["family_id"] == new_family["family_id"] and original_claim["status"] == "COMPLETED":
+    if original_claim["family_id"] == new_family["family_id"] and original_claim["status"] == "PENDING":
         available_balance += original_claim["total_claim_amount"]
     
     if new_total > available_balance:
         # Rollback the refund
-        if original_claim["status"] == "COMPLETED":
+        if original_claim["status"] == "PENDING":
             await db.families.update_one(
                 {"family_id": original_claim["family_id"]},
                 {"$inc": {"remaining_balance": -original_claim["total_claim_amount"]}}
