@@ -525,6 +525,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
       setClaimForm({
         claim_id: claim.claim_id,
         patient_serial_number: response.data.header.patient_serial_number,
+        status: response.data.header.status || 'PENDING',  // Include current status
         claim_items: response.data.details.map(item => ({
           item_id: item.item_id,
           item_name: item.item_name,
