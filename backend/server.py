@@ -1041,6 +1041,10 @@ async def get_all_pricelists(admin_user: dict = Depends(get_admin_user)):
 
 @api_router.post("/admin/pricelists")
 async def create_pricelist_item(item: PriceListCreate, admin_user: dict = Depends(get_admin_user)):
+    # Only superadmin can create price list items
+    if admin_user["username"] != "superadmin":
+        raise HTTPException(status_code=403, detail="Only superadmin can create price list items")
+    
     # Check if item_id already exists for this hospital
     existing = await db.pricelists.find_one({
         "hospital_name": item.hospital_name,
