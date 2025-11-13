@@ -397,8 +397,8 @@ const Dashboard = () => {
                     <h3 className="font-semibold text-gray-800 mb-3">{hospital}</h3>
                     <div className="space-y-3">
                       <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600">Completed Claims:</span>
-                        <span className="text-sm font-medium text-blue-600">{stats.completed_count} (${stats.total_completed.toFixed(2)})</span>
+                        <span className="text-sm text-gray-600">Pending Claims:</span>
+                        <span className="text-sm font-medium text-blue-600">{stats.pending_count} (${stats.total_pending.toFixed(2)})</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600">Paid Claims:</span>
