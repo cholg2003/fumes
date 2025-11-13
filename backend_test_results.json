@@ -1,8 +1,8 @@
 {
-  "timestamp": "2025-11-13T17:04:10.505764",
-  "total_tests": 104,
-  "passed_tests": 75,
-  "success_rate": 72.11538461538461,
+  "timestamp": "2025-11-13T18:21:02.276967",
+  "total_tests": 134,
+  "passed_tests": 106,
+  "success_rate": 79.1044776119403,
   "results": [
     {
       "test": "Login - superadmin",
@@ -16,8 +16,8 @@
     },
     {
       "test": "Superadmin - Update Family",
-      "success": false,
-      "details": "Exception: cannot access local variable 'response' where it is not associated with a value"
+      "success": true,
+      "details": "Status: 200"
     },
     {
       "test": "Superadmin - Create Member",
@@ -26,8 +26,8 @@
     },
     {
       "test": "Superadmin - Update Member",
-      "success": false,
-      "details": "Exception: cannot access local variable 'response' where it is not associated with a value"
+      "success": true,
+      "details": "Status: 200"
     },
     {
       "test": "Superadmin - Create Price List Item",
@@ -36,8 +36,8 @@
     },
     {
       "test": "Superadmin - Update Price List Item",
-      "success": false,
-      "details": "Exception: cannot access local variable 'response' where it is not associated with a value"
+      "success": true,
+      "details": "Status: 200"
     },
     {
       "test": "Superadmin - Bulk Create Family with Members",
@@ -50,12 +50,7 @@
       "details": "Status: 200"
     },
     {
-      "test": "Login - mercy_admin",
-      "success": false,
-      "details": "Status: 401 (Expected: 200) - Invalid username or password"
-    },
-    {
-      "test": "Login - general_clerk",
+      "test": "Login - test_hospital_admin",
       "success": false,
       "details": "Status: 401 (Expected: 200) - Invalid username or password"
     },
@@ -272,7 +267,7 @@
     {
       "test": "Calculation Verification - System Administration Paid Amount",
       "success": true,
-      "details": "$865.0"
+      "details": "$1095.0"
     },
     {
       "test": "Calculation Verification - System Administration Completed Count",
@@ -282,7 +277,7 @@
     {
       "test": "Calculation Verification - System Administration Paid Count",
       "success": true,
-      "details": "13"
+      "details": "15"
     },
     {
       "test": "Login - superadmin",
@@ -387,7 +382,7 @@
     {
       "test": "Hospital Balance Deduction Verification",
       "success": false,
-      "details": "Balance not deducted properly. Initial: $6685.00, Final: $6685.00"
+      "details": "Balance not deducted properly. Initial: $7955.00, Final: $7955.00"
     },
     {
       "test": "Login - superadmin",
@@ -487,7 +482,7 @@
     {
       "test": "Family Status Field Verification",
       "success": false,
-      "details": "Only 7/10 families have status field"
+      "details": "Only 10/13 families have status field"
     },
     {
       "test": "Verify Member Status Fields",
@@ -497,7 +492,162 @@
     {
       "test": "Member Status Field Verification",
       "success": false,
-      "details": "Only 16/26 members have status field"
+      "details": "Only 19/29 members have status field"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Add Hospital Deposit for Status Testing",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Initial Hospital Balance",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Patient for Status Testing",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Price List for Status Testing",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Create Test Claim for Status Editing",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Edit Claim Status - PENDING to VOIDED",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Verify Family Balance After VOIDED",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "PENDING\u2192VOIDED Balance Adjustment",
+      "success": true,
+      "details": "Family balance refunded: $855.00"
+    },
+    {
+      "test": "Edit Claim Status - VOIDED to PENDING",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Verify Family Balance After PENDING",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "VOIDED\u2192PENDING Balance Adjustment",
+      "success": true,
+      "details": "Family balance deducted: $805.00"
+    },
+    {
+      "test": "Edit Claim Status - PENDING to PAID",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Verify Hospital Balance After PAID",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "PENDING\u2192PAID Balance Adjustment",
+      "success": true,
+      "details": "Hospital balance deducted: $9905.00"
+    },
+    {
+      "test": "Edit Claim Status - PAID to VOIDED",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Verify Family Balance After PAID\u2192VOIDED",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Verify Hospital Balance After PAID\u2192VOIDED",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "PAID\u2192VOIDED Family Balance Refund",
+      "success": false,
+      "details": "Expected: $855.00, Got: $805.00"
+    },
+    {
+      "test": "PAID\u2192VOIDED Hospital Balance Refund",
+      "success": true,
+      "details": "Hospital balance refunded: $9955.00"
+    },
+    {
+      "test": "Edit Claim Status - VOIDED to PAID",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Verify Family Balance After VOIDED\u2192PAID",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Verify Hospital Balance After VOIDED\u2192PAID",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "VOIDED\u2192PAID Family Balance Deduction",
+      "success": false,
+      "details": "Expected: $805.00, Got: $755.00"
+    },
+    {
+      "test": "VOIDED\u2192PAID Hospital Balance Deduction",
+      "success": true,
+      "details": "Hospital balance deducted: $9905.00"
+    },
+    {
+      "test": "Login - mercy_admin",
+      "success": false,
+      "details": "Status: 401 (Expected: 200) - Invalid username or password"
+    },
+    {
+      "test": "Login - superadmin",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Get Current Patient Balance for High Amount Test",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Edit Claim with Multiple Items",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Edit Claim with Invalid Status (Should Fail)",
+      "success": true,
+      "details": "Status: 400"
+    },
+    {
+      "test": "Edit Non-existent Claim (Should Fail)",
+      "success": true,
+      "details": "Status: 404"
     },
     {
       "test": "Login - general_clerk",
