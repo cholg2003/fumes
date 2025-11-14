@@ -276,6 +276,19 @@ const Dashboard = () => {
     }
   };
 
+  // Pagination helpers
+  const paginate = (array, page) => {
+    const startIndex = (page - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    return array.slice(startIndex, endIndex);
+  };
+
+  const getTotalPages = (arrayLength) => {
+    return Math.ceil(arrayLength / ITEMS_PER_PAGE);
+  };
+
+  const paginatedClaims = paginate(claims, claimPage);
+
   const handleMarkAsPaid = async (claimId, claimAmount) => {
     if (!window.confirm(`Mark this claim as paid? This will deduct $${claimAmount.toFixed(2)} from your hospital balance.`)) {
       return;
