@@ -1646,6 +1646,144 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
             </Card>
           </TabsContent>
 
+          {/* Currencies Tab - Superadmin Only */}
+          {isSuperAdmin && (
+          <TabsContent value="currencies">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle>Currency Management</CardTitle>
+                <Dialog open={currencyDialog} onOpenChange={setCurrencyDialog}>
+                  <DialogTrigger asChild>
+                    <Button onClick={() => { setEditMode({ type: '', data: null }); setCurrencyForm({ code: '', name: '', symbol: '', rate_to_usd: '', decimal_places: 2 }); }}>
+                      <Plus className="w-4 h-4 mr-2" />Add Currency
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>{editMode.type === 'currency' ? 'Edit Currency' : 'Add Currency'}</DialogTitle>
+                    </DialogHeader>
+                    <form onSubmit={handleCurrencySubmit} className="space-y-4">
+                      <div>
+                        <Label>Currency Code (e.g., USD, KSH, EUR)</Label>
+                        <Input 
+                          value={currencyForm.code} 
+                          onChange={(e) => setCurrencyForm({...currencyForm, code: e.target.value.toUpperCase()})} 
+                          placeholder="USD" 
+                          maxLength={3}
+                          required 
+                          disabled={editMode.type === 'currency'} 
+                        />
+                      </div>
+                      <div>
+                        <Label>Currency Name</Label>
+                        <Input 
+                          value={currencyForm.name} 
+                          onChange={(e) => setCurrencyForm({...currencyForm, name: e.target.value})} 
+                          placeholder="US Dollar"
+                          required 
+                        />
+                      </div>
+                      <div>
+                        <Label>Currency Symbol</Label>
+                        <Input 
+                          value={currencyForm.symbol} 
+                          onChange={(e) => setCurrencyForm({...currencyForm, symbol: e.target.value})} 
+                          placeholder="$"
+                          required 
+                        />
+                      </div>
+                      <div>
+                        <Label>Exchange Rate to USD</Label>
+                        <Input 
+                          type="number" 
+                          step="0.0001" 
+                          min="0.0001"
+                          value={currencyForm.rate_to_usd} 
+                          onChange={(e) => setCurrencyForm({...currencyForm, rate_to_usd: e.target.value})} 
+                          placeholder="1.0000"
+                          required 
+                        />
+                        <p className="text-xs text-gray-500 mt-1">1 {currencyForm.code || 'XXX'} = {currencyForm.rate_to_usd || '?'} USD</p>
+                      </div>
+                      <div>
+                        <Label>Decimal Places</Label>
+                        <Input 
+                          type="number" 
+                          min="0" 
+                          max="4"
+                          value={currencyForm.decimal_places} 
+                          onChange={(e) => setCurrencyForm({...currencyForm, decimal_places: e.target.value})} 
+                          required 
+                        />
+                      </div>
+                      <Button type="submit" disabled={loading} className="w-full">
+                        {loading ? 'Saving...' : editMode.type === 'currency' ? 'Update' : 'Create'}
+                      </Button>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+              </CardHeader>
+              <CardContent>
+                <div className="mb-4 bg-blue-50 border border-blue-200 p-3 rounded-lg">
+                  <p className="text-sm text-blue-800">
+                    <strong>Note:</strong> USD is the base currency. All exchange rates are defined relative to USD. You cannot delete USD.
+                  </p>
+                </div>
+                <table className="w-full">
+                  <thead className="bg-gray-100">
+                    <tr>
+                      <th className="text-left p-3 text-sm font-semibold">Code</th>
+                      <th className="text-left p-3 text-sm font-semibold">Name</th>
+                      <th className="text-left p-3 text-sm font-semibold">Symbol</th>
+                      <th className="text-right p-3 text-sm font-semibold">Rate to USD</th>
+                      <th className="text-center p-3 text-sm font-semibold">Decimal Places</th>
+                      <th className="text-center p-3 text-sm font-semibold">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currencies.map((currency) => (
+                      <tr key={currency.code} className="border-b hover:bg-gray-50">
+                        <td className="p-3 text-sm font-medium">{currency.code}</td>
+                        <td className="p-3 text-sm">{currency.name}</td>
+                        <td className="p-3 text-sm">{currency.symbol}</td>
+                        <td className="p-3 text-sm text-right">{currency.rate_to_usd.toFixed(4)}</td>
+                        <td className="p-3 text-sm text-center">{currency.decimal_places}</td>
+                        <td className="p-3 text-center">
+                          <div className="flex justify-center gap-2">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              onClick={() => openEditDialog('currency', currency)}
+                            >
+                              <Edit className="w-4 h-4 text-blue-600" />
+                            </Button>
+                            {currency.code !== 'USD' && (
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                onClick={() => handleCurrencyDelete(currency.code)} 
+                                className="text-red-600"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {currencies.length === 0 && (
+                  <div className="text-center py-8 text-gray-500">
+                    <DollarSign className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                    <p>No currencies found. Add your first currency.</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+          )}
+
           {/* Documentation Tab */}
           <TabsContent value="documentation">
             <Card>
