@@ -88,6 +88,17 @@ const AdminCRUD = () => {
   const [currencyPage, setCurrencyPage] = useState(1);
   const ITEMS_PER_PAGE = 20;
 
+  // Bulk selection states
+  const [selectedHospitals, setSelectedHospitals] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [selectedFamilies, setSelectedFamilies] = useState([]);
+  const [selectedMembers, setSelectedMembers] = useState([]);
+  const [selectedPricelists, setSelectedPricelists] = useState([]);
+  const [selectedClaims, setSelectedClaims] = useState([]);
+  const [selectedCurrencies, setSelectedCurrencies] = useState([]);
+  const [bulkStatusDialog, setBulkStatusDialog] = useState(false);
+  const [bulkStatus, setBulkStatus] = useState('');
+
   const token = localStorage.getItem('token');
   const role = localStorage.getItem('role');
   const username = localStorage.getItem('username');
