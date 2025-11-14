@@ -1497,7 +1497,6 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                                   {h.hospital_name} ({currency?.symbol || '$'} {currency?.code || 'USD'})
                                 </SelectItem>
                             ))}
-                            })}
                           </SelectContent>
                         </Select>
                         {pricelistForm.hospital_name && (
