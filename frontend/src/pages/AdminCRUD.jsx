@@ -25,6 +25,8 @@ const AdminCRUD = () => {
   const [members, setMembers] = useState([]);
   const [pricelists, setPricelists] = useState([]);
   const [claims, setClaims] = useState([]);
+  const [currencies, setCurrencies] = useState([]);
+
   const [loading, setLoading] = useState(false);
 
   // Dialog states
