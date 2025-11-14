@@ -22,6 +22,7 @@ const Admin = () => {
   const [members, setMembers] = useState([]);
   const [pricelists, setPricelists] = useState([]);
   const [hospitals, setHospitals] = useState([]);
+  const [currencies, setCurrencies] = useState({});
   const [loading, setLoading] = useState(false);
 
   // Bulk family form (family + multiple members)
