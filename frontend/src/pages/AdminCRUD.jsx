@@ -642,6 +642,52 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
     }
   };
 
+  // Currency CRUD
+  const handleCurrencySubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const currencyData = {
+        code: currencyForm.code.toUpperCase(),
+        name: currencyForm.name,
+        symbol: currencyForm.symbol,
+        rate_to_usd: parseFloat(currencyForm.rate_to_usd),
+        decimal_places: parseInt(currencyForm.decimal_places)
+      };
+
+      if (editMode.type === 'currency') {
+        await axios.put(`${API}/admin/currencies/${editMode.data.code}`, currencyData, axiosConfig);
+        toast.success('Currency updated successfully');
+      } else {
+        await axios.post(`${API}/admin/currencies`, currencyData, axiosConfig);
+        toast.success('Currency created successfully');
+      }
+      setCurrencyDialog(false);
+      setCurrencyForm({ code: '', name: '', symbol: '', rate_to_usd: '', decimal_places: 2 });
+      setEditMode({ type: '', data: null });
+      loadData();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Operation failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCurrencyDelete = async (code) => {
+    if (code === 'USD') {
+      toast.error('Cannot delete USD - it is the base currency');
+      return;
+    }
+    if (!window.confirm(`Delete currency "${code}"? This will fail if any hospital is using this currency.`)) return;
+    try {
+      await axios.delete(`${API}/admin/currencies/${code}`, axiosConfig);
+      toast.success('Currency deleted successfully');
+      loadData();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Failed to delete currency');
+    }
+  };
+
   // Bill delete
   const handleClaimDelete = async (claimId) => {
     if (!window.confirm(`Delete claim "${claimId}"? This will refund the amount if the claim was pending.`)) return;
