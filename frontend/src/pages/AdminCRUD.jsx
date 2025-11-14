@@ -924,6 +924,13 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                     })}
                   </tbody>
                 </table>
+                {filteredHospitals.length > ITEMS_PER_PAGE && (
+                  <Pagination
+                    currentPage={hospitalPage}
+                    totalPages={getTotalPages(filteredHospitals.length)}
+                    onPageChange={setHospitalPage}
+                  />
+                )}
               </CardContent>
             </Card>
           </TabsContent>
