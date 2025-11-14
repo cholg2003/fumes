@@ -220,6 +220,26 @@ const AdminCRUD = () => {
     c.name.toLowerCase().includes(currencySearch.toLowerCase())
   );
 
+  // Pagination helpers
+  const paginate = (array, page) => {
+    const startIndex = (page - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    return array.slice(startIndex, endIndex);
+  };
+
+  const getTotalPages = (arrayLength) => {
+    return Math.ceil(arrayLength / ITEMS_PER_PAGE);
+  };
+
+  // Paginated data
+  const paginatedHospitals = paginate(filteredHospitals, hospitalPage);
+  const paginatedUsers = paginate(filteredUsers, userPage);
+  const paginatedFamilies = paginate(filteredFamilies, familyPage);
+  const paginatedMembers = paginate(filteredMembers, memberPage);
+  const paginatedPricelists = paginate(filteredPricelists, pricelistPage);
+  const paginatedClaims = paginate(filteredClaims, claimPage);
+  const paginatedCurrencies = paginate(filteredCurrencies, currencyPage);
+
   const handleHospitalDelete = async (hospitalName) => {
     if (!window.confirm(`Delete hospital "${hospitalName}"? This will fail if the hospital has users or price lists.`)) return;
     try {
