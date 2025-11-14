@@ -1058,6 +1058,12 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                       const balance = hospital.deposit_balance || 0;
                       return (
                         <tr key={hospital.hospital_name} className="border-b hover:bg-gray-50">
+                          <td className="p-3 text-center">
+                            <Checkbox
+                              checked={selectedHospitals.includes(hospital.hospital_name)}
+                              onCheckedChange={() => toggleSelectItem(hospital.hospital_name, selectedHospitals, setSelectedHospitals)}
+                            />
+                          </td>
                           <td className="p-3 text-sm font-medium">{hospital.hospital_name}</td>
                           <td className="p-3 text-sm">{hospital.address}</td>
                           <td className="p-3 text-sm">{hospital.phone}</td>
