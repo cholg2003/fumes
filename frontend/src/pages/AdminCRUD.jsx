@@ -1468,7 +1468,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredMembers.map((member) => (
+                    {paginatedMembers.map((member) => (
                       <tr key={member.serial_number} className="border-b hover:bg-gray-50">
                         <td className="p-3 text-sm font-medium">{member.serial_number}</td>
                         <td className="p-3 text-sm">{member.first_name} {member.middle_name} {member.last_name}</td>
