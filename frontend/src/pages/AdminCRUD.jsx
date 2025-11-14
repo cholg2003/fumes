@@ -72,6 +72,7 @@ const AdminCRUD = () => {
   const [memberSearch, setMemberSearch] = useState('');
   const [pricelistSearch, setPricelistSearch] = useState('');
   const [claimSearch, setClaimSearch] = useState('');
+  const [currencySearch, setCurrencySearch] = useState('');
 
   // Edit states
   const [editMode, setEditMode] = useState({ type: '', data: null });
