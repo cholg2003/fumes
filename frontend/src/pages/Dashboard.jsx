@@ -721,7 +721,7 @@ const Dashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {claims.map((claim) => (
+                    {paginatedClaims.map((claim) => (
                       <tr key={claim.claim_id} className="border-b border-gray-100 hover:bg-gray-50">
                         <td className="p-3 text-sm font-medium text-gray-800">{claim.claim_id}</td>
                         <td className="p-3 text-sm text-gray-700">{claim.patient_name}</td>
