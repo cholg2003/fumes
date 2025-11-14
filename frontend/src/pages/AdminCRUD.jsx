@@ -807,6 +807,21 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                         <Label>Email</Label>
                         <Input type="email" value={hospitalForm.email} onChange={(e) => setHospitalForm({...hospitalForm, email: e.target.value})} />
                       </div>
+                      <div>
+                        <Label>Currency</Label>
+                        <Select value={hospitalForm.currency_code} onValueChange={(value) => setHospitalForm({...hospitalForm, currency_code: value})}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select currency" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {currencies.map(currency => (
+                              <SelectItem key={currency.code} value={currency.code}>
+                                {currency.code} - {currency.name} ({currency.symbol})
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
                       <Button type="submit" disabled={loading} className="w-full">
                         {loading ? 'Saving...' : editMode.type === 'hospital' ? 'Update' : 'Create'}
                       </Button>
