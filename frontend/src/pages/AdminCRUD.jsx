@@ -1848,9 +1848,31 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
           <TabsContent value="bills">
             <Card>
               <CardHeader>
-                <CardTitle>
-                  {isSuperAdmin ? 'All Claims (View & Delete)' : `${hospitalName} Claims (View & Delete)`}
-                </CardTitle>
+                <div className="flex items-center justify-between w-full">
+                  <CardTitle>
+                    {isSuperAdmin ? 'All Claims (View & Delete)' : `${hospitalName} Claims (View & Delete)`}
+                  </CardTitle>
+                  {selectedClaims.length > 0 && (
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => setBulkStatusDialog(true)}
+                      >
+                        <CheckCircle className="w-4 h-4 mr-2" />
+                        Change Status ({selectedClaims.length})
+                      </Button>
+                      <Button 
+                        variant="destructive" 
+                        size="sm"
+                        onClick={() => handleBulkDelete('claims', selectedClaims, setSelectedClaims, '/admin/claims', 'claim_id')}
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete {selectedClaims.length}
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="mb-4">
