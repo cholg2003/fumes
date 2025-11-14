@@ -52,7 +52,7 @@ const AdminCRUD = () => {
   const [uploadResult, setUploadResult] = useState(null);
 
   // Forms
-  const [hospitalForm, setHospitalForm] = useState({ hospital_name: '', address: '', phone: '', email: '' });
+  const [hospitalForm, setHospitalForm] = useState({ hospital_name: '', address: '', phone: '', email: '', currency_code: 'USD' });
   const [userForm, setUserForm] = useState({ username: '', hospital_name: '', role: 'Billing Clerk', temporary_password: '', first_login: true });
   const [familyForm, setFamilyForm] = useState({ family_id: '', principle_member_name: '', total_allotment: '', remaining_balance: '' });
   const [memberForm, setMemberForm] = useState({ serial_number: '', family_id: '', first_name: '', middle_name: '', last_name: '', dob: '', sex: 'Male', relationship: 'Principle' });
