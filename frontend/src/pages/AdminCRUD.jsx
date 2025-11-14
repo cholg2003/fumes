@@ -1303,7 +1303,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredFamilies.map((family) => (
+                    {paginatedFamilies.map((family) => (
                       <tr key={family.family_id} className="border-b hover:bg-gray-50">
                         <td className="p-3 text-sm font-medium">{family.family_id}</td>
                         <td className="p-3 text-sm">{family.principle_member_name}</td>
