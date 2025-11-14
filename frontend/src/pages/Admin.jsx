@@ -508,6 +508,7 @@ const Admin = () => {
                         <th className="text-left p-3 text-sm font-semibold text-gray-700">Item ID</th>
                         <th className="text-left p-3 text-sm font-semibold text-gray-700">Item Name</th>
                         <th className="text-left p-3 text-sm font-semibold text-gray-700">Type</th>
+                        <th className="text-center p-3 text-sm font-semibold text-gray-700">Currency</th>
                         <th className="text-right p-3 text-sm font-semibold text-gray-700">Cost</th>
                         <th className="text-center p-3 text-sm font-semibold text-gray-700">Action</th>
                       </tr>
