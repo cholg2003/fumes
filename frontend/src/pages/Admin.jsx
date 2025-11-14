@@ -66,17 +66,24 @@ const Admin = () => {
 
   const loadData = async () => {
     try {
-      const [familiesRes, membersRes, pricelistsRes, hospitalsRes] = await Promise.all([
+      const [familiesRes, membersRes, pricelistsRes, hospitalsRes, currenciesRes] = await Promise.all([
         axios.get(`${API}/admin/families`, axiosConfig),
         axios.get(`${API}/admin/members`, axiosConfig),
         axios.get(`${API}/admin/pricelists/all`, axiosConfig),
-        axios.get(`${API}/admin/hospitals`, axiosConfig)
+        axios.get(`${API}/admin/hospitals`, axiosConfig),
+        axios.get(`${API}/currencies`, axiosConfig)
       ]);
       setFamilies(familiesRes.data);
       setMembers(membersRes.data);
       setPricelists(pricelistsRes.data);
-      // Extract hospital names from hospital objects
-      setHospitals(hospitalsRes.data.map(h => h.hospital_name));
+      // Store full hospital objects to access currency_code
+      setHospitals(hospitalsRes.data);
+      // Store currencies for lookup
+      const currencyMap = {};
+      currenciesRes.data.forEach(c => {
+        currencyMap[c.code] = c;
+      });
+      setCurrencies(currencyMap);
     } catch (error) {
       toast.error('Failed to load data');
     }
