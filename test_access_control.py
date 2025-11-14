@@ -6,7 +6,7 @@ from datetime import datetime
 
 class AccessControlTester:
     def __init__(self):
-        self.base_url = "https://medfinanceflow.preview.emergentagent.com"
+        self.base_url = "https://global-currency-6.preview.emergentagent.com"
         self.api_url = f"{self.base_url}/api"
         self.tests_run = 0
         self.tests_passed = 0
