@@ -160,6 +160,20 @@ class BulkPriceList(BaseModel):
     hospital_name: str
     items: List[dict]  # List of {item_id, item_name, item_type, cost}
 
+
+class CurrencyCreate(BaseModel):
+    code: str  # USD, KSH, UGX, etc.
+    name: str  # US Dollar, Kenyan Shilling, etc.
+    symbol: str  # $, KSh, USh, etc.
+    rate_to_usd: float  # Exchange rate to USD (e.g., 150 KSH = 1 USD, so rate = 150)
+    decimal_places: int = 2  # Number of decimal places for display
+    
+class CurrencyUpdate(BaseModel):
+    name: Optional[str] = None
+    symbol: Optional[str] = None
+    rate_to_usd: Optional[float] = None
+    decimal_places: Optional[int] = None
+
 class HospitalCreate(BaseModel):
     hospital_name: str
     address: Optional[str] = ""
