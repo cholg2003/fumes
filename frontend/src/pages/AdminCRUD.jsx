@@ -1894,6 +1894,12 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                 <table className="w-full">
                   <thead className="bg-gray-100">
                     <tr>
+                      <th className="text-center p-3 text-sm font-semibold w-12">
+                        <Checkbox
+                          checked={selectedClaims.length === paginatedClaims.length && paginatedClaims.length > 0}
+                          onCheckedChange={() => toggleSelectAll(paginatedClaims, selectedClaims, setSelectedClaims, 'claim_id')}
+                        />
+                      </th>
                       <th className="text-left p-3 text-sm font-semibold">Claim ID</th>
                       <th className="text-left p-3 text-sm font-semibold">Hospital</th>
                       <th className="text-left p-3 text-sm font-semibold">Patient</th>
