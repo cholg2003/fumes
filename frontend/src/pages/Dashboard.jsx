@@ -780,6 +780,13 @@ const Dashboard = () => {
                 </table>
               </div>
             )}
+            {claims.length > ITEMS_PER_PAGE && (
+              <Pagination
+                currentPage={claimPage}
+                totalPages={getTotalPages(claims.length)}
+                onPageChange={setClaimPage}
+              />
+            )}
           </CardContent>
         </Card>
         )}
