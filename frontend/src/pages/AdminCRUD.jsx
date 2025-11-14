@@ -1633,7 +1633,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredPricelists.map((item, index) => {
+                    {paginatedPricelists.map((item, index) => {
                       const hospital = hospitals.find(h => h.hospital_name === item.hospital_name);
                       const currency = currencies.find(c => c.code === (hospital?.currency_code || 'USD'));
                       return (
