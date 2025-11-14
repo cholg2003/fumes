@@ -813,17 +813,19 @@ const Dashboard = () => {
                 </table>
                 </div>
                 {filteredClaims.length > ITEMS_PER_PAGE && (
-              <Pagination
-                currentPage={claimPage}
-                totalPages={getTotalPages(filteredClaims.length)}
-                onPageChange={setClaimPage}
-              />
-            )}
-            {claims.length > 0 && filteredClaims.length === 0 && (
-              <div className="text-center py-8 text-gray-500">
-                <FileText className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                <p>No claims found with status: {claimStatusFilter}</p>
-              </div>
+                  <Pagination
+                    currentPage={claimPage}
+                    totalPages={getTotalPages(filteredClaims.length)}
+                    onPageChange={setClaimPage}
+                  />
+                )}
+                {claims.length > 0 && filteredClaims.length === 0 && (
+                  <div className="text-center py-8 text-gray-500">
+                    <FileText className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                    <p>No claims found with status: {claimStatusFilter}</p>
+                  </div>
+                )}
+              </>
             )}
           </CardContent>
         </Card>
