@@ -36,6 +36,8 @@ const AdminCRUD = () => {
   const [bulkFamilyDialog, setBulkFamilyDialog] = useState(false);
   const [memberDialog, setMemberDialog] = useState(false);
   const [pricelistDialog, setPricelistDialog] = useState(false);
+  const [currencyDialog, setCurrencyDialog] = useState(false);
+
   const [claimDialog, setClaimDialog] = useState(false);
   const [resetPasswordDialog, setResetPasswordDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
