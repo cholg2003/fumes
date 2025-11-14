@@ -1925,6 +1925,13 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                     <p>{currencySearch ? 'No currencies match your search.' : 'No currencies found. Add your first currency.'}</p>
                   </div>
                 )}
+                {filteredCurrencies.length > ITEMS_PER_PAGE && (
+                  <Pagination
+                    currentPage={currencyPage}
+                    totalPages={getTotalPages(filteredCurrencies.length)}
+                    onPageChange={setCurrencyPage}
+                  />
+                )}
               </CardContent>
             </Card>
           </TabsContent>
