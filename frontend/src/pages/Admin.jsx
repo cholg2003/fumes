@@ -447,13 +447,25 @@ const Admin = () => {
                         <SelectValue placeholder="Select hospital" />
                       </SelectTrigger>
                       <SelectContent>
-                        {hospitals.map((hospital) => (
-                          <SelectItem key={hospital} value={hospital}>
-                            {hospital}
-                          </SelectItem>
-                        ))}
+                        {hospitals.map((hospital) => {
+                          const currency = currencies[hospital.currency_code || 'USD'];
+                          return (
+                            <SelectItem key={hospital.hospital_name} value={hospital.hospital_name}>
+                              {hospital.hospital_name} ({currency?.symbol || '$'} {currency?.code || 'USD'})
+                            </SelectItem>
+                          );
+                        })}
                       </SelectContent>
                     </Select>
+                    {bulkPricelistForm.hospital_name && (
+                      <p className="text-xs text-blue-600 bg-blue-50 p-2 rounded">
+                        💡 All prices will be in <strong>{(() => {
+                          const hosp = hospitals.find(h => h.hospital_name === bulkPricelistForm.hospital_name);
+                          const curr = currencies[hosp?.currency_code || 'USD'];
+                          return `${curr?.name || 'US Dollar'} (${curr?.symbol || '$'})`;
+                        })()}</strong>
+                      </p>
+                    )}
                   </div>
 
                   <div className="space-y-2">
