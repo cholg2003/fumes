@@ -1530,7 +1530,11 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                         </Select>
                       </div>
                       <div>
-                        <Label>Cost ($)</Label>
+                        <Label>Cost {pricelistForm.hospital_name && (() => {
+                          const hosp = hospitals.find(h => h.hospital_name === pricelistForm.hospital_name);
+                          const curr = currencies.find(c => c.code === (hosp?.currency_code || 'USD'));
+                          return `(${curr?.symbol || '$'})`;
+                        })()}</Label>
                         <Input type="number" step="0.01" value={pricelistForm.cost} onChange={(e) => setPricelistForm({...pricelistForm, cost: e.target.value})} required />
                       </div>
                       <Button type="submit" disabled={loading} className="w-full">
