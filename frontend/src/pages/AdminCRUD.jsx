@@ -1079,7 +1079,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredUsers.map((user) => (
+                    {paginatedUsers.map((user) => (
                       <tr key={user.username} className="border-b hover:bg-gray-50">
                         <td className="p-3 text-sm font-medium">{user.username}</td>
                         <td className="p-3 text-sm">{user.hospital_name}</td>
