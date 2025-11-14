@@ -251,6 +251,141 @@ const AdminCRUD = () => {
   const paginatedClaims = paginate(filteredClaims, claimPage);
   const paginatedCurrencies = paginate(filteredCurrencies, currencyPage);
 
+  // Bulk selection helpers
+  const toggleSelectAll = (items, selectedItems, setSelectedItems, idField) => {
+    if (selectedItems.length === items.length) {
+      setSelectedItems([]);
+    } else {
+      setSelectedItems(items.map(item => item[idField]));
+    }
+  };
+
+  const toggleSelectItem = (id, selectedItems, setSelectedItems) => {
+    if (selectedItems.includes(id)) {
+      setSelectedItems(selectedItems.filter(itemId => itemId !== id));
+    } else {
+      setSelectedItems([...selectedItems, id]);
+    }
+  };
+
+  // Bulk delete handlers
+  const handleBulkDelete = async (type, selectedItems, setSelectedItems, endpoint, idField) => {
+    if (selectedItems.length === 0) {
+      toast.error('No items selected');
+      return;
+    }
+    
+    if (!window.confirm(`Delete ${selectedItems.length} selected item(s)? This action cannot be undone.`)) {
+      return;
+    }
+
+    setLoading(true);
+    let successCount = 0;
+    let failCount = 0;
+
+    for (const id of selectedItems) {
+      try {
+        await axios.delete(`${API}${endpoint}/${id}`, axiosConfig);
+        successCount++;
+      } catch (error) {
+        failCount++;
+      }
+    }
+
+    toast.success(`Deleted ${successCount} item(s)${failCount > 0 ? `, ${failCount} failed` : ''}`);
+    setSelectedItems([]);
+    loadData();
+    setLoading(false);
+  };
+
+  // Bulk status change for claims
+  const handleBulkStatusChange = async () => {
+    if (selectedClaims.length === 0 || !bulkStatus) {
+      toast.error('No claims selected or status not chosen');
+      return;
+    }
+
+    setLoading(true);
+    let successCount = 0;
+    let failCount = 0;
+
+    for (const claimId of selectedClaims) {
+      try {
+        await axios.put(`${API}/admin/claims/${claimId}/status`, { status: bulkStatus }, axiosConfig);
+        successCount++;
+      } catch (error) {
+        failCount++;
+      }
+    }
+
+    toast.success(`Updated ${successCount} claim(s)${failCount > 0 ? `, ${failCount} failed` : ''}`);
+    setSelectedClaims([]);
+    setBulkStatusDialog(false);
+    setBulkStatus('');
+    loadData();
+    setLoading(false);
+  };
+
+  // Bulk suspend/unsuspend families
+  const handleBulkSuspendFamilies = async (suspend) => {
+    if (selectedFamilies.length === 0) {
+      toast.error('No families selected');
+      return;
+    }
+
+    if (!window.confirm(`${suspend ? 'Suspend' : 'Activate'} ${selectedFamilies.length} selected family(ies)?`)) {
+      return;
+    }
+
+    setLoading(true);
+    let successCount = 0;
+    let failCount = 0;
+
+    for (const familyId of selectedFamilies) {
+      try {
+        await axios.put(`${API}/admin/families/${familyId}`, { suspended: suspend }, axiosConfig);
+        successCount++;
+      } catch (error) {
+        failCount++;
+      }
+    }
+
+    toast.success(`${suspend ? 'Suspended' : 'Activated'} ${successCount} family(ies)${failCount > 0 ? `, ${failCount} failed` : ''}`);
+    setSelectedFamilies([]);
+    loadData();
+    setLoading(false);
+  };
+
+  // Bulk suspend/unsuspend members
+  const handleBulkSuspendMembers = async (suspend) => {
+    if (selectedMembers.length === 0) {
+      toast.error('No members selected');
+      return;
+    }
+
+    if (!window.confirm(`${suspend ? 'Suspend' : 'Activate'} ${selectedMembers.length} selected member(s)?`)) {
+      return;
+    }
+
+    setLoading(true);
+    let successCount = 0;
+    let failCount = 0;
+
+    for (const memberId of selectedMembers) {
+      try {
+        await axios.put(`${API}/admin/members/${memberId}`, { suspended: suspend }, axiosConfig);
+        successCount++;
+      } catch (error) {
+        failCount++;
+      }
+    }
+
+    toast.success(`${suspend ? 'Suspended' : 'Activated'} ${successCount} member(s)${failCount > 0 ? `, ${failCount} failed` : ''}`);
+    setSelectedMembers([]);
+    loadData();
+    setLoading(false);
+  };
+
   const handleHospitalDelete = async (hospitalName) => {
     if (!window.confirm(`Delete hospital "${hospitalName}"? This will fail if the hospital has users or price lists.`)) return;
     try {
