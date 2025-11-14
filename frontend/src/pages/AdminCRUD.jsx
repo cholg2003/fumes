@@ -1765,6 +1765,13 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                     ))}
                   </tbody>
                 </table>
+                {filteredClaims.length > ITEMS_PER_PAGE && (
+                  <Pagination
+                    currentPage={claimPage}
+                    totalPages={getTotalPages(filteredClaims.length)}
+                    onPageChange={setClaimPage}
+                  />
+                )}
               </CardContent>
             </Card>
           </TabsContent>
