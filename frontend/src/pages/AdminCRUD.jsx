@@ -782,7 +782,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                 <CardTitle>Hospitals</CardTitle>
                 <Dialog open={hospitalDialog} onOpenChange={setHospitalDialog}>
                   <DialogTrigger asChild>
-                    <Button onClick={() => { setEditMode({ type: '', data: null }); setHospitalForm({ hospital_name: '', address: '', phone: '', email: '' }); }}>
+                    <Button onClick={() => { setEditMode({ type: '', data: null }); setHospitalForm({ hospital_name: '', address: '', phone: '', email: '', currency_code: 'USD' }); }}>
                       <Plus className="w-4 h-4 mr-2" />Add Hospital
                     </Button>
                   </DialogTrigger>
