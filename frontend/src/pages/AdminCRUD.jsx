@@ -1912,6 +1912,12 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                   <tbody>
                     {paginatedClaims.map((claim) => (
                       <tr key={claim.claim_id} className="border-b hover:bg-gray-50">
+                        <td className="p-3 text-center">
+                          <Checkbox
+                            checked={selectedClaims.includes(claim.claim_id)}
+                            onCheckedChange={() => toggleSelectItem(claim.claim_id, selectedClaims, setSelectedClaims)}
+                          />
+                        </td>
                         <td className="p-3 text-sm font-medium">{claim.claim_id}</td>
                         <td className="p-3 text-sm">{claim.hospital_name}</td>
                         <td className="p-3 text-sm">{claim.patient_name}</td>
