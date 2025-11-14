@@ -753,7 +753,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
 
       <div className="max-w-7xl mx-auto p-6">
         <Tabs defaultValue={isSuperAdmin ? "hospitals" : "families"} className="space-y-6">
-          <TabsList className={`grid w-full ${isSuperAdmin ? 'grid-cols-6' : 'grid-cols-4'} bg-white border border-gray-200 p-1 rounded-lg`}>
+          <TabsList className={`grid w-full ${isSuperAdmin ? 'grid-cols-8' : 'grid-cols-5'} bg-white border border-gray-200 p-1 rounded-lg`}>
             {isSuperAdmin && (
               <>
                 <TabsTrigger value="hospitals"><Building2 className="w-4 h-4 mr-2" />Hospitals</TabsTrigger>
