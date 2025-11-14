@@ -853,6 +853,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                       <th className="text-left p-3 text-sm font-semibold">Address</th>
                       <th className="text-left p-3 text-sm font-semibold">Phone</th>
                       <th className="text-left p-3 text-sm font-semibold">Email</th>
+                      <th className="text-center p-3 text-sm font-semibold">Currency</th>
                       <th className="text-right p-3 text-sm font-semibold">Deposit Balance</th>
                       <th className="text-center p-3 text-sm font-semibold">Actions</th>
                     </tr>
