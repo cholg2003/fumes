@@ -1585,6 +1585,163 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
               </CardContent>
             </Card>
           </TabsContent>
+
+          {/* Documentation Tab */}
+          <TabsContent value="documentation">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="w-5 h-5" />
+                  System Documentation & Workflow
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Quick Links */}
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-200">
+                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                    📚 Complete System Documentation
+                  </h3>
+                  <p className="text-gray-700 mb-4">
+                    Access the complete 12-page system documentation including workflows, user roles, security matrix, and feature details.
+                  </p>
+                  <a 
+                    href="/Medical_Insurance_System_Presentation.html" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    <FileText className="w-5 h-5" />
+                    Open Full Documentation
+                  </a>
+                </div>
+
+                {/* Quick Reference */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-white p-4 rounded-lg border border-gray-200">
+                    <h4 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                      👤 User Roles
+                    </h4>
+                    <ul className="text-sm space-y-2 text-gray-700">
+                      <li><strong>Superadmin:</strong> Full system control, manages all hospitals</li>
+                      <li><strong>Hospital Admin:</strong> Claims operations for their hospital</li>
+                      <li><strong>Finance:</strong> View claims and financial reports</li>
+                      <li><strong>Reception:</strong> Patient search and claim submission</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-white p-4 rounded-lg border border-gray-200">
+                    <h4 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                      🔄 Claim Statuses
+                    </h4>
+                    <ul className="text-sm space-y-2 text-gray-700">
+                      <li><span className="inline-block w-3 h-3 bg-yellow-400 rounded-full mr-2"></span><strong>PENDING:</strong> Service provided, awaiting payment</li>
+                      <li><span className="inline-block w-3 h-3 bg-green-500 rounded-full mr-2"></span><strong>PAID:</strong> Insurance has paid hospital</li>
+                      <li><span className="inline-block w-3 h-3 bg-red-500 rounded-full mr-2"></span><strong>VOIDED:</strong> Claim cancelled/rejected</li>
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Workflow Overview */}
+                <div className="bg-white p-6 rounded-lg border border-gray-200">
+                  <h4 className="font-semibold text-gray-800 mb-4 text-lg">🔄 Complete Workflow</h4>
+                  
+                  <div className="space-y-4">
+                    <div className="flex gap-4">
+                      <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">1</div>
+                      <div>
+                        <h5 className="font-semibold text-gray-800">Initial Setup (Superadmin Only)</h5>
+                        <p className="text-sm text-gray-600">Register hospitals, create families, add members, set up price lists</p>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-4">
+                      <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">2</div>
+                      <div>
+                        <h5 className="font-semibold text-gray-800">Patient Visit & Claim Creation</h5>
+                        <p className="text-sm text-gray-600">Search patient → Select services → Submit claim → Status: PENDING</p>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-4">
+                      <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">3</div>
+                      <div>
+                        <h5 className="font-semibold text-gray-800">Financial Tracking</h5>
+                        <p className="text-sm text-gray-600">View outstanding claims, hospital balances, and pending payments</p>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-4">
+                      <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">4</div>
+                      <div>
+                        <h5 className="font-semibold text-gray-800">Payment Process (Superadmin Only)</h5>
+                        <p className="text-sm text-gray-600">Add deposit → Mark claims as paid → Balances automatically adjusted</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Key Features */}
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-lg border border-green-200">
+                  <h4 className="font-semibold text-gray-800 mb-4 text-lg">✨ Key Features</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600">✅</span>
+                      <span>Patient search and management</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600">✅</span>
+                      <span>Claim creation with item quantities</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600">✅</span>
+                      <span>Edit claim status with balance adjustments</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600">✅</span>
+                      <span>Hospital deposit management</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600">✅</span>
+                      <span>Bulk family upload via CSV</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600">✅</span>
+                      <span>Role-based access control</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600">✅</span>
+                      <span>Financial dashboards</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600">✅</span>
+                      <span>Suspend/unsuspend families/members</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Access Control Notice */}
+                <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                  <h4 className="font-semibold text-yellow-800 mb-2 flex items-center gap-2">
+                    ⚠️ Access Control Notice
+                  </h4>
+                  <p className="text-sm text-yellow-800">
+                    Only <strong>Superadmin</strong> can create/edit families, members, and price lists. 
+                    Hospital Admin has read-only access to master data but can submit and view claims.
+                  </p>
+                </div>
+
+                {/* Support Section */}
+                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                  <h4 className="font-semibold text-gray-800 mb-2">📞 Need Help?</h4>
+                  <p className="text-sm text-gray-600">
+                    For detailed workflows, status transition matrices, security guidelines, and troubleshooting, 
+                    please refer to the complete documentation using the button above.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
         </Tabs>
 
         {/* Reset Password Dialog */}
