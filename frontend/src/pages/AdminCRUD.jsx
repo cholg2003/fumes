@@ -958,7 +958,18 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Hospitals</CardTitle>
-                <Dialog open={hospitalDialog} onOpenChange={setHospitalDialog}>
+                <div className="flex gap-2">
+                  {selectedHospitals.length > 0 && (
+                    <Button 
+                      variant="destructive" 
+                      size="sm"
+                      onClick={() => handleBulkDelete('hospitals', selectedHospitals, setSelectedHospitals, '/admin/hospitals', 'hospital_name')}
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Delete {selectedHospitals.length} Selected
+                    </Button>
+                  )}
+                  <Dialog open={hospitalDialog} onOpenChange={setHospitalDialog}>
                   <DialogTrigger asChild>
                     <Button onClick={() => { setEditMode({ type: '', data: null }); setHospitalForm({ hospital_name: '', address: '', phone: '', email: '', currency_code: 'USD' }); }}>
                       <Plus className="w-4 h-4 mr-2" />Add Hospital
