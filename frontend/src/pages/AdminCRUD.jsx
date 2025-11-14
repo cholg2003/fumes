@@ -1574,13 +1574,21 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredPricelists.map((item, index) => (
+                    {filteredPricelists.map((item, index) => {
+                      const hospital = hospitals.find(h => h.hospital_name === item.hospital_name);
+                      const currency = currencies.find(c => c.code === (hospital?.currency_code || 'USD'));
+                      return (
                       <tr key={index} className="border-b hover:bg-gray-50">
                         <td className="p-3 text-sm">{item.hospital_name}</td>
                         <td className="p-3 text-sm font-medium">{item.item_id}</td>
                         <td className="p-3 text-sm">{item.item_name}</td>
                         <td className="p-3 text-sm">{item.item_type}</td>
-                        <td className="p-3 text-sm text-right font-medium">${item.cost.toFixed(2)}</td>
+                        <td className="p-3 text-sm text-center">
+                          <span className="inline-flex items-center px-2 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-medium">
+                            {currency?.code || 'USD'}
+                          </span>
+                        </td>
+                        <td className="p-3 text-sm text-right font-medium">{currency?.symbol || '$'}{item.cost.toFixed(currency?.decimal_places || 2)}</td>
                         <td className="p-3 text-center">
                           <div className="flex items-center justify-center gap-2">
                             <Button variant="ghost" size="sm" onClick={() => openEditDialog('pricelist', item)}>
