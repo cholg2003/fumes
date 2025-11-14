@@ -811,9 +811,8 @@ const Dashboard = () => {
                     ))}
                   </tbody>
                 </table>
-              </div>
-            )}
-            {filteredClaims.length > ITEMS_PER_PAGE && (
+                </div>
+                {filteredClaims.length > ITEMS_PER_PAGE && (
               <Pagination
                 currentPage={claimPage}
                 totalPages={getTotalPages(filteredClaims.length)}
