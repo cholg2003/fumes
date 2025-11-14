@@ -710,10 +710,26 @@ const Dashboard = () => {
         {(role === 'Finance' || role === 'Admin') && (
           <Card className="border-purple-200 shadow-md">
           <CardHeader className="bg-gradient-to-r from-purple-50 to-purple-100 border-b border-purple-200">
-            <CardTitle className="flex items-center gap-2 text-purple-900">
-              <FileText className="w-5 h-5" />
-              Recent Claims
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-2 text-purple-900">
+                <FileText className="w-5 h-5" />
+                Recent Claims
+              </CardTitle>
+              <div className="flex items-center gap-2">
+                <Label className="text-sm text-purple-800">Filter by Status:</Label>
+                <Select value={claimStatusFilter} onValueChange={setClaimStatusFilter}>
+                  <SelectTrigger className="w-[150px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ALL">All Status</SelectItem>
+                    <SelectItem value="PENDING">Pending</SelectItem>
+                    <SelectItem value="PAID">Paid</SelectItem>
+                    <SelectItem value="VOIDED">Voided</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
           </CardHeader>
           <CardContent className="pt-6">
             {claims.length === 0 ? (
