@@ -77,6 +77,16 @@ const AdminCRUD = () => {
   // Edit states
   const [editMode, setEditMode] = useState({ type: '', data: null });
 
+  // Pagination states
+  const [hospitalPage, setHospitalPage] = useState(1);
+  const [userPage, setUserPage] = useState(1);
+  const [familyPage, setFamilyPage] = useState(1);
+  const [memberPage, setMemberPage] = useState(1);
+  const [pricelistPage, setPricelistPage] = useState(1);
+  const [claimPage, setClaimPage] = useState(1);
+  const [currencyPage, setCurrencyPage] = useState(1);
+  const ITEMS_PER_PAGE = 2;
+
   const token = localStorage.getItem('token');
   const role = localStorage.getItem('role');
   const username = localStorage.getItem('username');
