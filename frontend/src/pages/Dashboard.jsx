@@ -32,8 +32,9 @@ const Dashboard = () => {
   const [hospitalBalance, setHospitalBalance] = useState(0);
   const [totalClaims, setTotalClaims] = useState(0);
   
-  // Pagination
+  // Pagination and filtering
   const [claimPage, setClaimPage] = useState(1);
+  const [claimStatusFilter, setClaimStatusFilter] = useState('ALL');
   const ITEMS_PER_PAGE = 20;
 
   const token = localStorage.getItem('token');
