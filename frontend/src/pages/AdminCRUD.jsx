@@ -85,7 +85,7 @@ const AdminCRUD = () => {
   const [pricelistPage, setPricelistPage] = useState(1);
   const [claimPage, setClaimPage] = useState(1);
   const [currencyPage, setCurrencyPage] = useState(1);
-  const ITEMS_PER_PAGE = 2;
+  const ITEMS_PER_PAGE = 20;
 
   const token = localStorage.getItem('token');
   const role = localStorage.getItem('role');
