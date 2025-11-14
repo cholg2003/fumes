@@ -889,7 +889,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                             </div>
                           </td>
                         </tr>
-                      );
+                    ))}
                     })}
                   </tbody>
                 </table>
@@ -1069,7 +1069,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                           </div>
                         </td>
                       </tr>
-                      );
+                    ))}
                     })}
                   </tbody>
                 </table>
@@ -1306,7 +1306,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                           </div>
                         </td>
                       </tr>
-                      );
+                    ))}
                     })}
                   </tbody>
                 </table>
@@ -1465,7 +1465,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                           </div>
                         </td>
                       </tr>
-                      );
+                    ))}
                     })}
                   </tbody>
                 </table>
@@ -1500,7 +1500,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                                 <SelectItem key={h.hospital_name} value={h.hospital_name}>
                                   {h.hospital_name} ({currency?.symbol || '$'} {currency?.code || 'USD'})
                                 </SelectItem>
-                              );
+                            ))}
                             })}
                           </SelectContent>
                         </Select>
@@ -1603,7 +1603,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                           </div>
                         </td>
                       </tr>
-                      );
+                    ))}
                     })}
                   </tbody>
                 </table>
@@ -1699,7 +1699,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                           </div>
                         </td>
                       </tr>
-                      );
+                    ))}
                     })}
                   </tbody>
                 </table>
@@ -1847,7 +1847,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                           </div>
                         </td>
                       </tr>
-                      );
+                    ))}
                     })}
                   </tbody>
                 </table>
