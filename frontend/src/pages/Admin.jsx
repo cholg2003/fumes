@@ -514,13 +514,21 @@ const Admin = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {pricelists.map((item, index) => (
+                      {pricelists.map((item, index) => {
+                        const hospital = hospitals.find(h => h.hospital_name === item.hospital_name);
+                        const currency = currencies[hospital?.currency_code || 'USD'];
+                        return (
                         <tr key={index} className="border-b border-gray-100 hover:bg-gray-50">
                           <td className="p-3 text-sm text-gray-800">{item.hospital_name}</td>
                           <td className="p-3 text-sm text-gray-800">{item.item_id}</td>
                           <td className="p-3 text-sm text-gray-800">{item.item_name}</td>
                           <td className="p-3 text-sm text-gray-600">{item.item_type}</td>
-                          <td className="p-3 text-sm text-gray-800 text-right font-medium">${item.cost.toFixed(2)}</td>
+                          <td className="p-3 text-sm text-center">
+                            <span className="inline-flex items-center px-2 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-medium">
+                              {currency?.code || 'USD'}
+                            </span>
+                          </td>
+                          <td className="p-3 text-sm text-gray-800 text-right font-medium">{currency?.symbol || '$'}{item.cost.toFixed(currency?.decimal_places || 2)}</td>
                           <td className="p-3 text-center">
                             <Button
                               data-testid={`delete-pricelist-${index}`}
