@@ -705,6 +705,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
             <TabsTrigger value="members"><Users className="w-4 h-4 mr-2" />Members</TabsTrigger>
             <TabsTrigger value="pricelists"><FileText className="w-4 h-4 mr-2" />Price Lists</TabsTrigger>
             <TabsTrigger value="bills"><Receipt className="w-4 h-4 mr-2" />Claims</TabsTrigger>
+            <TabsTrigger value="documentation"><FileText className="w-4 h-4 mr-2" />Documentation</TabsTrigger>
           </TabsList>
 
           {/* Hospitals Tab - Superadmin Only */}
