@@ -1296,6 +1296,106 @@ async def add_deposit(hospital_name: str, deposit: DepositRequest, admin_user: d
     }
 
 
+
+# ==================== Currency Management ====================
+
+@api_router.get("/currencies")
+async def get_currencies(current_user: dict = Depends(get_current_user)):
+    """Get all currencies"""
+    currencies = await db.currencies.find({}, {"_id": 0}).to_list(100)
+    return currencies
+
+@api_router.post("/admin/currencies")
+async def create_currency(currency: CurrencyCreate, admin_user: dict = Depends(get_admin_user)):
+    """Create a new currency (superadmin only)"""
+    if admin_user["username"] != "superadmin":
+        raise HTTPException(status_code=403, detail="Only superadmin can create currencies")
+    
+    # Check if currency code already exists
+    existing = await db.currencies.find_one({"code": currency.code.upper()})
+    if existing:
+        raise HTTPException(status_code=400, detail="Currency code already exists")
+    
+    # Validate rate_to_usd
+    if currency.rate_to_usd <= 0:
+        raise HTTPException(status_code=400, detail="Exchange rate must be positive")
+    
+    currency_doc = {
+        "code": currency.code.upper(),
+        "name": currency.name,
+        "symbol": currency.symbol,
+        "rate_to_usd": currency.rate_to_usd,
+        "decimal_places": currency.decimal_places
+    }
+    
+    await db.currencies.insert_one(currency_doc)
+    return {"success": True, "message": "Currency created successfully"}
+
+@api_router.put("/admin/currencies/{code}")
+async def update_currency(code: str, currency_update: CurrencyUpdate, admin_user: dict = Depends(get_admin_user)):
+    """Update currency (superadmin only)"""
+    if admin_user["username"] != "superadmin":
+        raise HTTPException(status_code=403, detail="Only superadmin can update currencies")
+    
+    # Check if currency exists
+    existing = await db.currencies.find_one({"code": code.upper()})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Currency not found")
+    
+    # Build update document
+    update_doc = {k: v for k, v in currency_update.model_dump().items() if v is not None}
+    
+    if "rate_to_usd" in update_doc and update_doc["rate_to_usd"] <= 0:
+        raise HTTPException(status_code=400, detail="Exchange rate must be positive")
+    
+    if update_doc:
+        await db.currencies.update_one({"code": code.upper()}, {"$set": update_doc})
+    
+    return {"success": True, "message": "Currency updated successfully"}
+
+@api_router.delete("/admin/currencies/{code}")
+async def delete_currency(code: str, admin_user: dict = Depends(get_admin_user)):
+    """Delete currency (superadmin only)"""
+    if admin_user["username"] != "superadmin":
+        raise HTTPException(status_code=403, detail="Only superadmin can delete currencies")
+    
+    # Prevent deleting USD
+    if code.upper() == "USD":
+        raise HTTPException(status_code=400, detail="Cannot delete base currency USD")
+    
+    # Check if any hospitals use this currency
+    hospital_using = await db.hospitals.find_one({"currency_code": code.upper()})
+    if hospital_using:
+        raise HTTPException(status_code=400, detail=f"Cannot delete currency used by {hospital_using['hospital_name']}")
+    
+    result = await db.currencies.delete_one({"code": code.upper()})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Currency not found")
+    
+    return {"success": True, "message": "Currency deleted successfully"}
+
+@api_router.get("/currency/convert")
+async def convert_currency(amount: float, from_currency: str, to_currency: str, current_user: dict = Depends(get_current_user)):
+    """Convert amount between currencies"""
+    from_curr = await db.currencies.find_one({"code": from_currency.upper()})
+    to_curr = await db.currencies.find_one({"code": to_currency.upper()})
+    
+    if not from_curr or not to_curr:
+        raise HTTPException(status_code=404, detail="Currency not found")
+    
+    # Convert to USD first, then to target currency
+    usd_amount = amount / from_curr["rate_to_usd"]
+    converted_amount = usd_amount * to_curr["rate_to_usd"]
+    
+    return {
+        "original_amount": amount,
+        "original_currency": from_currency.upper(),
+        "converted_amount": round(converted_amount, to_curr["decimal_places"]),
+        "target_currency": to_currency.upper(),
+        "rate": to_curr["rate_to_usd"] / from_curr["rate_to_usd"]
+    }
+
+
 @api_router.post("/admin/users")
 async def create_user(user_data: UserCreate, admin_user: dict = Depends(get_admin_user)):
     # Check if username exists
