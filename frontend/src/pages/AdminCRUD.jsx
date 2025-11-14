@@ -1763,7 +1763,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                     </tr>
                   </thead>
                   <tbody>
-                    {currencies.map((currency) => (
+                    {filteredCurrencies.map((currency) => (
                       <tr key={currency.code} className="border-b hover:bg-gray-50">
                         <td className="p-3 text-sm font-medium">{currency.code}</td>
                         <td className="p-3 text-sm">{currency.name}</td>
