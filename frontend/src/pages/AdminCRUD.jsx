@@ -57,6 +57,8 @@ const AdminCRUD = () => {
   const [familyForm, setFamilyForm] = useState({ family_id: '', principle_member_name: '', total_allotment: '', remaining_balance: '' });
   const [memberForm, setMemberForm] = useState({ serial_number: '', family_id: '', first_name: '', middle_name: '', last_name: '', dob: '', sex: 'Male', relationship: 'Principle' });
   const [pricelistForm, setPricelistForm] = useState({ hospital_name: '', item_id: '', item_name: '', item_type: 'Service', cost: '' });
+  const [currencyForm, setCurrencyForm] = useState({ code: '', name: '', symbol: '', rate_to_usd: '', decimal_places: 2 });
+
   
   // Claim edit form
   const [claimForm, setClaimForm] = useState({ claim_id: '', patient_serial_number: '', claim_items: [] });
