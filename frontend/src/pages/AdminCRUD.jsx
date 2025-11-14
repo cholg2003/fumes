@@ -1491,9 +1491,25 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                         <Select value={pricelistForm.hospital_name} onValueChange={(value) => setPricelistForm({...pricelistForm, hospital_name: value})} disabled={editMode.type === 'pricelist'}>
                           <SelectTrigger><SelectValue placeholder="Select hospital" /></SelectTrigger>
                           <SelectContent>
-                            {hospitals.map((h) => (<SelectItem key={h.hospital_name} value={h.hospital_name}>{h.hospital_name}</SelectItem>))}
+                            {hospitals.map((h) => {
+                              const currency = currencies.find(c => c.code === (h.currency_code || 'USD'));
+                              return (
+                                <SelectItem key={h.hospital_name} value={h.hospital_name}>
+                                  {h.hospital_name} ({currency?.symbol || '$'} {currency?.code || 'USD'})
+                                </SelectItem>
+                              );
+                            })}
                           </SelectContent>
                         </Select>
+                        {pricelistForm.hospital_name && (
+                          <p className="text-xs text-blue-600 bg-blue-50 p-2 rounded mt-2">
+                            💡 Cost will be in <strong>{(() => {
+                              const hosp = hospitals.find(h => h.hospital_name === pricelistForm.hospital_name);
+                              const curr = currencies.find(c => c.code === (hosp?.currency_code || 'USD'));
+                              return `${curr?.name || 'US Dollar'} (${curr?.symbol || '$'})`;
+                            })()}</strong>
+                          </p>
+                        )}
                       </div>
                       <div>
                         <Label>Item ID</Label>
