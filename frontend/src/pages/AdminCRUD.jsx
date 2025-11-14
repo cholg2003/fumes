@@ -1353,6 +1353,13 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                     ))}
                   </tbody>
                 </table>
+                {filteredFamilies.length > ITEMS_PER_PAGE && (
+                  <Pagination
+                    currentPage={familyPage}
+                    totalPages={getTotalPages(filteredFamilies.length)}
+                    onPageChange={setFamilyPage}
+                  />
+                )}
               </CardContent>
             </Card>
           </TabsContent>
