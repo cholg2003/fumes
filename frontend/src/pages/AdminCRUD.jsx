@@ -158,7 +158,7 @@ const AdminCRUD = () => {
         toast.success('Hospital created successfully');
       }
       setHospitalDialog(false);
-      setHospitalForm({ hospital_name: '', address: '', phone: '', email: '' });
+      setHospitalForm({ hospital_name: '', address: '', phone: '', email: '', currency_code: 'USD' });
       setEditMode({ type: '', data: null });
       loadData();
     } catch (error) {
