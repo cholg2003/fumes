@@ -105,7 +105,8 @@ const AdminCRUD = () => {
       const requests = [
         axios.get(`${API}/admin/families`, axiosConfig),
         axios.get(`${API}/admin/members`, axiosConfig),
-        axios.get(`${API}/admin/pricelists/all`, axiosConfig)
+        axios.get(`${API}/admin/pricelists/all`, axiosConfig),
+        axios.get(`${API}/currencies`, axiosConfig)
       ];
       
       // Claims endpoint differs based on user type
