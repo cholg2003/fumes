@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog';
+import { Checkbox } from '../components/ui/checkbox';
 import { toast } from 'sonner';
 import { ArrowLeft, Plus, Edit, Trash2, Building2, Users, UserPlus, UsersRound, FileText, Receipt, Printer, Ban, CheckCircle, Key, Search, Upload, Download, DollarSign } from 'lucide-react';
 import Pagination from '../components/Pagination';
