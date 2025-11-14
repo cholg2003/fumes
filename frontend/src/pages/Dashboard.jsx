@@ -735,7 +735,13 @@ const Dashboard = () => {
             {claims.length === 0 ? (
               <p className="text-center text-gray-500 py-8">No claims created yet</p>
             ) : (
-              <div className="overflow-x-auto">
+              <>
+                {claimStatusFilter !== 'ALL' && (
+                  <div className="mb-4 text-sm text-gray-600">
+                    Showing <strong>{filteredClaims.length}</strong> of <strong>{claims.length}</strong> claims
+                  </div>
+                )}
+                <div className="overflow-x-auto">
                 <table className="w-full" data-testid="claims-table">
                   <thead className="bg-gray-100 border-b border-gray-200">
                     <tr>
