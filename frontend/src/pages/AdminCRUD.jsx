@@ -890,7 +890,6 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                           </td>
                         </tr>
                     ))}
-                    })}
                   </tbody>
                 </table>
               </CardContent>
@@ -1070,7 +1069,6 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                         </td>
                       </tr>
                     ))}
-                    })}
                   </tbody>
                 </table>
               </CardContent>
@@ -1307,7 +1305,6 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                         </td>
                       </tr>
                     ))}
-                    })}
                   </tbody>
                 </table>
               </CardContent>
@@ -1466,7 +1463,6 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                         </td>
                       </tr>
                     ))}
-                    })}
                   </tbody>
                 </table>
               </CardContent>
@@ -1604,7 +1600,6 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                         </td>
                       </tr>
                     ))}
-                    })}
                   </tbody>
                 </table>
               </CardContent>
@@ -1700,7 +1695,6 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                         </td>
                       </tr>
                     ))}
-                    })}
                   </tbody>
                 </table>
               </CardContent>
@@ -1848,7 +1842,6 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                         </td>
                       </tr>
                     ))}
-                    })}
                   </tbody>
                 </table>
                 {filteredCurrencies.length === 0 && (
