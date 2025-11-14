@@ -11,8 +11,9 @@ load_dotenv()
 async def seed_currencies():
     # Connect to MongoDB
     mongo_url = os.getenv("MONGO_URL", "mongodb://localhost:27017")
+    db_name = os.getenv("DB_NAME", "medical_insurance_db")
     client = AsyncIOMotorClient(mongo_url)
-    db = client.medical_insurance
+    db = client[db_name]
     
     print("Starting currency seeding...")
     
