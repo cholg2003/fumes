@@ -204,6 +204,11 @@ const AdminCRUD = () => {
     c.hospital_name.toLowerCase().includes(claimSearch.toLowerCase())
   );
 
+  const filteredCurrencies = currencies.filter(c =>
+    c.code.toLowerCase().includes(currencySearch.toLowerCase()) ||
+    c.name.toLowerCase().includes(currencySearch.toLowerCase())
+  );
+
   const handleHospitalDelete = async (hospitalName) => {
     if (!window.confirm(`Delete hospital "${hospitalName}"? This will fail if the hospital has users or price lists.`)) return;
     try {
