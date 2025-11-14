@@ -867,6 +867,11 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                           <td className="p-3 text-sm">{hospital.address}</td>
                           <td className="p-3 text-sm">{hospital.phone}</td>
                           <td className="p-3 text-sm">{hospital.email}</td>
+                          <td className="p-3 text-sm text-center">
+                            <span className="inline-flex items-center px-2 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-medium">
+                              {hospital.currency_code || 'USD'}
+                            </span>
+                          </td>
                           <td className={`p-3 text-sm text-right font-semibold ${balance > 0 ? 'text-green-600' : 'text-red-600'}`}>
                             ${balance.toFixed(2)}
                           </td>
