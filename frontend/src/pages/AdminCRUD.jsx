@@ -1568,6 +1568,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                       <th className="text-left p-3 text-sm font-semibold">Item ID</th>
                       <th className="text-left p-3 text-sm font-semibold">Item Name</th>
                       <th className="text-left p-3 text-sm font-semibold">Type</th>
+                      <th className="text-center p-3 text-sm font-semibold">Currency</th>
                       <th className="text-right p-3 text-sm font-semibold">Cost</th>
                       <th className="text-center p-3 text-sm font-semibold">Actions</th>
                     </tr>
