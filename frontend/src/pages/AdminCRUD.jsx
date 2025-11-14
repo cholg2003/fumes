@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog';
 import { toast } from 'sonner';
 import { ArrowLeft, Plus, Edit, Trash2, Building2, Users, UserPlus, UsersRound, FileText, Receipt, Printer, Ban, CheckCircle, Key, Search, Upload, Download, DollarSign } from 'lucide-react';
+import Pagination from '../components/Pagination';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
