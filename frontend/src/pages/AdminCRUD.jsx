@@ -1978,6 +1978,33 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                 )}
               </CardContent>
             </Card>
+
+            {/* Bulk Status Change Dialog */}
+            <Dialog open={bulkStatusDialog} onOpenChange={setBulkStatusDialog}>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Change Status for {selectedClaims.length} Claim(s)</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <Label>New Status</Label>
+                    <Select value={bulkStatus} onValueChange={setBulkStatus}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="PENDING">Pending</SelectItem>
+                        <SelectItem value="PAID">Paid</SelectItem>
+                        <SelectItem value="VOIDED">Voided</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <Button onClick={handleBulkStatusChange} disabled={loading || !bulkStatus} className="w-full">
+                    {loading ? 'Updating...' : 'Update Status'}
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
           </TabsContent>
 
           {/* Currencies Tab - Superadmin Only */}
