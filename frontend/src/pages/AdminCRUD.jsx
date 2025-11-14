@@ -128,12 +128,14 @@ const AdminCRUD = () => {
         setFamilies(responses[2].data);
         setMembers(responses[3].data);
         setPricelists(responses[4].data);
-        setClaims(responses[5].data);
+        setCurrencies(responses[5].data);
+        setClaims(responses[6].data);
       } else {
         setFamilies(responses[0].data);
         setMembers(responses[1].data);
         setPricelists(responses[2].data);
-        setClaims(responses[3].data);
+        setCurrencies(responses[3].data);
+        setClaims(responses[4].data);
         // For hospital admin, only load their hospital info
         setHospitals([{ hospital_name: hospitalName }]);
       }
