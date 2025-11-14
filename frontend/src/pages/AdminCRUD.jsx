@@ -1735,6 +1735,22 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                     <strong>Note:</strong> USD is the base currency. All exchange rates are defined relative to USD. You cannot delete USD.
                   </p>
                 </div>
+                <div className="mb-4">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      placeholder="Search currencies by code or name..."
+                      value={currencySearch}
+                      onChange={(e) => setCurrencySearch(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                  {currencySearch && (
+                    <p className="text-sm text-gray-500 mt-2">
+                      Found {filteredCurrencies.length} currency(ies)
+                    </p>
+                  )}
+                </div>
                 <table className="w-full">
                   <thead className="bg-gray-100">
                     <tr>
