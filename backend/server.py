@@ -180,6 +180,7 @@ class HospitalCreate(BaseModel):
     phone: Optional[str] = ""
     email: Optional[str] = ""
     deposit_balance: float = 0.0
+    currency_code: str = "USD"  # Default to USD
 
 class DepositRequest(BaseModel):
     amount: float
