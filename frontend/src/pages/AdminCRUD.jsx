@@ -1795,10 +1795,10 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                     ))}
                   </tbody>
                 </table>
-                {currencies.length === 0 && (
+                {filteredCurrencies.length === 0 && (
                   <div className="text-center py-8 text-gray-500">
                     <DollarSign className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                    <p>No currencies found. Add your first currency.</p>
+                    <p>{currencySearch ? 'No currencies match your search.' : 'No currencies found. Add your first currency.'}</p>
                   </div>
                 )}
               </CardContent>
