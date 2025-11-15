@@ -1484,24 +1484,44 @@ NEW CLAIM SUBMITTED
         </tbody>
     </table>
     
-    <h2>Supported Currencies (Default)</h2>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
+    <h2>Tested Currencies (All Working)</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 20px;">
         <div class="role-card">
             <h3>💵 USD - US Dollar</h3>
-            <p>Symbol: $<br>Rate: 1.0000<br>Decimals: 2</p>
+            <p>Symbol: $<br>Rate: 1.0<br>Format: $ 1,234.56</p>
         </div>
         <div class="role-card">
             <h3>🇰🇪 KSH - Kenyan Shilling</h3>
-            <p>Symbol: KSh<br>Rate: 150.0000<br>Decimals: 2</p>
+            <p>Symbol: KSh<br>Rate: 150.0<br>Format: KSh 7,500.00</p>
+        </div>
+        <div class="role-card">
+            <h3>🇳🇬 NGN - Nigerian Naira</h3>
+            <p>Symbol: ₦<br>Rate: 800.0<br>Format: ₦ 80,000.00</p>
         </div>
         <div class="role-card">
             <h3>🇺🇬 UGX - Ugandan Shilling</h3>
-            <p>Symbol: USh<br>Rate: 3700.0000<br>Decimals: 0</p>
+            <p>Symbol: USh<br>Rate: 3,700.0<br>Format: USh 370,000</p>
         </div>
         <div class="role-card">
             <h3>🇹🇿 TZS - Tanzanian Shilling</h3>
-            <p>Symbol: TSh<br>Rate: 2500.0000<br>Decimals: 0</p>
+            <p>Symbol: TSh<br>Rate: 2,500.0<br>Format: TSh 250,000</p>
         </div>
+        <div class="role-card">
+            <h3>🇸🇸 SSP - S. Sudanese Pounds</h3>
+            <p>Symbol: SSP<br>Rate: 5,800.0<br>Format: SSP 580,000.00</p>
+        </div>
+    </div>
+    
+    <h2>Universal Architecture</h2>
+    <div class="highlight-box" style="background: #f0fdf4; border-left-color: #10b981; margin-top: 20px;">
+        <h3 style="color: #059669; margin-top: 0;">Storage vs Display</h3>
+        <ul>
+            <li><strong>Family Balances:</strong> Stored in USD → Displayed in hospital's currency</li>
+            <li><strong>Hospital Deposits:</strong> Stored in USD → Displayed in hospital's currency</li>
+            <li><strong>Claim Amounts:</strong> Stored in local currency → Always in hospital's currency</li>
+            <li><strong>Price Lists:</strong> Stored in local currency → Hospital-specific</li>
+        </ul>
+        <p style="margin-top: 15px;"><strong>Example:</strong> Hospital using KSH creates claim for KSh 280. System converts to $1.87 USD for family balance deduction, but displays KSh 280 everywhere in that hospital.</p>
     </div>
     
     <div class="footer">Page 12</div>
