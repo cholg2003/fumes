@@ -563,7 +563,12 @@ const Dashboard = () => {
                     <div className="bg-gradient-to-br from-green-500 to-green-600 text-white px-8 py-6 rounded-2xl shadow-lg text-center">
                       <DollarSign className="w-8 h-8 mx-auto mb-2" />
                       <div className="text-sm font-medium opacity-90">Family Balance</div>
-                      <div className="text-3xl font-bold">${familyInfo.remaining_balance.toFixed(2)}</div>
+                      <div className="text-3xl font-bold">{formatCurrency(familyInfo.remaining_balance * (hospitalCurrency.rate_to_usd || 1))}</div>
+                      {!isSuperAdmin && hospitalCurrency.code !== 'USD' && (
+                        <div className="text-xs opacity-75 mt-1">
+                          (≈ ${familyInfo.remaining_balance.toFixed(2)} USD)
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
