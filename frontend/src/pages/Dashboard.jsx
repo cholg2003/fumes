@@ -728,7 +728,7 @@ const Dashboard = () => {
 
                   <div className="flex items-center justify-between p-6 bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200">
                     <div className="text-xl font-bold text-gray-800">
-                      Total: <span data-testid="total-claim-cost" className="text-blue-600">${getTotalClaimCost().toFixed(2)}</span>
+                      Total: <span data-testid="total-claim-cost" className="text-blue-600">{formatCurrency(getTotalClaimCost())}</span>
                     </div>
                     <Button
                       data-testid="submit-claim-button"
