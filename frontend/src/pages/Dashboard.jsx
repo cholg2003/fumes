@@ -808,7 +808,7 @@ const Dashboard = () => {
                         )}
                         <td className="p-3 text-sm text-gray-700">{claim.patient_name}</td>
                         <td className="p-3 text-sm text-gray-600">{new Date(claim.timestamp).toLocaleDateString()}</td>
-                        <td className="p-3 text-sm text-gray-800 text-right font-medium">${claim.total_claim_amount.toFixed(2)}</td>
+                        <td className="p-3 text-sm text-gray-800 text-right font-medium">{formatCurrency(claim.total_claim_amount)}</td>
                         <td className="p-3 text-center">
                           <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
                             claim.status === 'PENDING' 
