@@ -1524,6 +1524,39 @@ NEW CLAIM SUBMITTED
         <p style="margin-top: 15px;"><strong>Example:</strong> Hospital using KSH creates claim for KSh 280. System converts to $1.87 USD for family balance deduction, but displays KSh 280 everywhere in that hospital.</p>
     </div>
     
+    <h2>Currency Formatting Standards</h2>
+    <table class="data-table" style="margin-top: 15px;">
+        <thead>
+            <tr>
+                <th>Feature</th>
+                <th>Implementation</th>
+                <th>Example</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Symbol Spacing</td>
+                <td>Space between symbol and amount</td>
+                <td>"KSh 7,500.00" not "KSh7500.00"</td>
+            </tr>
+            <tr>
+                <td>Thousand Separators</td>
+                <td>Comma every 3 digits</td>
+                <td>"$ 1,234,567.89"</td>
+            </tr>
+            <tr>
+                <td>Decimal Precision</td>
+                <td>Currency-specific (0-4 places)</td>
+                <td>UGX: 0 decimals, USD: 2 decimals</td>
+            </tr>
+            <tr>
+                <td>Unicode Symbols</td>
+                <td>Full support for all symbols</td>
+                <td>₦ (Naira), $ (Dollar), £ (Pound)</td>
+            </tr>
+        </tbody>
+    </table>
+    
     <div class="footer">Page 12</div>
 </div>
 
