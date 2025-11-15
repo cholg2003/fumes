@@ -470,28 +470,52 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent className="pt-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {Object.entries(hospitalStats).map(([hospital, stats]) => (
+                {Object.entries(hospitalStats).map(([hospital, stats]) => {
+                  // Create currency object for this hospital
+                  const hospitalCurrencyInfo = {
+                    symbol: stats.currency_symbol || '$',
+                    decimal_places: stats.currency_decimals !== undefined ? stats.currency_decimals : 2
+                  };
+                  
+                  // Format function for this hospital's currency
+                  const formatHospitalCurrency = (amount) => {
+                    const formattedAmount = amount.toLocaleString('en-US', {
+                      minimumFractionDigits: hospitalCurrencyInfo.decimal_places,
+                      maximumFractionDigits: hospitalCurrencyInfo.decimal_places
+                    });
+                    return `${hospitalCurrencyInfo.symbol} ${formattedAmount}`;
+                  };
+                  
+                  return (
                   <div key={hospital} className="bg-gradient-to-br from-red-50 to-white p-6 rounded-xl border border-red-200 shadow-sm">
-                    <h3 className="font-semibold text-gray-800 mb-3">{hospital}</h3>
+                    <h3 className="font-semibold text-gray-800 mb-3">
+                      {hospital}
+                      {stats.currency_code && stats.currency_code !== 'USD' && (
+                        <span className="ml-2 text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded">
+                          {stats.currency_code}
+                        </span>
+                      )}
+                    </h3>
                     <div className="space-y-3">
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600">Pending Claims:</span>
-                        <span className="text-sm font-medium text-blue-600">{stats.pending_count} ({formatCurrency(stats.total_pending)})</span>
+                        <span className="text-sm font-medium text-blue-600">{stats.pending_count} ({formatHospitalCurrency(stats.total_pending)})</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600">Paid Claims:</span>
-                        <span className="text-sm font-medium text-green-600">{stats.paid_count} ({formatCurrency(stats.total_paid)})</span>
+                        <span className="text-sm font-medium text-green-600">{stats.paid_count} ({formatHospitalCurrency(stats.total_paid)})</span>
                       </div>
                       <div className="border-t pt-3">
                         <div className="flex justify-between items-center">
                           <span className="text-sm font-semibold text-gray-700">Outstanding:</span>
-                          <span className="text-2xl font-bold text-red-600">-${stats.outstanding.toFixed(2)}</span>
+                          <span className="text-2xl font-bold text-red-600">-{formatHospitalCurrency(stats.outstanding)}</span>
                         </div>
                         <p className="text-xs text-gray-500 mt-1 text-right">Insurance owes hospital</p>
                       </div>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
