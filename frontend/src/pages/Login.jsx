@@ -18,9 +18,16 @@ const Login = () => {
   const [capsLockOn, setCapsLockOn] = useState(false);
   const [loginError, setLoginError] = useState('');
 
+  // Caps Lock detection
+  const handleKeyPress = (e) => {
+    const capsLockIsOn = e.getModifierState && e.getModifierState('CapsLock');
+    setCapsLockOn(capsLockIsOn);
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setLoginError('');
 
     try {
       const response = await axios.post(`${API}/auth/login`, {
@@ -44,7 +51,31 @@ const Login = () => {
         navigate('/dashboard');
       }
     } catch (error) {
-      toast.error(error.response?.data?.detail || 'Login failed');
+      let errorMessage = 'Login failed. Please try again.';
+      
+      if (error.response) {
+        switch (error.response.status) {
+          case 401:
+            errorMessage = 'Invalid username or password. Please check your credentials and try again.';
+            break;
+          case 403:
+            errorMessage = 'Your account has been suspended. Please contact the administrator.';
+            break;
+          case 404:
+            errorMessage = 'User not found. Please check your username.';
+            break;
+          case 500:
+            errorMessage = 'Server error. Please try again later or contact support.';
+            break;
+          default:
+            errorMessage = error.response.data?.detail || errorMessage;
+        }
+      } else if (error.request) {
+        errorMessage = 'Cannot connect to server. Please check your internet connection.';
+      }
+      
+      setLoginError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
