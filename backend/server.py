@@ -405,14 +405,31 @@ async def submit_claim(claim_submission: ClaimSubmission, current_user: dict = D
     if family.get("status") == "Suspended":
         raise HTTPException(status_code=403, detail="Cannot create claim for suspended family")
     
-    # Calculate total (cost * quantity for each item)
+    # Calculate total (cost * quantity for each item) - this is in hospital's local currency
     total_amount = sum(item.item_cost * item.quantity for item in claim_submission.claim_items)
     
-    # Check balance
-    if total_amount > family["remaining_balance"]:
+    # Get hospital's currency to convert to USD for balance check
+    hospital = await db.hospitals.find_one(
+        {"hospital_name": current_user["hospital_name"]},
+        {"_id": 0, "currency_code": 1}
+    )
+    
+    # Get exchange rate
+    currency_code = hospital.get("currency_code", "USD") if hospital else "USD"
+    currency = await db.currencies.find_one({"code": currency_code}, {"_id": 0})
+    rate_to_usd = currency.get("rate_to_usd", 1.0) if currency else 1.0
+    
+    # Convert claim amount to USD for balance comparison
+    # If rate_to_usd = 150 (150 KSH = 1 USD), then amount_in_usd = amount_in_local / 150
+    total_amount_usd = total_amount / rate_to_usd
+    
+    # Check balance (family balance is always in USD)
+    if total_amount_usd > family["remaining_balance"]:
+        # Get currency symbol for error message
+        currency_symbol = currency.get("symbol", "$") if currency else "$"
         raise HTTPException(
             status_code=400,
-            detail=f"Insufficient funds. Available balance: ${family['remaining_balance']:.2f}, Claim amount: ${total_amount:.2f}"
+            detail=f"Insufficient funds. Available balance: {currency_symbol}{(family['remaining_balance'] * rate_to_usd):.2f} ({currency_code}), Claim amount: {currency_symbol}{total_amount:.2f} ({currency_code})"
         )
     
     # Create claim
