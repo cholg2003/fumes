@@ -32,6 +32,10 @@ const Dashboard = () => {
   const [hospitalBalance, setHospitalBalance] = useState(0);
   const [totalClaims, setTotalClaims] = useState(0);
   
+  // Currency information
+  const [hospitalCurrency, setHospitalCurrency] = useState({ code: 'USD', symbol: '$', decimal_places: 2 });
+  const [currencies, setCurrencies] = useState({});
+  
   // Pagination and filtering
   const [claimPage, setClaimPage] = useState(1);
   const [claimStatusFilter, setClaimStatusFilter] = useState('ALL');
