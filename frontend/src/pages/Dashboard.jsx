@@ -845,15 +845,13 @@ const Dashboard = () => {
                     {paginatedClaims.map((claim) => {
                       // For superadmin, format each claim in its hospital's currency
                       let claimCurrency = hospitalCurrency;
-                      if (isSuperAdmin && claim.hospital_name) {
-                        // Get the currency for this claim's hospital
-                        const hospitalStats = Object.entries(hospitalStats || {}).find(([name]) => name === claim.hospital_name);
-                        if (hospitalStats && hospitalStats[1]) {
-                          claimCurrency = {
-                            symbol: hospitalStats[1].currency_symbol || '$',
-                            decimal_places: hospitalStats[1].currency_decimals !== undefined ? hospitalStats[1].currency_decimals : 2
-                          };
-                        }
+                      if (isSuperAdmin && claim.hospital_name && hospitalStats[claim.hospital_name]) {
+                        // Get the currency for this claim's hospital from hospitalStats
+                        const stats = hospitalStats[claim.hospital_name];
+                        claimCurrency = {
+                          symbol: stats.currency_symbol || '$',
+                          decimal_places: stats.currency_decimals !== undefined ? stats.currency_decimals : 2
+                        };
                       }
                       
                       const formatClaimAmount = (amount) => {
