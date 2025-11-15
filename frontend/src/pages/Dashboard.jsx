@@ -311,12 +311,19 @@ const Dashboard = () => {
     }
   };
 
-  // Currency formatting helper
+  // Currency formatting helper with thousand separators
   const formatCurrency = (amount, currencyCode = null) => {
     const currency = currencyCode ? currencies[currencyCode] : hospitalCurrency;
     const symbol = currency?.symbol || '$';
     const decimals = currency?.decimal_places !== undefined ? currency.decimal_places : 2;
-    return `${symbol}${amount.toFixed(decimals)}`;
+    
+    // Format number with thousand separators and decimals
+    const formattedAmount = amount.toLocaleString('en-US', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals
+    });
+    
+    return `${symbol} ${formattedAmount}`;
   };
 
   // Pagination and filtering helpers
