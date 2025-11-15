@@ -138,6 +138,15 @@ const Login = () => {
               )}
             </div>
 
+            {loginError && (
+              <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-800 flex items-start gap-2">
+                  <span className="text-red-600 font-bold">✖</span>
+                  <span>{loginError}</span>
+                </p>
+              </div>
+            )}
+
             <Button
               type="submit"
               data-testid="login-submit-button"
