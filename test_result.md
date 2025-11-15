@@ -336,7 +336,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Claim Status Editing with Balance Adjustments - PUT /api/admin/claims/{claim_id}"
+    - "SSP Currency Claim Submission for Test Hospital"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
