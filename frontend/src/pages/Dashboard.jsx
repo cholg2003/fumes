@@ -470,7 +470,7 @@ const Dashboard = () => {
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600">Paid Claims:</span>
-                        <span className="text-sm font-medium text-green-600">{stats.paid_count} (${stats.total_paid.toFixed(2)})</span>
+                        <span className="text-sm font-medium text-green-600">{stats.paid_count} ({formatCurrency(stats.total_paid)})</span>
                       </div>
                       <div className="border-t pt-3">
                         <div className="flex justify-between items-center">
