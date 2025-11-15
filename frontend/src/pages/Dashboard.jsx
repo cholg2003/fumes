@@ -762,6 +762,13 @@ const Dashboard = () => {
                     {paginatedClaims.map((claim) => (
                       <tr key={claim.claim_id} className="border-b border-gray-100 hover:bg-gray-50">
                         <td className="p-3 text-sm font-medium text-gray-800">{claim.claim_id}</td>
+                        {isSuperAdmin && (
+                          <td className="p-3 text-sm text-gray-700">
+                            <span className="inline-flex items-center px-2 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-medium">
+                              {claim.hospital_name}
+                            </span>
+                          </td>
+                        )}
                         <td className="p-3 text-sm text-gray-700">{claim.patient_name}</td>
                         <td className="p-3 text-sm text-gray-600">{new Date(claim.timestamp).toLocaleDateString()}</td>
                         <td className="p-3 text-sm text-gray-800 text-right font-medium">${claim.total_claim_amount.toFixed(2)}</td>
