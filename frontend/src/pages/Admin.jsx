@@ -65,6 +65,20 @@ const Admin = () => {
     headers: { Authorization: `Bearer ${token}` }
   };
 
+  // Currency formatting helper with thousand separators
+  const formatCurrency = (amount, currency) => {
+    const symbol = currency?.symbol || '$';
+    const decimals = currency?.decimal_places !== undefined ? currency.decimal_places : 2;
+    
+    // Format number with thousand separators and decimals
+    const formattedAmount = amount.toLocaleString('en-US', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals
+    });
+    
+    return `${symbol} ${formattedAmount}`;
+  };
+
   const loadData = async () => {
     try {
       const [familiesRes, membersRes, pricelistsRes, hospitalsRes, currenciesRes] = await Promise.all([
