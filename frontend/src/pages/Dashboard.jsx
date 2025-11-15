@@ -748,6 +748,9 @@ const Dashboard = () => {
                   <thead className="bg-gray-100 border-b border-gray-200">
                     <tr>
                       <th className="text-left p-3 text-sm font-semibold text-gray-700">Claim ID</th>
+                      {isSuperAdmin && (
+                        <th className="text-left p-3 text-sm font-semibold text-gray-700">Hospital</th>
+                      )}
                       <th className="text-left p-3 text-sm font-semibold text-gray-700">Patient</th>
                       <th className="text-left p-3 text-sm font-semibold text-gray-700">Date</th>
                       <th className="text-right p-3 text-sm font-semibold text-gray-700">Amount</th>
