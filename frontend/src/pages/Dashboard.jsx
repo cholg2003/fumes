@@ -434,7 +434,7 @@ const Dashboard = () => {
                 <div className="text-center">
                   <p className="text-sm text-gray-600 mb-2">Net Balance</p>
                   <p className={`text-3xl font-bold ${totalClaims > hospitalBalance ? 'text-green-600' : 'text-red-600'}`}>
-                    {totalClaims > hospitalBalance ? '+' : ''}${(totalClaims - hospitalBalance).toFixed(2)}
+                    {totalClaims > hospitalBalance ? '+' : ''}{formatCurrency(totalClaims - hospitalBalance)}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
                     {totalClaims > hospitalBalance 
