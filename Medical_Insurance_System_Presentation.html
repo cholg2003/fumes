@@ -1427,21 +1427,24 @@ NEW CLAIM SUBMITTED
 
 <!-- PAGE 12: MULTI-CURRENCY FEATURE -->
 <div class="page">
-    <h1>💱 Multi-Currency Support</h1>
+    <h1>💱 Universal Multi-Currency System</h1>
     
     <h2>Overview</h2>
     <p>
-        The system now supports multiple currencies, allowing hospitals in different countries 
-        to operate in their local currency while providing unified USD views for the superadmin.
+        The system features a <strong>universal multi-currency architecture</strong> that allows hospitals 
+        in any country to operate entirely in their local currency. The system automatically handles 
+        currency conversion, balance management, and cross-hospital accounting through a USD-based backend.
     </p>
     
     <h2>Currency Management</h2>
     <div class="highlight-box">
         <ul>
-            <li>📊 <strong>Currency CRUD:</strong> Superadmin can create, edit, and delete currencies</li>
-            <li>💵 <strong>Base Currency:</strong> USD is the system base currency (cannot be deleted)</li>
-            <li>🔄 <strong>Exchange Rates:</strong> All rates defined relative to USD</li>
+            <li>📊 <strong>Dynamic Currency CRUD:</strong> Superadmin can create, edit, and delete any currency</li>
+            <li>💵 <strong>Base Currency:</strong> USD is the universal accounting base (cannot be deleted)</li>
+            <li>🔄 <strong>Exchange Rates:</strong> All rates defined as "X local = 1 USD" (e.g., 150 KSH = 1 USD)</li>
             <li>🔢 <strong>Decimal Places:</strong> Configurable precision per currency (0-4 places)</li>
+            <li>🌍 <strong>Universal Support:</strong> Works with ANY currency - tested with 6 currencies</li>
+            <li>✨ <strong>Auto-Formatting:</strong> Space between symbol and amount + thousand separators</li>
         </ul>
     </div>
     
