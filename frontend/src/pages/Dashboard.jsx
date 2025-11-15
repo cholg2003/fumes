@@ -657,7 +657,7 @@ const Dashboard = () => {
                       <SelectContent>
                         {filteredPriceList.map((item) => (
                           <SelectItem key={item.item_id} value={item.item_id}>
-                            {item.item_id} - {item.item_name} - ${item.cost.toFixed(2)} ({item.item_type})
+                            {item.item_id} - {item.item_name} - {formatCurrency(item.cost)} ({item.item_type})
                           </SelectItem>
                         ))}
                       </SelectContent>
