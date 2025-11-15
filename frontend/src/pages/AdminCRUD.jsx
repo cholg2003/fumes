@@ -1937,7 +1937,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                         <td className="p-3 text-sm">{claim.hospital_name}</td>
                         <td className="p-3 text-sm">{claim.patient_name}</td>
                         <td className="p-3 text-sm">{new Date(claim.timestamp).toLocaleDateString()}</td>
-                        <td className="p-3 text-sm text-right font-medium">${claim.total_claim_amount.toFixed(2)}</td>
+                        <td className="p-3 text-sm text-right font-medium">$ {claim.total_claim_amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                         <td className="p-3 text-center">
                           <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                             claim.status === 'PENDING' 
