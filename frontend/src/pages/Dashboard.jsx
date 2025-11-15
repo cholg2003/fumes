@@ -53,6 +53,7 @@ const Dashboard = () => {
       navigate('/login');
       return;
     }
+    loadCurrencyInfo();
     loadPriceList();
     loadClaims();
     loadHospitalBalance();
