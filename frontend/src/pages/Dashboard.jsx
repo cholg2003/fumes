@@ -842,7 +842,29 @@ const Dashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {paginatedClaims.map((claim) => (
+                    {paginatedClaims.map((claim) => {
+                      // For superadmin, format each claim in its hospital's currency
+                      let claimCurrency = hospitalCurrency;
+                      if (isSuperAdmin && claim.hospital_name) {
+                        // Get the currency for this claim's hospital
+                        const hospitalStats = Object.entries(hospitalStats || {}).find(([name]) => name === claim.hospital_name);
+                        if (hospitalStats && hospitalStats[1]) {
+                          claimCurrency = {
+                            symbol: hospitalStats[1].currency_symbol || '$',
+                            decimal_places: hospitalStats[1].currency_decimals !== undefined ? hospitalStats[1].currency_decimals : 2
+                          };
+                        }
+                      }
+                      
+                      const formatClaimAmount = (amount) => {
+                        const formattedAmount = amount.toLocaleString('en-US', {
+                          minimumFractionDigits: claimCurrency.decimal_places,
+                          maximumFractionDigits: claimCurrency.decimal_places
+                        });
+                        return `${claimCurrency.symbol} ${formattedAmount}`;
+                      };
+                      
+                      return (
                       <tr key={claim.claim_id} className="border-b border-gray-100 hover:bg-gray-50">
                         <td className="p-3 text-sm font-medium text-gray-800">{claim.claim_id}</td>
                         {isSuperAdmin && (
@@ -854,7 +876,7 @@ const Dashboard = () => {
                         )}
                         <td className="p-3 text-sm text-gray-700">{claim.patient_name}</td>
                         <td className="p-3 text-sm text-gray-600">{new Date(claim.timestamp).toLocaleDateString()}</td>
-                        <td className="p-3 text-sm text-gray-800 text-right font-medium">{formatCurrency(claim.total_claim_amount)}</td>
+                        <td className="p-3 text-sm text-gray-800 text-right font-medium">{formatClaimAmount(claim.total_claim_amount)}</td>
                         <td className="p-3 text-center">
                           <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
                             claim.status === 'PENDING' 
