@@ -111,16 +111,31 @@ const Login = () => {
 
             <div className="space-y-2">
               <Label htmlFor="password" className="text-gray-700 font-medium">Password</Label>
-              <Input
-                id="password"
-                data-testid="login-password-input"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                required
-                className="h-11 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  data-testid="login-password-input"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyUp={handleKeyPress}
+                  placeholder="Enter your password"
+                  required
+                  className={`h-11 border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${capsLockOn ? 'border-yellow-400' : ''}`}
+                />
+                {capsLockOn && (
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <div className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded flex items-center gap-1">
+                      <span className="font-semibold">⚠</span> Caps Lock is ON
+                    </div>
+                  </div>
+                )}
+              </div>
+              {capsLockOn && (
+                <p className="text-xs text-yellow-600 flex items-center gap-1">
+                  <span className="font-semibold">⚠</span> Caps Lock is ON - Your password may be incorrect
+                </p>
+              )}
             </div>
 
             <Button
