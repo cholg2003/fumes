@@ -87,7 +87,9 @@ const Dashboard = () => {
 
   const loadClaims = async () => {
     try {
-      const response = await axios.get(`${API}/claims`, axiosConfig);
+      // Superadmin gets all claims, others get hospital-specific claims
+      const endpoint = isSuperAdmin ? `${API}/admin/claims/all` : `${API}/claims`;
+      const response = await axios.get(endpoint, axiosConfig);
       setClaims(response.data);
     } catch (error) {
       toast.error('Failed to load claims');
