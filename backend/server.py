@@ -461,18 +461,20 @@ async def submit_claim(claim_submission: ClaimSubmission, current_user: dict = D
         }
         await db.claims_details.insert_one(claim_detail)
     
-    # Update family balance
-    new_balance = family["remaining_balance"] - total_amount
+    # Update family balance (deduct USD equivalent)
+    new_balance_usd = family["remaining_balance"] - total_amount_usd
     await db.families.update_one(
         {"family_id": patient["family_id"]},
-        {"$set": {"remaining_balance": new_balance}}
+        {"$set": {"remaining_balance": new_balance_usd}}
     )
     
     return {
         "success": True,
         "claim_id": claim_id,
-        "total_amount": total_amount,
-        "new_balance": new_balance
+        "total_amount": total_amount,  # Amount in local currency
+        "total_amount_usd": total_amount_usd,  # Amount in USD
+        "new_balance": new_balance_usd,  # Balance in USD
+        "currency_code": currency_code
     }
 
 @api_router.get("/claims")
