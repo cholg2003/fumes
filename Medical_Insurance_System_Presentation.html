@@ -1425,7 +1425,277 @@ NEW CLAIM SUBMITTED
     <div class="footer">Page 11</div>
 </div>
 
-<!-- PAGE 12: BENEFITS & CONCLUSION -->
+<!-- PAGE 12: MULTI-CURRENCY FEATURE -->
+<div class="page">
+    <h1>💱 Multi-Currency Support</h1>
+    
+    <h2>Overview</h2>
+    <p>
+        The system now supports multiple currencies, allowing hospitals in different countries 
+        to operate in their local currency while providing unified USD views for the superadmin.
+    </p>
+    
+    <h2>Currency Management</h2>
+    <div class="highlight-box">
+        <ul>
+            <li>📊 <strong>Currency CRUD:</strong> Superadmin can create, edit, and delete currencies</li>
+            <li>💵 <strong>Base Currency:</strong> USD is the system base currency (cannot be deleted)</li>
+            <li>🔄 <strong>Exchange Rates:</strong> All rates defined relative to USD</li>
+            <li>🔢 <strong>Decimal Places:</strong> Configurable precision per currency (0-4 places)</li>
+        </ul>
+    </div>
+    
+    <h2>Hospital Currency Assignment</h2>
+    <ul>
+        <li>Each hospital is assigned a specific currency</li>
+        <li>All financial data (claims, balances, price lists) stored in hospital's local currency</li>
+        <li>Currency displayed as badges throughout the system</li>
+        <li>Existing hospitals default to USD</li>
+    </ul>
+    
+    <h2>Currency Display</h2>
+    <table class="data-table" style="margin-top: 20px;">
+        <thead>
+            <tr>
+                <th>Component</th>
+                <th>Display Format</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Hospital Table</td>
+                <td>Currency badge (e.g., <span class="status-badge" style="background: #dbeafe; color: #1e40af;">USD</span>)</td>
+            </tr>
+            <tr>
+                <td>Price Lists</td>
+                <td>Currency column + symbol in amount (e.g., KSh 150.00)</td>
+            </tr>
+            <tr>
+                <td>Hospital Selector</td>
+                <td>"Hospital Name ($ USD)" format</td>
+            </tr>
+            <tr>
+                <td>Superadmin View</td>
+                <td>Toggle between local currency and USD equivalent</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h2>Supported Currencies (Default)</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
+        <div class="role-card">
+            <h3>💵 USD - US Dollar</h3>
+            <p>Symbol: $<br>Rate: 1.0000<br>Decimals: 2</p>
+        </div>
+        <div class="role-card">
+            <h3>🇰🇪 KSH - Kenyan Shilling</h3>
+            <p>Symbol: KSh<br>Rate: 150.0000<br>Decimals: 2</p>
+        </div>
+        <div class="role-card">
+            <h3>🇺🇬 UGX - Ugandan Shilling</h3>
+            <p>Symbol: USh<br>Rate: 3700.0000<br>Decimals: 0</p>
+        </div>
+        <div class="role-card">
+            <h3>🇹🇿 TZS - Tanzanian Shilling</h3>
+            <p>Symbol: TSh<br>Rate: 2500.0000<br>Decimals: 0</p>
+        </div>
+    </div>
+    
+    <div class="footer">Page 12</div>
+</div>
+
+<!-- PAGE 13: PAGINATION & FILTERING -->
+<div class="page">
+    <h1>📄 Pagination & Advanced Filtering</h1>
+    
+    <h2>Pagination System</h2>
+    <p>
+        All tables now support pagination with 20 items per page, improving performance 
+        and user experience when dealing with large datasets.
+    </p>
+    
+    <h3>Tables with Pagination:</h3>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
+        <div class="role-card">
+            <ul>
+                <li>✅ Hospitals</li>
+                <li>✅ Users</li>
+                <li>✅ Families</li>
+                <li>✅ Members</li>
+            </ul>
+        </div>
+        <div class="role-card">
+            <ul>
+                <li>✅ Price Lists</li>
+                <li>✅ Claims (Admin Panel)</li>
+                <li>✅ Claims (Dashboard)</li>
+                <li>✅ Currencies</li>
+            </ul>
+        </div>
+    </div>
+    
+    <h3>Pagination Features:</h3>
+    <ul>
+        <li>🔢 <strong>Page Numbers:</strong> Clear numeric pagination (1, 2, 3...)</li>
+        <li>⬅️➡️ <strong>Navigation:</strong> Previous/Next buttons with disabled states</li>
+        <li>🎯 <strong>Active Page:</strong> Current page highlighted in blue</li>
+        <li>🔍 <strong>Search Compatible:</strong> Works seamlessly with filtered results</li>
+        <li>💡 <strong>Smart Display:</strong> Only appears when items exceed 20</li>
+        <li>📊 <strong>Independent State:</strong> Each table maintains its own page</li>
+    </ul>
+    
+    <h2>Claims Status Filtering</h2>
+    <div class="highlight-box">
+        <h3>Dashboard Claims Filter</h3>
+        <p>Finance and Admin users can now filter claims by status on the dashboard:</p>
+        <ul>
+            <li>📋 <strong>All Status:</strong> View all claims (default)</li>
+            <li>⏳ <strong>Pending:</strong> Only unpaid claims</li>
+            <li>✅ <strong>Paid:</strong> Only paid claims</li>
+            <li>❌ <strong>Voided:</strong> Only cancelled claims</li>
+        </ul>
+        
+        <p style="margin-top: 15px;"><strong>Filter Features:</strong></p>
+        <ul>
+            <li>Real-time filtering with instant results</li>
+            <li>Shows count: "Showing X of Y claims"</li>
+            <li>Auto-resets to page 1 on filter change</li>
+            <li>Empty state when no matches found</li>
+            <li>Pagination works with filtered data</li>
+        </ul>
+    </div>
+    
+    <h2>User Experience Benefits</h2>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Feature</th>
+                <th>Benefit</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Pagination</td>
+                <td>Faster page loads, easier navigation through large datasets</td>
+            </tr>
+            <tr>
+                <td>Status Filter</td>
+                <td>Quick access to specific claim types, better workflow focus</td>
+            </tr>
+            <tr>
+                <td>Combined Features</td>
+                <td>Can filter and paginate simultaneously for precise data views</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="footer">Page 13</div>
+</div>
+
+<!-- PAGE 14: BULK OPERATIONS -->
+<div class="page">
+    <h1>⚡ Bulk Selection & Actions</h1>
+    
+    <h2>Overview</h2>
+    <p>
+        Superadmins can now select multiple items and perform bulk operations, 
+        dramatically improving efficiency when managing large amounts of data.
+    </p>
+    
+    <h2>Bulk Selection Features</h2>
+    <ul>
+        <li>☑️ <strong>Select All:</strong> Checkbox in header selects entire page</li>
+        <li>☑️ <strong>Individual Selection:</strong> Checkbox for each row</li>
+        <li>🔢 <strong>Selection Count:</strong> Shows number of selected items in action buttons</li>
+        <li>🎯 <strong>Smart Buttons:</strong> Bulk action buttons only appear when items selected</li>
+        <li>🔄 <strong>Page-Level:</strong> Selection applies to current page (20 items max)</li>
+    </ul>
+    
+    <h2>Bulk Actions by Table</h2>
+    
+    <h3>🏥 Hospitals</h3>
+    <div class="role-card">
+        <ul>
+            <li>🗑️ <strong>Bulk Delete:</strong> Delete multiple hospitals at once</li>
+            <li>⚠️ Deletion fails if hospital has users or price lists</li>
+        </ul>
+    </div>
+    
+    <h3>📋 Claims</h3>
+    <div class="role-card">
+        <ul>
+            <li>🔄 <strong>Bulk Status Change:</strong> Change status of multiple claims</li>
+            <li>  Options: PENDING → PAID, PENDING → VOIDED, etc.</li>
+            <li>  Dialog with dropdown to select new status</li>
+            <li>🗑️ <strong>Bulk Delete:</strong> Delete multiple claims with balance refund</li>
+        </ul>
+    </div>
+    
+    <h3>👥 Users</h3>
+    <div class="role-card">
+        <ul>
+            <li>🗑️ <strong>Bulk Delete:</strong> Remove multiple user accounts</li>
+            <li>🛡️ Superadmin account cannot be deleted</li>
+        </ul>
+    </div>
+    
+    <h3>👨‍👩‍👧 Families & Members</h3>
+    <div class="role-card">
+        <ul>
+            <li>⏸️ <strong>Bulk Suspend:</strong> Suspend multiple families/members</li>
+            <li>▶️ <strong>Bulk Activate:</strong> Reactivate suspended accounts</li>
+            <li>🗑️ <strong>Bulk Delete:</strong> Remove multiple families/members</li>
+        </ul>
+    </div>
+    
+    <h3>💰 Price Lists</h3>
+    <div class="role-card">
+        <ul>
+            <li>🗑️ <strong>Bulk Delete:</strong> Remove multiple price list items</li>
+        </ul>
+    </div>
+    
+    <h3>💱 Currencies</h3>
+    <div class="role-card">
+        <ul>
+            <li>🗑️ <strong>Bulk Delete:</strong> Remove multiple currencies</li>
+            <li>🛡️ USD cannot be deleted (base currency protection)</li>
+        </ul>
+    </div>
+    
+    <h2>Bulk Operation Workflow</h2>
+    <div class="workflow-step">
+        <strong>Step 1:</strong> Navigate to desired table
+    </div>
+    <div class="workflow-step">
+        <strong>Step 2:</strong> Select items using checkboxes (or "Select All")
+    </div>
+    <div class="workflow-step">
+        <strong>Step 3:</strong> Click bulk action button (e.g., "Delete 5 Selected")
+    </div>
+    <div class="workflow-step">
+        <strong>Step 4:</strong> Confirm action in dialog
+    </div>
+    <div class="workflow-step">
+        <strong>Step 5:</strong> System processes all selected items
+    </div>
+    <div class="workflow-step">
+        <strong>Step 6:</strong> Success/failure summary displayed
+    </div>
+    
+    <h2>Safety Features</h2>
+    <ul>
+        <li>⚠️ <strong>Confirmation Dialogs:</strong> All bulk actions require confirmation</li>
+        <li>📊 <strong>Progress Feedback:</strong> Shows success/failure count</li>
+        <li>🔒 <strong>Permission Checks:</strong> Only superadmin can perform bulk operations</li>
+        <li>🛡️ <strong>Protected Items:</strong> Critical items (USD, superadmin) cannot be deleted</li>
+        <li>❌ <strong>Graceful Failures:</strong> Individual failures don't stop entire operation</li>
+    </ul>
+    
+    <div class="footer">Page 14</div>
+</div>
+
+<!-- PAGE 15: BENEFITS & CONCLUSION -->
 <div class="page">
     <h1>✨ System Benefits & Advantages</h1>
     
