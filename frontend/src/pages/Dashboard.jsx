@@ -466,7 +466,7 @@ const Dashboard = () => {
                     <div className="space-y-3">
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600">Pending Claims:</span>
-                        <span className="text-sm font-medium text-blue-600">{stats.pending_count} (${stats.total_pending.toFixed(2)})</span>
+                        <span className="text-sm font-medium text-blue-600">{stats.pending_count} ({formatCurrency(stats.total_pending)})</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600">Paid Claims:</span>
