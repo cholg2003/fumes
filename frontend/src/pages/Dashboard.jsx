@@ -340,7 +340,7 @@ const Dashboard = () => {
   }, [claimStatusFilter]);
 
   const handleMarkAsPaid = async (claimId, claimAmount) => {
-    if (!window.confirm(`Mark this claim as paid? This will deduct $${claimAmount.toFixed(2)} from your hospital balance.`)) {
+    if (!window.confirm(`Mark this claim as paid? This will deduct ${formatCurrency(claimAmount)} from your hospital balance.`)) {
       return;
     }
 
