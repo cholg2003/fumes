@@ -123,6 +123,30 @@ const Dashboard = () => {
     }
   };
 
+  const loadCurrencyInfo = async () => {
+    try {
+      // Load all currencies
+      const currenciesResponse = await axios.get(`${API}/currencies`, axiosConfig);
+      const currencyMap = {};
+      currenciesResponse.data.forEach(c => {
+        currencyMap[c.code] = c;
+      });
+      setCurrencies(currencyMap);
+
+      // If not superadmin, load hospital's currency
+      if (!isSuperAdmin && hospitalName) {
+        const hospitalResponse = await axios.get(`${API}/admin/hospitals`, axiosConfig);
+        const hospital = hospitalResponse.data.find(h => h.hospital_name === hospitalName);
+        if (hospital && hospital.currency_code) {
+          const currency = currencyMap[hospital.currency_code] || { code: 'USD', symbol: '$', decimal_places: 2 };
+          setHospitalCurrency(currency);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load currency info:', error);
+    }
+  };
+
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
