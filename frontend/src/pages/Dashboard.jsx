@@ -439,17 +439,24 @@ const Dashboard = () => {
                 </div>
                 <div className="text-center">
                   <p className="text-sm text-gray-600 mb-2">Deposit Balance</p>
-                  <p className="text-2xl font-bold text-purple-600">{formatCurrency(hospitalBalance)}</p>
+                  <p className="text-2xl font-bold text-purple-600">
+                    {formatCurrency(hospitalBalance * (hospitalCurrency.rate_to_usd || 1))}
+                  </p>
+                  {!isSuperAdmin && hospitalCurrency.code !== 'USD' && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      (≈ $ {hospitalBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD)
+                    </p>
+                  )}
                 </div>
                 <div className="text-center">
                   <p className="text-sm text-gray-600 mb-2">Net Balance</p>
-                  <p className={`text-3xl font-bold ${totalClaims > hospitalBalance ? 'text-green-600' : 'text-red-600'}`}>
-                    {totalClaims > hospitalBalance ? '+' : ''}{formatCurrency(totalClaims - hospitalBalance)}
+                  <p className={`text-3xl font-bold ${totalClaims > (hospitalBalance * (hospitalCurrency.rate_to_usd || 1)) ? 'text-green-600' : 'text-red-600'}`}>
+                    {totalClaims > (hospitalBalance * (hospitalCurrency.rate_to_usd || 1)) ? '+' : ''}{formatCurrency(totalClaims - (hospitalBalance * (hospitalCurrency.rate_to_usd || 1)))}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
-                    {totalClaims > hospitalBalance 
+                    {totalClaims > (hospitalBalance * (hospitalCurrency.rate_to_usd || 1))
                       ? 'Insurance owes hospital' 
-                      : totalClaims < hospitalBalance
+                      : totalClaims < (hospitalBalance * (hospitalCurrency.rate_to_usd || 1))
                       ? 'Hospital owes insurance'
                       : 'Balanced'}
                   </p>
