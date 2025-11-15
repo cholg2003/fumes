@@ -557,17 +557,33 @@ async def get_hospital_claims_stats(current_user: dict = Depends(get_current_use
     
     stats = {}
     for result in results:
-        hospital = result["_id"]
+        hospital_name = result["_id"]
         total_pending = result["total_pending"]
         total_paid = result["total_paid"]
         outstanding = total_pending  # Outstanding is what's still PENDING (not yet paid)
         
-        stats[hospital] = {
+        # Get hospital's currency
+        hospital = await db.hospitals.find_one(
+            {"hospital_name": hospital_name},
+            {"_id": 0, "currency_code": 1}
+        )
+        currency_code = hospital.get("currency_code", "USD") if hospital else "USD"
+        
+        # Get currency details
+        currency = await db.currencies.find_one(
+            {"code": currency_code},
+            {"_id": 0, "symbol": 1, "decimal_places": 1}
+        )
+        
+        stats[hospital_name] = {
             "total_pending": total_pending,
             "total_paid": total_paid,
             "outstanding": outstanding,
             "pending_count": result["pending_count"],
-            "paid_count": result["paid_count"]
+            "paid_count": result["paid_count"],
+            "currency_code": currency_code,
+            "currency_symbol": currency.get("symbol", "$") if currency else "$",
+            "currency_decimals": currency.get("decimal_places", 2) if currency else 2
         }
     
     return stats
