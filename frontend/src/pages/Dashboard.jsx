@@ -706,9 +706,9 @@ const Dashboard = () => {
                           <tr key={index} className="border-b border-gray-100 hover:bg-gray-50">
                             <td className="p-3 text-sm text-gray-800">{item.item_name}</td>
                             <td className="p-3 text-sm text-gray-600">{item.item_type}</td>
-                            <td className="p-3 text-sm text-gray-600 text-right">${item.cost.toFixed(2)}</td>
+                            <td className="p-3 text-sm text-gray-600 text-right">{formatCurrency(item.cost)}</td>
                             <td className="p-3 text-sm text-gray-800 text-center font-medium">{item.quantity || 1}</td>
-                            <td className="p-3 text-sm text-gray-800 text-right font-bold">${(item.cost * (item.quantity || 1)).toFixed(2)}</td>
+                            <td className="p-3 text-sm text-gray-800 text-right font-bold">{formatCurrency(item.cost * (item.quantity || 1))}</td>
                             <td className="p-3 text-center">
                               <Button
                                 data-testid={`remove-item-${index}`}
