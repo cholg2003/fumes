@@ -432,7 +432,7 @@ const Dashboard = () => {
                 </div>
                 <div className="text-center">
                   <p className="text-sm text-gray-600 mb-2">Deposit Balance</p>
-                  <p className="text-2xl font-bold text-purple-600">${hospitalBalance.toFixed(2)}</p>
+                  <p className="text-2xl font-bold text-purple-600">{formatCurrency(hospitalBalance)}</p>
                 </div>
                 <div className="text-center">
                   <p className="text-sm text-gray-600 mb-2">Net Balance</p>
