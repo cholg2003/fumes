@@ -308,6 +308,14 @@ const Dashboard = () => {
     }
   };
 
+  // Currency formatting helper
+  const formatCurrency = (amount, currencyCode = null) => {
+    const currency = currencyCode ? currencies[currencyCode] : hospitalCurrency;
+    const symbol = currency?.symbol || '$';
+    const decimals = currency?.decimal_places !== undefined ? currency.decimal_places : 2;
+    return `${symbol}${amount.toFixed(decimals)}`;
+  };
+
   // Pagination and filtering helpers
   const paginate = (array, page) => {
     const startIndex = (page - 1) * ITEMS_PER_PAGE;
