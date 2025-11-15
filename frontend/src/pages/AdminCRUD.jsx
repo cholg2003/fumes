@@ -1493,7 +1493,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                         <td className="p-3 text-sm font-medium">{family.family_id}</td>
                         <td className="p-3 text-sm">{family.principle_member_name}</td>
                         <td className="p-3 text-sm text-right">${family.total_allotment.toFixed(2)}</td>
-                        <td className="p-3 text-sm text-right font-medium">${family.remaining_balance.toFixed(2)}</td>
+                        <td className="p-3 text-sm text-right font-medium">$ {family.remaining_balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                         <td className="p-3 text-center">
                           <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
                             family.status === 'Suspended' 
