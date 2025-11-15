@@ -1832,7 +1832,7 @@ GS-3001,John Doe,7500,GS-3001-01,Jane,Marie,Doe,1982-03-20,Female,Spouse`;
                             {currency?.code || 'USD'}
                           </span>
                         </td>
-                        <td className="p-3 text-sm text-right font-medium">{currency?.symbol || '$'}{item.cost.toFixed(currency?.decimal_places || 2)}</td>
+                        <td className="p-3 text-sm text-right font-medium">{formatCurrency(item.cost, currency)}</td>
                         <td className="p-3 text-center">
                           <div className="flex items-center justify-center gap-2">
                             <Button variant="ghost" size="sm" onClick={() => openEditDialog('pricelist', item)}>
