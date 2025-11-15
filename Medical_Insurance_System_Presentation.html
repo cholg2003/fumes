@@ -1751,7 +1751,206 @@ NEW CLAIM SUBMITTED
     <div class="footer">Page 14</div>
 </div>
 
-<!-- PAGE 15: BENEFITS & CONCLUSION -->
+<!-- PAGE 15: DEPOSITS & FINANCIAL MANAGEMENT -->
+<div class="page">
+    <h1>💰 Deposit System & Financial Management</h1>
+    
+    <h2>Multi-Currency Deposit System</h2>
+    <p>
+        The system features intelligent deposit management that works seamlessly with multiple currencies,
+        providing real-time financial status updates across all dashboards.
+    </p>
+    
+    <h2>How Deposits Work</h2>
+    <div class="workflow-step">
+        <strong>Step 1:</strong> Superadmin adds deposit in USD (universal accounting)
+    </div>
+    <div class="workflow-step">
+        <strong>Step 2:</strong> System stores deposit as USD in database
+    </div>
+    <div class="workflow-step">
+        <strong>Step 3:</strong> Hospital dashboard converts to local currency for display
+    </div>
+    <div class="workflow-step">
+        <strong>Step 4:</strong> Financial status automatically recalculates
+    </div>
+    <div class="workflow-step">
+        <strong>Step 5:</strong> All dashboards reflect updated balances instantly
+    </div>
+    
+    <h2>Real-World Example</h2>
+    <div class="highlight-box">
+        <h3>KSH Hospital Deposit Flow</h3>
+        <table class="data-table" style="margin-top: 10px;">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>USD (Backend)</th>
+                    <th>KSH (Display)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Initial Balance</td>
+                    <td>$0.00</td>
+                    <td>KSh 0.00</td>
+                </tr>
+                <tr>
+                    <td>Add Deposit</td>
+                    <td>+$50.00</td>
+                    <td>(converts automatically)</td>
+                </tr>
+                <tr>
+                    <td>New Balance</td>
+                    <td>$50.00</td>
+                    <td><strong>KSh 7,500.00</strong> (50 × 150)</td>
+                </tr>
+                <tr>
+                    <td>Create Claim</td>
+                    <td>-$1.87 (280 ÷ 150)</td>
+                    <td><strong>KSh 280.00</strong></td>
+                </tr>
+                <tr>
+                    <td>Net Balance</td>
+                    <td>$48.13</td>
+                    <td><strong>-KSh 7,220.00</strong> (hospital owes)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <h2>Dashboard Integration</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div class="role-card">
+            <h3>Hospital Dashboard</h3>
+            <ul>
+                <li>Deposit Balance in local currency</li>
+                <li>USD reference shown below</li>
+                <li>Net Balance auto-calculated</li>
+                <li>Real-time updates</li>
+            </ul>
+        </div>
+        <div class="role-card">
+            <h3>Superadmin Dashboard</h3>
+            <ul>
+                <li>Outstanding Claims by Hospital</li>
+                <li>Each hospital in local currency</li>
+                <li>Currency badges (KSH, NGN, SSP)</li>
+                <li>Cross-hospital financial view</li>
+            </ul>
+        </div>
+    </div>
+    
+    <h2>Financial Status Components</h2>
+    <ul>
+        <li>📊 <strong>Total Claims:</strong> Sum of all pending + paid claims (local currency)</li>
+        <li>💰 <strong>Deposit Balance:</strong> Hospital's available funds (converted to local)</li>
+        <li>⚖️ <strong>Net Balance:</strong> Claims - Deposits (shows who owes whom)</li>
+        <li>🔄 <strong>Real-time Updates:</strong> All changes reflect immediately</li>
+        <li>💱 <strong>USD Reference:</strong> Shows original USD amount for non-USD hospitals</li>
+    </ul>
+    
+    <div class="footer">Page 15</div>
+</div>
+
+<!-- PAGE 16: ENHANCED LOGIN & SECURITY -->
+<div class="page">
+    <h1>🔐 Enhanced Login & User Experience</h1>
+    
+    <h2>Intelligent Error Messages</h2>
+    <p>
+        The login system now provides detailed, actionable error messages to help users 
+        troubleshoot authentication issues independently.
+    </p>
+    
+    <h2>Error Types & Messages</h2>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>HTTP Status</th>
+                <th>Error Message</th>
+                <th>User Guidance</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>401</td>
+                <td>"Invalid username or password"</td>
+                <td>Check credentials and try again</td>
+            </tr>
+            <tr>
+                <td>403</td>
+                <td>"Account suspended"</td>
+                <td>Contact administrator</td>
+            </tr>
+            <tr>
+                <td>404</td>
+                <td>"User not found"</td>
+                <td>Verify username spelling</td>
+            </tr>
+            <tr>
+                <td>500</td>
+                <td>"Server error"</td>
+                <td>Try again later or contact support</td>
+            </tr>
+            <tr>
+                <td>Network</td>
+                <td>"Cannot connect to server"</td>
+                <td>Check internet connection</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h2>Caps Lock Detection</h2>
+    <div class="highlight-box">
+        <h3>Real-Time Caps Lock Warning</h3>
+        <ul>
+            <li>⌨️ <strong>Live Detection:</strong> Monitors Caps Lock state while typing password</li>
+            <li>⚠️ <strong>Visual Warning:</strong> Yellow badge appears inside password field</li>
+            <li>📝 <strong>Help Text:</strong> "Caps Lock is ON - Your password may be incorrect"</li>
+            <li>🎨 <strong>UI Highlight:</strong> Yellow border on password field when active</li>
+            <li>✨ <strong>Dynamic:</strong> Warning appears/disappears as user types</li>
+        </ul>
+    </div>
+    
+    <h2>Error Display UI</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div class="role-card" style="background: #fef2f2; border-color: #fca5a5;">
+            <h3 style="color: #dc2626;">Error Box (Red)</h3>
+            <ul>
+                <li>Appears below password field</li>
+                <li>Red border and background</li>
+                <li>✖ Icon for clear indication</li>
+                <li>Detailed error message</li>
+                <li>Auto-dismisses on retry</li>
+            </ul>
+        </div>
+        <div class="role-card" style="background: #fef9c3; border-color: #fde047;">
+            <h3 style="color: #ca8a04;">Caps Lock Warning (Yellow)</h3>
+            <ul>
+                <li>Inside password field (right side)</li>
+                <li>Yellow badge with ⚠ symbol</li>
+                <li>Warning text below field</li>
+                <li>Prevents common mistakes</li>
+                <li>Real-time detection</li>
+            </ul>
+        </div>
+    </div>
+    
+    <h2>User Experience Benefits</h2>
+    <ul>
+        <li>✅ <strong>Self-Service:</strong> Users can troubleshoot login issues independently</li>
+        <li>🎯 <strong>Actionable Guidance:</strong> Clear instructions on what to do next</li>
+        <li>⚡ <strong>Faster Resolution:</strong> Reduces support tickets for login problems</li>
+        <li>🔒 <strong>Security:</strong> Doesn't reveal whether username or password is wrong</li>
+        <li>👥 <strong>User-Friendly:</strong> Non-technical error messages</li>
+        <li>🌐 <strong>Professional:</strong> Enterprise-grade error handling</li>
+    </ul>
+    
+    <div class="footer">Page 16</div>
+</div>
+
+<!-- PAGE 17: BENEFITS & CONCLUSION -->
 <div class="page">
     <h1>✨ System Benefits & Advantages</h1>
     
