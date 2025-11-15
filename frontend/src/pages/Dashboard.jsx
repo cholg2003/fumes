@@ -254,7 +254,7 @@ const Dashboard = () => {
 
     const totalCost = getTotalClaimCost();
     if (totalCost > selectedPatient.remaining_balance) {
-      toast.error(`Insufficient funds! Available: $${selectedPatient.remaining_balance.toFixed(2)}, Required: $${totalCost.toFixed(2)}`);
+      toast.error(`Insufficient funds! Available: ${formatCurrency(selectedPatient.remaining_balance)}, Required: ${formatCurrency(totalCost)}`);
       return;
     }
 
