@@ -876,6 +876,18 @@ async def get_hospital_balance(current_user: dict = Depends(get_current_user)):
         "deposit_balance": hospital.get("deposit_balance", 0.0)
     }
 
+@api_router.get("/hospital/info")
+async def get_hospital_info(current_user: dict = Depends(get_current_user)):
+    # Get hospital with all info including currency
+    hospital = await db.hospitals.find_one(
+        {"hospital_name": current_user["hospital_name"]},
+        {"_id": 0}
+    )
+    if not hospital:
+        raise HTTPException(status_code=404, detail="Hospital not found")
+    
+    return hospital
+
 
 # Admin Routes
 @api_router.get("/admin/families")
