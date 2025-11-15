@@ -389,6 +389,18 @@ test_plan:
         agent: "testing"
         comment: "TESTED: NEW Claim Status Editing feature working excellently with 90% success rate (36/40 tests passed). Core functionality verified: 1) STATUS TRANSITIONS: All 6 status transitions work correctly (PENDING↔VOIDED↔PAID) with proper balance adjustments ✅, 2) BALANCE LOGIC: Hospital balance adjustments working perfectly, family balance adjustments working with minor calculation differences ✅, 3) ACCESS CONTROL: Only superadmin can edit claims (403 for others) ✅, 4) VALIDATION: Invalid status values rejected (400), non-existent claims handled (404), multiple items supported ✅, 5) INSUFFICIENT BALANCE: Proper validation prevents invalid transitions ✅. Minor issues: Family balance calculations show small discrepancies in complex transitions but core logic is sound. Feature is production-ready for superadmin claim management."
 
+  - task: "SSP Currency Claim Submission for Test Hospital"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "TESTED: SSP Currency claim submission working perfectly with 100% success rate (13/13 tests passed). Comprehensive testing verified: 1) AUTHENTICATION: test_reception/TestSSP@2024 login successful for Test Hospital ✅, 2) FAMILY SEARCH: SEC-2413 family found with correct $465 USD balance and 3 members ✅, 3) PRICE LIST: TEST-ITEM-001 found with correct 100 SSP cost ✅, 4) CLAIM SUBMISSION: Successfully submitted claim with proper currency handling ✅, 5) CURRENCY CONVERSION: Perfect calculation (100 SSP ÷ 5800 = $0.017241 USD) ✅, 6) BALANCE DEDUCTION: Family balance correctly reduced from $465.00 to $464.982759 USD ✅, 7) CLAIM VERIFICATION: Claim created with PENDING status and correct details ✅. All currency conversion logic, balance calculations, and multi-currency claim processing working flawlessly. Feature is production-ready."
+
 agent_communication:
   - agent: "main"
     message: "Starting implementation of two features: 1) Searchable price list items by Item ID/Name, 2) Family/Member suspension system with status field. Will implement backend changes first, then frontend."
