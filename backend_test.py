@@ -2257,6 +2257,215 @@ class MedicalBillingAPITester:
         print(f"   ✅ Claim Status Editing feature testing completed")
         return True
 
+    def test_ssp_currency_claim_submission(self):
+        """Test claim submission for Test Hospital using SSP currency"""
+        print(f"\n💱 Testing SSP Currency Claim Submission for Test Hospital...")
+        
+        # Test 1: Login as test_reception user
+        if not self.test_login("test_reception", "TestSSP@2024"):
+            self.log_test("SSP Currency Test Setup", False, "Could not login as test_reception")
+            return False
+        
+        print(f"   Logged in as: {self.username}")
+        print(f"   Hospital: {self.hospital_name}")
+        
+        # Test 2: Search for family SEC-2413
+        success, search_response = self.run_test(
+            "Search Family SEC-2413",
+            "GET",
+            "patients/search?query=SEC-2413",
+            200
+        )
+        
+        if not success:
+            self.log_test("Family Search SEC-2413", False, "Could not find family SEC-2413")
+            return False
+        
+        family_data = None
+        members_data = []
+        
+        if search_response.get("type") == "family":
+            family_data = search_response.get("family")
+            members_data = search_response.get("members", [])
+            
+            if family_data:
+                print(f"   Found family: {family_data.get('family_id')}")
+                print(f"   Principal: {family_data.get('principle_member_name')}")
+                print(f"   Balance: ${family_data.get('remaining_balance', 0):.2f} USD")
+                print(f"   Members: {len(members_data)}")
+                
+                # Verify balance is approximately $465 USD
+                expected_balance = 465.0
+                actual_balance = family_data.get('remaining_balance', 0)
+                if abs(actual_balance - expected_balance) < 1.0:
+                    self.log_test("Family Balance Verification", True, f"Balance ${actual_balance:.2f} USD matches expected ~${expected_balance} USD")
+                else:
+                    self.log_test("Family Balance Verification", False, f"Balance ${actual_balance:.2f} USD does not match expected ~${expected_balance} USD")
+            else:
+                self.log_test("Family Data Retrieval", False, "Family SEC-2413 not found in search results")
+                return False
+        else:
+            self.log_test("Family Search Type", False, f"Expected family search, got {search_response.get('type')}")
+            return False
+        
+        # Test 3: Get price list and find TEST-ITEM-001
+        success, price_items = self.run_test(
+            "Get Price List for Test Hospital",
+            "GET",
+            "pricelists",
+            200
+        )
+        
+        if not success:
+            self.log_test("Price List Retrieval", False, "Could not get price list")
+            return False
+        
+        test_item = None
+        for item in price_items:
+            if item.get('item_id') == 'TEST-ITEM-001':
+                test_item = item
+                break
+        
+        if test_item:
+            print(f"   Found item: {test_item.get('item_id')} - {test_item.get('item_name')}")
+            print(f"   Cost: {test_item.get('cost')} SSP")
+            
+            # Verify cost is SSP 100
+            expected_cost = 100.0
+            actual_cost = test_item.get('cost', 0)
+            if abs(actual_cost - expected_cost) < 0.01:
+                self.log_test("Item Cost Verification", True, f"Cost {actual_cost} SSP matches expected {expected_cost} SSP")
+            else:
+                self.log_test("Item Cost Verification", False, f"Cost {actual_cost} SSP does not match expected {expected_cost} SSP")
+        else:
+            self.log_test("Test Item Search", False, "TEST-ITEM-001 not found in price list")
+            return False
+        
+        # Test 4: Select a member from the family for claim submission
+        if not members_data:
+            self.log_test("Member Selection", False, "No members found in family SEC-2413")
+            return False
+        
+        # Use first member for testing
+        test_member = members_data[0]
+        print(f"   Selected member: {test_member.get('serial_number')} - {test_member.get('first_name')} {test_member.get('last_name')}")
+        
+        # Test 5: Submit claim with TEST-ITEM-001
+        claim_data = {
+            "patient_serial_number": test_member.get('serial_number'),
+            "claim_items": [{
+                "item_id": test_item.get('item_id'),
+                "item_name": test_item.get('item_name'),
+                "item_cost": test_item.get('cost'),
+                "quantity": 1
+            }]
+        }
+        
+        success, claim_response = self.run_test(
+            "Submit Claim with TEST-ITEM-001",
+            "POST",
+            "claims/submit",
+            200,
+            data=claim_data
+        )
+        
+        if success:
+            claim_id = claim_response.get('claim_id')
+            total_amount_ssp = claim_response.get('total_amount', 0)
+            total_amount_usd = claim_response.get('total_amount_usd', 0)
+            new_balance_usd = claim_response.get('new_balance', 0)
+            currency_code = claim_response.get('currency_code', 'Unknown')
+            
+            print(f"   ✅ Claim submitted successfully!")
+            print(f"   Claim ID: {claim_id}")
+            print(f"   Amount: {total_amount_ssp} {currency_code}")
+            print(f"   Amount USD: ${total_amount_usd:.6f}")
+            print(f"   New balance: ${new_balance_usd:.6f} USD")
+            
+            # Test 6: Verify currency conversion calculations
+            # Expected: SSP 100 / 5800 = $0.017241 USD
+            expected_usd_amount = 100.0 / 5800.0
+            if abs(total_amount_usd - expected_usd_amount) < 0.000001:
+                self.log_test("Currency Conversion Verification", True, f"${total_amount_usd:.6f} USD matches expected ${expected_usd_amount:.6f} USD")
+            else:
+                self.log_test("Currency Conversion Verification", False, f"${total_amount_usd:.6f} USD does not match expected ${expected_usd_amount:.6f} USD")
+            
+            # Test 7: Verify balance deduction
+            # Expected new balance: $465 - $0.017241 = $464.982759
+            expected_new_balance = family_data.get('remaining_balance', 0) - expected_usd_amount
+            if abs(new_balance_usd - expected_new_balance) < 0.000001:
+                self.log_test("Balance Deduction Verification", True, f"New balance ${new_balance_usd:.6f} USD matches expected ${expected_new_balance:.6f} USD")
+            else:
+                self.log_test("Balance Deduction Verification", False, f"New balance ${new_balance_usd:.6f} USD does not match expected ${expected_new_balance:.6f} USD")
+            
+            # Test 8: Verify claim details
+            success, claim_details = self.run_test(
+                "Get Claim Details",
+                "GET",
+                f"claims/{claim_id}",
+                200
+            )
+            
+            if success:
+                header = claim_details.get('header', {})
+                details = claim_details.get('details', [])
+                
+                print(f"   Claim details retrieved:")
+                print(f"     Status: {header.get('status')}")
+                print(f"     Patient: {header.get('patient_name')}")
+                print(f"     Items: {len(details)}")
+                
+                if header.get('status') == 'PENDING':
+                    self.log_test("Claim Status Verification", True, "Claim status is PENDING as expected")
+                else:
+                    self.log_test("Claim Status Verification", False, f"Claim status is {header.get('status')}, expected PENDING")
+                
+                if len(details) == 1 and details[0].get('item_id') == 'TEST-ITEM-001':
+                    self.log_test("Claim Items Verification", True, "Claim contains correct item TEST-ITEM-001")
+                else:
+                    self.log_test("Claim Items Verification", False, f"Claim items do not match expected. Found {len(details)} items")
+            
+            # Test 9: Verify updated family balance by searching again
+            success, updated_search = self.run_test(
+                "Verify Updated Family Balance",
+                "GET",
+                "patients/search?query=SEC-2413",
+                200
+            )
+            
+            if success and updated_search.get("type") == "family":
+                updated_family = updated_search.get("family")
+                if updated_family:
+                    updated_balance = updated_family.get('remaining_balance', 0)
+                    print(f"   Updated family balance: ${updated_balance:.6f} USD")
+                    
+                    if abs(updated_balance - expected_new_balance) < 0.000001:
+                        self.log_test("Family Balance Update Verification", True, f"Family balance correctly updated to ${updated_balance:.6f} USD")
+                    else:
+                        self.log_test("Family Balance Update Verification", False, f"Family balance ${updated_balance:.6f} USD does not match expected ${expected_new_balance:.6f} USD")
+            
+            return True
+        else:
+            self.log_test("Claim Submission", False, "Failed to submit claim")
+            return False
+
+    def run_ssp_currency_test(self):
+        """Run only the SSP currency claim submission test"""
+        print("🏥 Medical Insurance Billing System - SSP Currency Claim Submission Test")
+        print("=" * 80)
+        
+        # Run the specific SSP currency test
+        success = self.test_ssp_currency_claim_submission()
+        
+        # Print summary
+        print(f"\n📊 SSP Currency Test Summary")
+        print("=" * 40)
+        print(f"Tests Run: {self.tests_run}")
+        print(f"Tests Passed: {self.tests_passed}")
+        print(f"Success Rate: {(self.tests_passed/self.tests_run*100):.1f}%")
+        
+        return success
+
     def run_comprehensive_test(self):
         """Run all tests including access control for Families, Members, and Price Lists"""
         print("🏥 Medical Insurance Billing System - Access Control Testing for Families, Members, and Price Lists")
