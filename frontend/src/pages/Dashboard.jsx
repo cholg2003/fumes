@@ -134,13 +134,16 @@ const Dashboard = () => {
       });
       setCurrencies(currencyMap);
 
-      // If not superadmin, load hospital's currency
+      // If not superadmin, get hospital's currency from hospital info endpoint
       if (!isSuperAdmin && hospitalName) {
-        const hospitalResponse = await axios.get(`${API}/admin/hospitals`, axiosConfig);
-        const hospital = hospitalResponse.data.find(h => h.hospital_name === hospitalName);
-        if (hospital && hospital.currency_code) {
-          const currency = currencyMap[hospital.currency_code] || { code: 'USD', symbol: '$', decimal_places: 2 };
-          setHospitalCurrency(currency);
+        try {
+          const hospitalResponse = await axios.get(`${API}/hospital/info`, axiosConfig);
+          if (hospitalResponse.data && hospitalResponse.data.currency_code) {
+            const currency = currencyMap[hospitalResponse.data.currency_code] || { code: 'USD', symbol: '$', decimal_places: 2 };
+            setHospitalCurrency(currency);
+          }
+        } catch (err) {
+          console.log('Could not load hospital currency, defaulting to USD');
         }
       }
     } catch (error) {
