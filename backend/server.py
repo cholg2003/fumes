@@ -179,8 +179,8 @@ class HospitalCreate(BaseModel):
     address: Optional[str] = ""
     phone: Optional[str] = ""
     email: Optional[str] = ""
-    deposit_balance: float = 0.0
-    currency_code: str = "USD"  # Default to USD
+    deposit_balance: float = 0.0  # Always stored in USD
+    currency_code: str = "USD"  # Hospital's operating currency (default USD)
 
 class DepositRequest(BaseModel):
     amount: float
